@@ -12,12 +12,12 @@ All 15 agent files and 4 skill directories present. `plugin.json` is valid JSON.
 ## Tasks
 - [x] Init git repo
 - [x] Add design spec
-- [ ] .gitignore + README stub
-- [ ] .claude-plugin/plugin.json
-- [ ] agents/ — 15 stubs
-- [ ] skills/ — 4 stubs
-- [ ] hooks/hooks.json
-- [ ] profiles/ — 5 scaffolds
-- [ ] ROADMAP.md
-- [ ] milestones/ — all 5 files
-- [ ] Validate structure
+- [x] .gitignore + README stub
+- [x] .claude-plugin/plugin.json
+- [x] agents/ — 15 stubs
+- [x] skills/ — 4 stubs
+- [x] hooks/hooks.json
+- [x] profiles/ — 5 scaffolds
+- [x] ROADMAP.md
+- [x] milestones/ — all 5 files
+- [x] Validate structure
