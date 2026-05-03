@@ -3,3 +3,4 @@ Thumbs.db
 *.local
 .env
 .claude/settings.local.json
+.worktrees/
