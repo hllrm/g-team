@@ -90,6 +90,8 @@ Follow up based on the answer:
 
 **Group 4 — Stack confirmation (only if ambiguous)**
 
+Ambiguous means: multiple lockfiles found (package.json AND requirements.txt), polyglot top-level directories, or the Stack line in Step 2 contained a "?" or "or". If the stack was clear and single-runtime, skip this group.
+
 If the stack was unclear after Step 1, or if multiple runtimes might be involved:
 
 > "I detected [stack]. Is this accurate? Are there any other runtimes or frameworks in use I should know about — a separate service, a mobile app, a background worker, a different language in another part of the repo?"
@@ -111,7 +113,7 @@ Dispatch `code-lead` with:
 - The relevant source files (entry points + service/controller/route files if found)
 
 Ask code-lead:
-> "Audit this codebase for architecture issues: layer boundary violations, wrong import directions, files doing too much (SRP violations), and any structural patterns that will make the planned work harder to add cleanly. Flag by severity. Do not fix anything — report only. Planned work: [insert Group 1 answer from Step 3]."
+> "Audit this codebase for architecture issues: layer boundary violations, wrong import directions, files doing too much (SRP violations), and any structural patterns that will make the planned work harder to add cleanly. Flag each finding as BLOCKING, HIGH, MEDIUM, or LOW severity. Do not fix anything — report only. Planned work: [insert Group 1 answer from Step 3]."
 
 Present code-lead's findings to the developer:
 
@@ -154,7 +156,7 @@ Write `project_brief.md` with this structure:
 
 | Component | Choice | Rationale | Risk | Code-lead note |
 |-----------|--------|-----------|------|----------------|
-[One row per detected tech component. Rationale = "already in use". Risk = Low for stable, established deps — flag anything unusual or old. Code-lead note = relevant finding from the audit if run, otherwise "-".]
+[One row per top-level choice only: language runtime, framework, ORM/database library, test runner, key infrastructure (auth, queue, storage). Do NOT list transitive or utility dependencies. Rationale = "already in use". Risk = Low for stable established deps — flag anything unusual, old, or with known CVEs. Code-lead note = relevant audit finding if Step 4 was run, otherwise "-".]
 
 ## Technical constraints
 
@@ -188,9 +190,9 @@ If the architecture audit found BLOCKING or HIGH severity issues, add:
 
 ## Rules
 
-- Never write `project_brief.md` before Step 3 is complete.
+- Never write `project_brief.md` before Steps 3 and 4 are complete — the brief's "Known risks" section depends on both the interview answers and any audit findings.
 - Never skip Step 2 confirmation — if the developer corrects your reading, update before continuing.
 - Dispatch code-lead only if the developer confirms in Step 4 — not by default.
 - If `project_brief.md` already exists, update it — do not replace content that is still accurate.
 - Do not run `/g-team init` or `/g-team specialize` yourself — suggest them and stop.
-- Group 4 (stack confirmation) is optional — skip it if the stack was unambiguous after Step 1.
+- Group 4 (stack confirmation) is optional — skip it unless: multiple lockfiles exist, polyglot directories were found, or the Stack field in Step 2 was uncertain.
