@@ -23,11 +23,11 @@ Run this in any Claude Code session:
 /plugin install g-team
 ```
 
-All 15 G-Team agents and 5 skills become available globally across all your projects.
+All 15 G-Team agents and 6 skills become available globally across all your projects.
 
 ### Verify
 
-Type `/g-team` in any Claude Code session. You should see: `kickoff`, `init`, `plan`, `review`, `specialize`.
+Type `/g-team` in any Claude Code session. You should see: `kickoff`, `onboard`, `init`, `plan`, `review`, `specialize`.
 
 ### Set up a new project
 
@@ -43,11 +43,19 @@ After `/g-team init`, `git commit` is gated — it will block until `/g-team rev
 
 ### Add to an existing project
 
-Skip kickoff if you already know your scope:
+Run onboard first to read the repo and capture current state:
 
 ```bash
+/g-team onboard     # read repo → present findings → interview → project_brief.md
 /g-team init        # safe on existing projects — appends G-rules if CLAUDE.md exists, creates missing files
-/g-team specialize  # reads project_brief.md and package.json / requirements.txt to detect stack
+/g-team specialize  # reads project_brief.md and detects stack automatically
+```
+
+Or skip onboard if you already know your scope and don't need a project_brief.md:
+
+```bash
+/g-team init
+/g-team specialize
 ```
 
 ### Uninstall
@@ -76,6 +84,19 @@ Quick reference for the most common workflows.
                      Installs .claude/hooks/check-commit.sh and registers it in .claude/settings.json
 
 /g-team specialize   Reads project_brief.md → detects stacks → confirms → installs architect agents
+```
+
+### Onboarding an existing project
+
+```
+/g-team onboard      Reads the repo first: stack, structure, tests, entry points
+                     Presents findings and asks you to confirm before continuing
+                     Interviews: what's next, constraints, known fragile areas
+                     Optional: dispatches code-lead for architecture audit
+                     Produces project_brief.md with current state + planned work
+
+/g-team init         Installs commit enforcement, injects G-rules into CLAUDE.md
+/g-team specialize   Reads project_brief.md → installs architect agent + rules
 ```
 
 ### Planning a feature
@@ -139,6 +160,7 @@ git push
 | Skill | What it does |
 |-------|-------------|
 | `/g-team kickoff` | Interview → scope challenge → stack deep dive → project_brief.md |
+| `/g-team onboard` | Read existing repo → present findings → interview → project_brief.md |
 | `/g-team init` | Scaffold CLAUDE.md, ROADMAP.md, milestones/, commit enforcement hooks |
 | `/g-team specialize [stack]` | Detect stack from brief + deps → install architect agent + rules |
 | `/g-team plan` | task-decomposer → wave-planner → approval gate → wave execution |
@@ -205,7 +227,13 @@ rm .claude/hooks/check-commit.sh   # removes the gate for this project
 ## Workflow
 
 ```
+New project:
 /g-team kickoff     →   project_brief.md  (goals, scope, tech decisions)
+
+Existing project:
+/g-team onboard     →   project_brief.md  (current state + planned work)
+
+Then for both:
 /g-team init        →   scaffolded project + commit gate
 /g-team specialize  →   stack architect agent + architecture rules
 /g-team plan        →   approved wave schedule
