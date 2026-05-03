@@ -160,7 +160,7 @@ git push
 | Skill | What it does |
 |-------|-------------|
 | `/g-team kickoff` | Interview → scope challenge → stack deep dive → project_brief.md |
-| `/g-team onboard` | Read existing repo → present findings → interview → project_brief.md |
+| `/g-team onboard` | Read existing repo → present findings → interview → optional architecture audit → project_brief.md |
 | `/g-team init` | Scaffold CLAUDE.md, ROADMAP.md, milestones/, commit enforcement hooks |
 | `/g-team specialize [stack]` | Detect stack from brief + deps → install architect agent + rules |
 | `/g-team plan` | task-decomposer → wave-planner → approval gate → wave execution |
