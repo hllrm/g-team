@@ -1,6 +1,40 @@
 {
   "hooks": {
-    "SubagentStart": [],
-    "SubagentStop": []
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash hooks/check-commit.sh",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash hooks/post-commit-cleanup.sh",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "type": "command",
+        "command": "bash hooks/agent-lifecycle.sh start"
+      }
+    ],
+    "SubagentStop": [
+      {
+        "type": "command",
+        "command": "bash hooks/agent-lifecycle.sh stop"
+      }
+    ]
   }
 }
