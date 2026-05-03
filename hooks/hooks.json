@@ -1,0 +1,6 @@
+{
+  "hooks": {
+    "SubagentStart": [],
+    "SubagentStop": []
+  }
+}
