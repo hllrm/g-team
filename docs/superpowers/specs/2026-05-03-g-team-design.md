@@ -20,7 +20,7 @@ G-Team is a Claude Code plugin that provides a managed multi-agent system focuse
 
 - **One agent, one mandate.** Every agent has a single, narrow job. No swiss-army agents.
 - **Model by task nature.** Opus for critical judgment (review, security, architecture). Sonnet for complex reasoning and orchestration. Haiku for deterministic execution (generate from spec, write tests, run ops). Never escalation-based — the right model is assigned upfront.
-- **Orchestrators never execute.** `dev-orchestrator` and `review-orchestrator` dispatch and integrate. They touch no files themselves.
+- **Orchestrators never execute.** `project-manager` and `review-orchestrator` dispatch and integrate. They touch no files themselves.
 - **Sonnet/Opus reasons → Haiku executes.** Every workflow chains a reasoning agent producing a spec, then Haiku agents consuming it.
 - **Output contracts.** Every agent returns: summary + `file:line` refs. Never raw file dumps. Always includes a verifiable done condition.
 - **Scope discipline.** Agents flag adjacent issues, never act on them. Only touch what they were asked.
@@ -48,7 +48,7 @@ g-team/
 │   ├── pr-writer.md
 │   ├── doc-writer.md
 │   ├── refactor-executor.md
-│   ├── dev-orchestrator.md
+│   ├── project-manager.md
 │   └── review-orchestrator.md
 ├── skills/
 │   ├── g-team-init/SKILL.md         # /g-team init
@@ -152,7 +152,7 @@ g-team/
 
 | Agent | Mandate |
 |---|---|
-| `dev-orchestrator` | Coordinates the full feature development pipeline: plan → spec → implement → test → review → PR. Dispatches to specialist agents per phase. Touches no files itself. |
+| `project-manager` | Coordinates the full feature development pipeline: plan → spec → implement → test → review → PR. Dispatches to specialist agents per phase. Touches no files itself. |
 | `review-orchestrator` | Coordinates the full review pipeline: code review + architecture + security + performance in parallel. Aggregates findings into a single report. Touches no files itself. |
 
 ---

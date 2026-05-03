@@ -33,5 +33,5 @@ Every agent in agents/ has a non-empty body. Every agent's system prompt include
 - [x] refactor-executor
 
 ### Orchestration (Sonnet)
-- [x] dev-orchestrator
+- [x] project-manager
 - [x] review-orchestrator

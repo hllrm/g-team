@@ -29,7 +29,7 @@ All files already exist as stubs from M1. This plan fills in the body of each.
 | `agents/pr-writer.md` | haiku | Execution |
 | `agents/doc-writer.md` | haiku | Execution |
 | `agents/refactor-executor.md` | haiku | Execution |
-| `agents/dev-orchestrator.md` | sonnet | Orchestration |
+| `agents/project-manager.md` | sonnet | Orchestration |
 | `agents/review-orchestrator.md` | sonnet | Orchestration |
 
 ---
@@ -756,16 +756,16 @@ git commit -m "feat(agents): add execution agent system prompts (Haiku)" && git 
 ## Task 5: Orchestration agents
 
 **Files:**
-- Modify: `agents/dev-orchestrator.md`
+- Modify: `agents/project-manager.md`
 - Modify: `agents/review-orchestrator.md`
 
-- [ ] **Step 1: Write dev-orchestrator.md body**
+- [ ] **Step 1: Write project-manager.md body**
 
-Replace the contents of `agents/dev-orchestrator.md` with:
+Replace the contents of `agents/project-manager.md` with:
 
 ```markdown
 ---
-name: dev-orchestrator
+name: project-manager
 description: Coordinates the full feature development pipeline from planning through PR. Dispatches specialist agents per phase — does not write code or edit files itself. Invoke for end-to-end feature development.
 model: sonnet
 tools: Agent
@@ -876,10 +876,10 @@ You coordinate the full review pipeline. You dispatch review agents in parallel 
 - [ ] **Step 3: Validate and commit**
 
 ```bash
-for f in agents/dev-orchestrator.md agents/review-orchestrator.md; do
+for f in agents/project-manager.md agents/review-orchestrator.md; do
   lines=$(wc -l < "$f"); echo "$f: $lines lines"
 done
-git add agents/dev-orchestrator.md agents/review-orchestrator.md
+git add agents/project-manager.md agents/review-orchestrator.md
 git commit -m "feat(agents): add orchestration agent system prompts" && git push
 ```
 

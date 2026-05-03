@@ -130,7 +130,7 @@ git commit -m "feat: add plugin manifest" && git push
 - Create: `agents/pr-writer.md`
 - Create: `agents/doc-writer.md`
 - Create: `agents/refactor-executor.md`
-- Create: `agents/dev-orchestrator.md`
+- Create: `agents/project-manager.md`
 - Create: `agents/review-orchestrator.md`
 
 - [ ] **Step 1: Create agents/ directory**
@@ -282,11 +282,11 @@ tools: Read, Glob, Grep, Write, Edit, Bash
 ---
 ```
 
-- [ ] **Step 15: Create dev-orchestrator.md**
+- [ ] **Step 15: Create project-manager.md**
 
 ```markdown
 ---
-name: dev-orchestrator
+name: project-manager
 description: Coordinates the full feature development pipeline from planning through PR. Dispatches specialist agents per phase — does not write code or edit files itself. Invoke for end-to-end feature development.
 model: sonnet
 tools: Agent
@@ -604,7 +604,7 @@ Every agent in agents/ has a non-empty body. Every agent's system prompt include
 - [ ] refactor-executor
 
 ### Orchestration (Sonnet)
-- [ ] dev-orchestrator
+- [ ] project-manager
 - [ ] review-orchestrator
 ```
 
