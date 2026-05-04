@@ -88,7 +88,7 @@ All plans produced by this skill are saved to `docs/plans/<feature-slug>.md` imm
 
 | Wave | Status | Notes |
 |------|--------|-------|
-| 1 | pending / in progress / complete | |
+| 1 | pending | |
 | 2 | pending | |
 ````
 
