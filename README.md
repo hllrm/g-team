@@ -25,7 +25,7 @@ G-Team installs a structured development workflow into any Claude Code project: 
 /plugin install g-team
 ```
 
-All 15 G-Team agents and 6 skills become available globally across all your projects.
+All 15 G-Team agents, 6 skills, and 44 stack profiles become available globally across all your projects.
 
 #### Desktop app, VS Code, JetBrains
 
@@ -223,15 +223,27 @@ git push
 
 Installed per-project by `/g-team specialize`. Each profile adds a stack-specific architect agent and appends architecture rules to `CLAUDE.md`. Once installed, the agent is project-native — no plugin required.
 
-| Profile | Agent | Stack |
-|---------|-------|-------|
-| `vue-pinia` | `vue-architect` | Vue 3, Pinia, Vite, TypeScript |
-| `node-ts` | `node-architect` | Node.js, TypeScript, Express/Fastify |
-| `fastapi` | `fastapi-architect` | FastAPI, Pydantic, SQLAlchemy, async Python |
+44 profiles ship with 0.2.0. Auto-detected from your project's dependency files when you run `/g-team specialize`.
 
-Planned: `react`, `tauri`
+**Web Frontend**
+`react` · `next-js` · `nuxt` · `vue-pinia` · `sveltekit` · `angular` · `astro` · `remix`
 
-Each architect agent knows its stack's layer map, import rules, and anti-patterns. Dispatch it during any review or planning task that touches stack-specific code.
+**Node / Go / Rust Backend**
+`node-ts` · `express` · `nest-js` · `go-gin` · `go-fiber` · `rust-axum` · `hono` · `bun`
+
+**Python / Ruby / PHP**
+`fastapi` · `django` · `laravel` · `rails` · `python-textual` · `python-cli` · `python-ml` · `python-data`
+
+**JVM / .NET**
+`spring-boot` · `asp-net-core` · `kotlin-ktor` · `kotlin-android` · `phoenix-liveview` · `wpf-csharp` · `maui`
+
+**Mobile / Desktop**
+`react-native` · `flutter` · `swift-ios` · `electron` · `tauri` · `capacitor`
+
+**Game Dev + Systems**
+`unity` · `unreal` · `godot-gdscript` · `godot-csharp` · `cpp-cmake` · `rust-cli` · `c-embedded`
+
+Each profile installs a stack-specific architect agent and appends architecture rules to `CLAUDE.md`. Once installed, the agent is project-native — no plugin required.
 
 ---
 
