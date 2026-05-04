@@ -1,198 +1,254 @@
 ---
 name: g-team-onboard
-description: Onboard G-Team onto an existing codebase. Reads the repo first, presents findings, interviews about what's next, optionally audits current architecture with code-lead, and produces project_brief.md. Run before /g-team init and /g-team specialize on existing projects.
+description: Onboard G-Team onto an existing codebase. Reads deeply before asking anything — treats existing CLAUDE.md, rules, agents, and task ledgers as first-class inputs. Only interviews for what it genuinely doesn't know yet. Produces or updates project_brief.md.
 argument-hint: (none)
 ---
 
 **Announce:** "Using g-team-onboard to onboard this codebase."
 
-You are bringing G-Team structure to an existing project. You read before you ask — questions are grounded in what you observed, not speculative.
+You read before you ask. Questions are grounded in what you observed, targeted to what you don't yet know. Never ask for information already visible in the project.
 
-## Step 1 — Read the codebase
+---
+
+## Step 1 — Deep read
 
 Read every source that exists — skip silently if absent.
 
 **Directory structure:**
+List the project root (top 2 levels). Note top-level directories and their apparent purpose.
 
-List the project root (top 2 levels). Note top-level directories and their apparent purpose (src, app, tests, docs, packages, etc.).
+**Core files:**
+- `README.md`
+- `CLAUDE.md` — read fully if present; note length, structure, and whether G-Team rules are embedded
+- `project_brief.md` — read fully if present
+- `package.json` / `pyproject.toml` / `Cargo.toml` / `build.gradle` / `pubspec.yaml` — whichever exist
+- `requirements.txt`
+- `ROADMAP.md` — note milestone status
+- `todo.md` — read fully if present; note schema, blocked tasks, active branch references
+- `todo-done.md` — note if present (signals an active task ledger convention)
 
-**Key files to read:**
+**G-Team state:**
+- `.claude/rules/` — list all files if directory exists
+- `.claude/agents/` — list all files if directory exists
+- `.claude/settings.json` — check if commit hook is registered
 
-- `README.md` — project description, stack hints, setup instructions
-- `package.json` — name, description, dependencies, devDependencies, scripts
-- `pyproject.toml` — project metadata, dependencies, tool config
-- `requirements.txt` — Python dependencies
-- `CLAUDE.md` — existing project rules (if G-Team rules already present, note it)
-- `project_brief.md` — if already exists, read it and tell the developer: "A project_brief.md already exists — I'll use it as the base and update it rather than starting fresh."
-
-**Entry point detection:**
-
-Look for whichever of these exist:
-- `src/index.ts`, `src/main.ts`, `src/app.ts`, `src/server.ts` — Node/TypeScript
-- `main.py`, `app.py`, `src/main.py`, `src/app/main.py` — Python / FastAPI
-- `src/App.vue`, `src/main.ts` — Vue
+**Version / branch signals:**
+- Run `git log --oneline -5` — note recent commit messages and cadence
+- Run `git branch --show-current` — note active branch name
+- Run `git status --short` — note uncommitted changes
 
 **Test structure:**
-
-Look for `tests/`, `test/`, `__tests__/`, `spec/` directories. Note: test framework (jest, vitest, pytest, etc.) and rough coverage signal (many test files vs. few vs. none vs. no test directory).
+Look for `tests/`, `test/`, `__tests__/`, `spec/` directories. Note framework and file count.
 
 **Architecture signals:**
+Look for layer directories: `routes/`, `controllers/`, `services/`, `repositories/`, `models/`, `stores/`, `composables/`, `schemas/`, `middleware/`.
 
-Look for layer directories: `routes/`, `controllers/`, `services/`, `repositories/`, `models/`, `stores/`, `composables/`, `schemas/`, `middleware/`. Note any that exist.
+---
 
-## Step 2 — Present findings
+## Step 2 — Assess project maturity
 
-Present a concise picture of what you found. Use this format exactly:
+Before presenting findings or asking anything, classify the project:
+
+**Mature** — ANY of these are true:
+- `CLAUDE.md` is >100 lines
+- `.claude/rules/` has files
+- `.claude/agents/` has files
+- `project_brief.md` exists and is complete
+- `ROADMAP.md` shows multiple completed milestones
+- `git log` shows >20 commits
+
+**Early-stage** — project exists but is sparse: CLAUDE.md present but thin, <20 commits, no rules/agents, no brief.
+
+**Greenfield** — essentially empty: no CLAUDE.md, no brief, no meaningful structure yet.
+
+This classification changes what you do in Steps 3 and 4.
+
+---
+
+## Step 3 — Present findings
+
+Present a concise picture. Use this format:
 
 ```
 Codebase read ✓
 
-Stack:           [e.g. Node.js + TypeScript + Express, or Vue 3 + Pinia, or FastAPI + SQLAlchemy]
-Entry point:     [e.g. src/index.ts  — or "not found"]
-Architecture:    [e.g. routes/controllers/services detected  — or "flat structure"  — or "monorepo: packages/"]
-Tests:           [e.g. Jest · 24 test files in tests/  — or "no test directory found"]
-G-Team rules:    [Already in CLAUDE.md  — or "not present"]
-project_brief:   [Found — will update  — or "not found — will create"]
+Stack:           [detected stack]
+Entry point:     [file — or "not found"]
+Architecture:    [layers found — or "flat" — or "see CLAUDE.md"]
+Tests:           [framework · N files — or "no test directory found"]
+Branch:          [current branch name]
+Commits:         [e.g. "active — 3 commits today" or "last commit 6 days ago"]
 
-Notable:
-  - [observation, e.g. "No test directory — test-writer will be valuable early"]
-  - [observation, e.g. "src/controllers/ files are large — refactor-executor worth considering"]
-  - [observation, e.g. "requirements.txt has 60+ dependencies — security-auditor worth an early run"]
+G-Team state:
+  CLAUDE.md:     [Not present / Thin (<50 lines) / Detailed (Nnn lines, G-rules embedded)]
+  .claude/rules: [Not present / N files: rule1.md, rule2.md]
+  .claude/agents:[Not present / N files: agent1.md, agent2.md]
+  Commit gate:   [Registered in settings.json / Not registered]
+  project_brief: [Not found / Found (Nnn lines)]
+  Task ledger:   [Not found / todo.md found (N tasks, N blocked)]
 ```
 
-Omit the Notable block if there is nothing worth flagging.
+Then — **for mature projects only** — add a targeted observations block:
 
-Then ask: **"Does this match what you're working with? Anything to correct before I continue?"**
+```
+Observations:
+  - [e.g. "Active branch 'feat/audio-pipeline-fixes' — should this merge before new work?"]
+  - [e.g. "todo.md shows tasks #4 and #5 blocked on external input — are those the active scope?"]
+  - [e.g. ".claude/agents/architecture-review.md already exists — specialize should not overwrite it"]
+  - [e.g. "CLAUDE.md is 400 lines with architecture + rules — project_brief.md may be redundant"]
+```
 
-Wait for the developer's confirmation. Update your understanding if corrected before moving on.
+Only include observations that are genuinely actionable. Omit the block entirely for greenfield projects.
 
-## Step 3 — Interview: what's next?
+Ask: **"Does this match what you're working with? Anything to correct?"**
 
-Ask these questions one group at a time. Wait for each answer before moving to the next.
+Wait for confirmation before continuing.
+
+---
+
+## Step 4 — Resolve G-Team state conflicts
+
+Before interviewing, resolve any existing G-Team infrastructure so specialize doesn't clobber it.
+
+**If `.claude/rules/` has files:**
+> "I found existing rules in `.claude/rules/`: [list files]. When we run `/g-team specialize`, it will install architect rules. Should it overlay (append to existing), replace, or skip rules installation entirely?"
+
+Wait for answer. Record preference.
+
+**If `.claude/agents/` has files:**
+> "I found existing agents in `.claude/agents/`: [list files]. When we run `/g-team specialize`, it will install a stack-specific architect agent. Should it overlay, replace, or skip agent installation?"
+
+Wait for answer. Record preference.
+
+**If `CLAUDE.md` is >100 lines and G-Team rules are already embedded:**
+> "Your CLAUDE.md already has G-Team rules embedded. `/g-team init` would normally inject them — should I skip that injection and treat your current CLAUDE.md as authoritative?"
+
+Wait for answer.
+
+**If `todo.md` exists with an established schema:**
+> "I see a `todo.md` already in use with its own schema. G-Team's init scaffold would normally create one. Should I: (a) integrate with your existing todo.md, (b) scaffold alongside it, or (c) skip todo.md scaffolding?"
+
+Wait for answer.
+
+**If `project_brief.md` already exists and CLAUDE.md is detailed (>100 lines):**
+> "You have both a `project_brief.md` and a detailed `CLAUDE.md`. Should I treat `CLAUDE.md` as the brief, update `project_brief.md` from it, or keep both?"
+
+Wait for answer.
+
+Skip any of the above that don't apply.
+
+---
+
+## Step 5 — Interview: only what you don't know yet
+
+**For mature projects** — the stack, architecture, and history are visible. Ask only what the files can't tell you:
+
+Build the interview from what you actually observed. Examples:
+
+- If branch name is `feat/X` or `fix/Y`: "You're on `[branch]` — are you merging that before planning new work, or should I scope the brief around it?"
+- If todo.md has blocked tasks: "todo.md shows [task N] blocked on [reason] — is that still blocked, or should I treat it as active scope?"
+- If ROADMAP.md shows a milestone in progress: "ROADMAP shows [M-N] is in progress — is that still the active milestone, or has scope shifted?"
+- If no explicit goal is inferable: "What do you want to do next with this project?"
+
+Do not ask questions whose answers are already visible. Do not run Group 1–4 as a script — pick only the questions that apply.
+
+**For early-stage and greenfield projects** — run the full interview:
 
 **Group 1 — The work**
+> "What do you want to do with this codebase?"
 
-> "What do you want to do with this codebase? (New feature, refactor, performance fix, bringing a new team member up to speed, something else?)"
-
-Follow up based on the answer:
-- New feature: "What specifically? What user problem does it solve?"
-- Refactor: "Which area? What's driving it — tech debt, performance, architecture violation?"
-- Performance: "Where is it slow? Do you have metrics, or is it a hunch?"
-- Onboarding a team member: note this — the brief should document the architecture in more detail than usual.
+Follow up: new feature → "What specifically?", refactor → "Which area, what's driving it?", performance → "Where is it slow?"
 
 **Group 2 — Constraints**
-
-> "What constraints matter here? Think: timeline, team size, areas of the code that are fragile or off-limits, anything you don't want touched."
+> "What constraints matter? Timeline, team size, areas that are fragile or off-limits."
 
 **Group 3 — Existing problems**
+> "Any known bugs, tech debt, or fragile areas to avoid building on top of?"
 
-> "Before we plan new work — is there anything in the current codebase you'd want me to know about? Fragile areas, known bugs, tech debt you want to avoid building on top of?"
+**Group 4 — Stack confirmation** (only if ambiguous)
+> "I detected [stack]. Accurate? Any other runtimes or services I should know about?"
 
-**Group 4 — Stack confirmation (only if ambiguous)**
+---
 
-Ambiguous means: multiple lockfiles found (package.json AND requirements.txt), polyglot top-level directories, or the Stack line in Step 2 contained a "?" or "or". If the stack was clear and single-runtime, skip this group.
-
-If the stack was unclear after Step 1, or if multiple runtimes might be involved:
-
-> "I detected [stack]. Is this accurate? Are there any other runtimes or frameworks in use I should know about — a separate service, a mobile app, a background worker, a different language in another part of the repo?"
-
-Skip this group if the stack was clear.
-
-## Step 4 — Optional architecture audit
+## Step 6 — Optional architecture audit
 
 Ask:
+> "Should I dispatch code-lead to audit the current architecture before planning? Worth it if you're planning significant changes. (y/n)"
 
-> "Should I dispatch code-lead to audit the current architecture before we plan new work? It will flag layer boundary violations, wrong import directions, and structural problems worth knowing about before adding to the codebase. Worth it if you're planning significant changes. (y/n)"
+**If yes:** dispatch `code-lead` with the structure, stack, architecture signals, and planned work. Ask it to flag BLOCKING / HIGH / MEDIUM / LOW violations. Present findings. Ask: "Address these first, or factor them into the brief as known risks?"
 
-**If yes:**
+**If no:** proceed.
 
-Dispatch `code-lead` with:
-- The directory structure and architecture signals from Step 1
-- The stack detected
-- Any layer map inferred from directory names
-- The relevant source files (entry points + service/controller/route files if found)
+---
 
-Ask code-lead:
-> "Audit this codebase for architecture issues: layer boundary violations, wrong import directions, files doing too much (SRP violations), and any structural patterns that will make the planned work harder to add cleanly. Flag each finding as BLOCKING, HIGH, MEDIUM, or LOW severity. Do not fix anything — report only. Planned work: [insert Group 1 answer from Step 3]."
+## Step 7 — Produce or update project_brief.md
 
-Present code-lead's findings to the developer:
+**If CLAUDE.md is the agreed source of truth** (developer chose that in Step 4): synthesize a brief from it rather than re-interviewing. Extract: stack, architecture, current goals, constraints. Write a short `project_brief.md` that summarises what CLAUDE.md contains — don't duplicate it wholesale.
 
-**"Architecture audit complete. Here's what code-lead found:"** followed by the findings.
-
-Then ask: "Do you want to address any of these before planning the new work, or should I factor them into the brief as known risks?"
-
-**If no:** proceed to Step 5.
-
-## Step 5 — Produce project_brief.md
-
-Write `project_brief.md` with this structure:
+**Otherwise:** write `project_brief.md` with:
 
 ```markdown
-# [Project name — from package.json name field, or README title, or directory name]
+# [Project name]
 
 ## Current state
 
-**Stack:** [detected stack]
-**Architecture:** [layer structure observed — or "flat" if no layers found]
-**Tests:** [framework and rough coverage signal]
-**Entry point:** [file path — or "not identified"]
+**Stack:** [detected]
+**Architecture:** [layers observed or "see CLAUDE.md"]
+**Tests:** [framework · count]
+**Entry point:** [file]
 
 ## Problem / Goal
 
-[What the developer wants to accomplish — from Group 1 interview]
+[What the developer wants to accomplish]
 
 ## Scope
 
 ### In scope
-[Features or changes confirmed in the interview]
+[Confirmed features or changes]
 
 ### Out of scope
-[Explicitly named constraints, fragile areas, off-limits code from Groups 2–3]
+[Constraints, fragile areas, off-limits]
 
 ### Known risks / existing issues
-[Tech debt or fragile areas from Group 3. Architecture findings from Step 4 if the audit was run.]
+[Tech debt, fragile areas, architecture audit findings]
 
 ## Tech decisions
 
 | Component | Choice | Rationale | Risk | Code-lead note |
 |-----------|--------|-----------|------|----------------|
-[One row per top-level choice only: language runtime, framework, ORM/database library, test runner, key infrastructure (auth, queue, storage). Do NOT list transitive or utility dependencies. Rationale = "already in use". Risk = Low for stable established deps — flag anything unusual, old, or with known CVEs. Code-lead note = relevant audit finding if Step 4 was run, otherwise "-".]
 
 ## Technical constraints
 
-[Deadline if given. Team size if given. Off-limits areas. Any other constraints from Groups 2–3.]
+[Deadline, team size, off-limits areas]
 ```
 
-If `project_brief.md` already existed, merge the new information in. Preserve any existing content that remains accurate — do not overwrite wholesale.
+If `project_brief.md` already existed, merge — preserve accurate existing content.
 
-## Step 6 — Report and suggest next steps
+---
+
+## Step 8 — Report and next steps
 
 ```
 project_brief.md written ✓
 
 Suggested next steps:
-
-  /g-team init        Install commit enforcement, inject G-rules into CLAUDE.md,
-                      scaffold ROADMAP.md and milestones/
-
-  /g-team specialize  Install [detected stack] architect agent and architecture rules
-                      (reads project_brief.md automatically)
-
-  /g-team plan        When you're ready to start the work described in the brief
 ```
 
-If the architecture audit found BLOCKING or HIGH severity issues, add:
+Build the next-steps list based on what's actually missing — don't suggest steps that are already done:
 
-```
-  Before /g-team plan, consider addressing the architecture issues code-lead flagged.
-  Dispatch spec-writer with the refactor description, then refactor-executor to execute it.
-```
+- Include `/g-team init` only if: commit gate not registered OR CLAUDE.md is missing OR ROADMAP.md is missing
+- Include `/g-team specialize` only if: no stack-specific architect agent is installed yet (or developer chose overlay/replace in Step 4)
+- Always include `/g-team plan` when ready to start the work described in the brief
+
+If architecture audit found BLOCKING or HIGH issues, add: "Before `/g-team plan`, consider addressing the architecture issues code-lead flagged."
+
+---
 
 ## Rules
 
-- Never write `project_brief.md` before Steps 3 and 4 are complete — the brief's "Known risks" section depends on both the interview answers and any audit findings.
-- Never skip Step 2 confirmation — if the developer corrects your reading, update before continuing.
-- Dispatch code-lead only if the developer confirms in Step 4 — not by default.
-- If `project_brief.md` already exists, update it — do not replace content that is still accurate.
-- Do not run `/g-team init` or `/g-team specialize` yourself — suggest them and stop.
-- Group 4 (stack confirmation) is optional — skip it unless: multiple lockfiles exist, polyglot directories were found, or the Stack field in Step 2 was uncertain.
+- Never write `project_brief.md` before Steps 4 and 5 are complete.
+- Never ask for information already visible in the project files.
+- Never suggest `/g-team init` or `/g-team specialize` steps that are already done.
+- Never overwrite existing `.claude/agents/` or `.claude/rules/` files without explicit developer permission from Step 4.
+- Mature project interview is targeted — not a script. Only ask what you genuinely don't know.
+- If the developer corrects your Step 3 reading, update before continuing.
