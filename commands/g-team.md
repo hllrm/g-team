@@ -1,6 +1,6 @@
 ---
-description: G-Team workflow commands. Subcommands: help, status, doctor, init, kickoff, onboard, brief, plan, execute, review, specialize, update.
-argument-hint: <help|status|doctor|init|kickoff|onboard|brief|plan|execute|review|specialize|update> [args]
+description: G-Team workflow commands. Subcommands: help, status, doctor, init, kickoff, onboard, brief, plan, execute, review, specialize, update, skill-design, skill-validate.
+argument-hint: <help|status|doctor|init|kickoff|onboard|brief|plan|execute|review|specialize|update|skill-design|skill-validate> [args]
 ---
 
 Route to the correct skill file based on the subcommand in $ARGUMENTS.
@@ -19,6 +19,8 @@ For each subcommand, use Glob to find the corresponding SKILL.md inside `~/.clau
 - `review`     → `skills/g-team-review/SKILL.md`
 - `specialize` → `skills/g-team-specialize/SKILL.md`  (remaining args: $ARGUMENTS)
 - `update`     → `skills/g-team-update/SKILL.md`
+- `skill-design` → `skills/g-team-skill-design/SKILL.md`
+- `skill-validate` → `skills/g-team-skill-validate/SKILL.md`  (remaining args: $ARGUMENTS)
 
 If $ARGUMENTS is empty or unrecognized, list available subcommands:
   - `help` — show current project state and next recommended action
@@ -33,3 +35,5 @@ If $ARGUMENTS is empty or unrecognized, list available subcommands:
   - `review` — run full review pipeline; issues MERGE READY or HOLD
   - `specialize [stack]` — auto-detect or apply a named stack profile
   - `update` — realign all g-team-managed files to the current plugin version
+  - `skill-design` — design a new skill from scratch (SKILL.md, command file, router entry)
+  - `skill-validate [name]` — validate a skill or agent against G-Team structural rules

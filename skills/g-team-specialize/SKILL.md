@@ -1,6 +1,6 @@
 ---
 name: g-team-specialize
-description: Determine which stack profiles to apply by reading the project brief, roadmap, and dependency files. Handles multi-stack projects. Consults code-lead when the picture is ambiguous or risky. Installs architect agents and architecture rules. Supported stacks: angular, asp-net-core, astro, bun, c-embedded, capacitor, cpp-cmake, django, electron, express, fastapi, flutter, go-fiber, go-gin, godot-csharp, godot-gdscript, hono, kotlin-android, kotlin-ktor, laravel, maui, nest-js, next-js, node-ts, nuxt, phoenix-liveview, python-cli, python-data, python-ml, python-textual, rails, react, react-native, remix, rust-axum, rust-cli, spring-boot, sveltekit, swift-ios, tauri, unity, unreal, vue-pinia, wpf-csharp.
+description: Determine which stack profiles to apply by reading the project brief, roadmap, and dependency files. Handles multi-stack projects. Consults code-lead when the picture is ambiguous or risky. Installs architect agents and architecture rules. Supported stacks: angular, asp-net-core, astro, bun, c-embedded, capacitor, cpp-cmake, django, electron, express, fastapi, flutter, go-fiber, go-gin, godot-csharp, godot-gdscript, hono, kotlin-android, kotlin-ktor, laravel, maui, nest-js, next-js, node-ts, nuxt, phoenix-liveview, python-cli, python-data, python-ml, python-textual, rails, react, react-native, remix, rust-axum, rust-cli, spring-boot, sveltekit, swift-ios, tauri, unity, unreal, vue-pinia, wpf-csharp, claude-plugin.
 ---
 
 **Announce:** "Using g-team-specialize to apply the stack profile."
@@ -85,6 +85,9 @@ Read whichever of these exist in the current working directory:
 - `*.uproject` → **unreal**
 
 - `Package.swift` with iOS targets → **swift-ios**
+
+- `.claude-plugin/plugin.json` — if this file exists, this is a Claude Code plugin project → **claude-plugin**
+- `plugin.json` — if the `$schema` field contains `claude-code-plugin` → **claude-plugin**
 
 **Synthesise:**
 
@@ -202,6 +205,7 @@ Stack → file mapping (agent file + rules file):
 - `unreal`          → `profiles/unreal/agents/unreal-architect.md`                 + `profiles/unreal/rules/architecture.md`
 - `vue-pinia`       → `profiles/vue-pinia/agents/vue-architect.md`                 + `profiles/vue-pinia/rules/architecture.md`
 - `wpf-csharp`      → `profiles/wpf-csharp/agents/wpf-architect.md`               + `profiles/wpf-csharp/rules/architecture.md`
+- `claude-plugin`   → `profiles/claude-plugin/agents/claude-plugin-architect.md`   + `profiles/claude-plugin/rules/architecture.md`
 
 Read both files for each profile before writing anything.
 
