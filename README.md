@@ -25,7 +25,7 @@ G-Team installs a structured development workflow into any Claude Code project: 
 /plugin install g-team
 ```
 
-All 15 G-Team agents, 6 skills, and 44 stack profiles become available globally across all your projects.
+All 16 G-Team agents, 8 skills, and 44 stack profiles become available globally across all your projects.
 
 #### Desktop app, VS Code, JetBrains
 
@@ -53,7 +53,7 @@ This loads G-Team for that session only. Re-run with `--plugin-dir` each time, o
 
 ### Verify
 
-Type `/g-team` in any Claude Code session. You should see: `kickoff`, `onboard`, `init`, `plan`, `review`, `specialize`.
+Type `/g-team` in any Claude Code session. You should see: `kickoff`, `onboard`, `init`, `plan`, `execute`, `review`, `specialize`, `update`.
 
 ### Set up a new project
 
@@ -107,7 +107,9 @@ Quick reference for the most common workflows.
                      Produces project_brief.md with tech decisions table
 
 /g-team init         Creates CLAUDE.md with G-rules, ROADMAP.md, milestones/M1.md, todo.md
-                     Installs .claude/hooks/check-commit.sh and registers it in .claude/settings.json
+                     Installs .claude/hooks/check-commit.sh (commit gate) and
+                     workflow-checkpoint.sh (UserPromptSubmit — auto-triggers plan/execute/review)
+                     Registers both in .claude/settings.json
 
 /g-team specialize   Reads project_brief.md → detects stacks → confirms → installs architect agents
 ```
@@ -126,6 +128,10 @@ Quick reference for the most common workflows.
 ```
 
 ### Planning a feature
+
+`/g-team plan`, `/g-team execute`, and `/g-team review` are **auto-triggered** — Claude detects task complexity and initiates them without you typing the commands. The `workflow-checkpoint.sh` hook fires on every message and reports current state; the G-Rules tell Claude what to do with it.
+
+You can still invoke them manually if needed:
 
 ```
 /g-team plan         Dispatches task-decomposer → wave-planner
@@ -203,7 +209,7 @@ git push
 
 ## Agents
 
-15 agents ship with every install. Full reference: [docs/agents.md](docs/agents.md)
+16 agents ship with every install. Full reference: [docs/agents.md](docs/agents.md)
 
 | Agent | Tier | Role |
 |-------|------|------|
@@ -256,7 +262,11 @@ Each profile installs a stack-specific architect agent and appends architecture 
 
 ## Commit Enforcement
 
-Once `/g-team init` is run in a project, `git commit` is blocked unless `.claude/g-team-approved` exists.
+Once `/g-team init` is run in a project, two hooks are installed:
+
+**`workflow-checkpoint.sh`** (`UserPromptSubmit`) — fires on every message. Reports whether an active plan exists and whether `.claude/g-team-approved` is set. Claude reads this and auto-triggers `/g-team plan`, `/g-team execute`, or `/g-team review` based on the current state.
+
+**`check-commit.sh`** (`PreToolUse`) — blocks `git commit` unless `.claude/g-team-approved` exists.
 
 - The sentinel is written by `/g-team review` only on a MERGE READY verdict
 - It is automatically cleared after the commit by the PostToolUse hook
