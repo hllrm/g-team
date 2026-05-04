@@ -7,13 +7,19 @@ description: Decompose the current request into atomic tasks and produce a paral
 
 You are driving the planning phase. Execute these steps in order.
 
-## Step 1 — Clarify scope (if needed)
+## Step 1 — Challenge the request (feature requests only)
 
-If the request is vague, ask ONE focused clarifying question before proceeding.
+**Skip this step entirely if the request is a bug fix or a refactor of existing behaviour (not a new capability) — go straight to Step 2.**
 
-Signs of vagueness: no clear done condition, touches multiple unrelated areas, no specific file or feature named.
+Dispatch the `project-manager` agent with the full feature request as described by the developer.
 
-If the request is clear and specific, skip this step.
+Tell project-manager:
+> "A developer wants to build the following: [feature request]. Apply your Feature Challenge gate. Ask the three challenge questions, wait for the developer's answers, then return one of: SCOPE ACCEPTED — [one-line summary], or SCOPE CONCERN — [reason] — DEVELOPER OVERRIDE."
+
+Present project-manager's questions to the developer verbatim. Wait for the developer's answers. Pass the answers back to project-manager to get its verdict.
+
+- **If verdict is SCOPE ACCEPTED:** proceed to Step 2.
+- **If verdict is SCOPE CONCERN — DEVELOPER OVERRIDE:** note the concern in the plan header as a risk, then proceed to Step 2.
 
 ## Step 2 — Dispatch task-decomposer
 

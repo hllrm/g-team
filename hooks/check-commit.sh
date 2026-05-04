@@ -19,4 +19,9 @@ if echo "$CMD" | grep -q "git commit"; then
         echo "G-Team: No code-lead sign-off. Run /g-team review and wait for MERGE READY before committing." >&2
         exit 1
     fi
+    # Advisory: warn when committing directly to main with approval
+    BRANCH=$(git branch --show-current 2>/dev/null)
+    if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
+        echo "G-Team: Note — committing directly to main. Non-trivial work should be on a feature branch (feat/<slug>, fix/<slug>)." >&2
+    fi
 fi

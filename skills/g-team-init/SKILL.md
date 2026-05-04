@@ -133,6 +133,8 @@ Write `.claude/hooks/check-commit.sh` with this exact content:
 #!/bin/bash
 # G-Team commit gate — PreToolUse hook.
 # Blocks git commit if .claude/g-team-approved does not exist.
+# Input: Claude Code PreToolUse JSON on stdin.
+
 INPUT=$(cat)
 CMD=$(echo "$INPUT" | python3 -c "
 import json, sys
@@ -143,10 +145,16 @@ try:
 except Exception:
     pass
 " 2>/dev/null)
+
 if echo "$CMD" | grep -q "git commit"; then
     if [ ! -f ".claude/g-team-approved" ]; then
         echo "G-Team: No code-lead sign-off. Run /g-team review and wait for MERGE READY before committing." >&2
         exit 1
+    fi
+    # Advisory: warn when committing directly to main with approval
+    BRANCH=$(git branch --show-current 2>/dev/null)
+    if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
+        echo "G-Team: Note — committing directly to main. Non-trivial work should be on a feature branch (feat/<slug>, fix/<slug>)." >&2
     fi
 fi
 ```
@@ -187,7 +195,13 @@ fi
 REVIEW_APPROVED=false
 [ -f ".claude/g-team-approved" ] && REVIEW_APPROVED=true
 
+CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
+
 echo "[G-Team Workflow Checkpoint]"
+echo "  Branch: $CURRENT_BRANCH"
+if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
+    echo "  ⚠  on main — non-trivial work should be on a feature branch (feat/<slug>, fix/<slug>)" >&2
+fi
 if [ -n "$PLAN_FILE" ]; then
     echo "  Active plan: $PLAN_FILE"
 
@@ -195,14 +209,11 @@ if [ -n "$PLAN_FILE" ]; then
     TOTAL_WAVES=$(grep -c "^### Wave" "$PLAN_FILE" 2>/dev/null || echo 0)
 
     # Find current wave: first wave not marked "complete" in the Progress table
-    # The Progress table rows look like: | 1 | complete | ... | or | 1 | pending | ... |
     CURRENT_WAVE=$(awk '
         /^\| Wave \| Status/ { in_table=1; next }
         in_table && /^\|[[:space:]]*[0-9]/ {
-            # Extract wave number and status from table row
             split($0, cols, "|")
             wave = cols[2]; status = cols[3]
-            # Trim whitespace
             gsub(/^[[:space:]]+|[[:space:]]+$/, "", wave)
             gsub(/^[[:space:]]+|[[:space:]]+$/, "", status)
             if (status != "complete") { print wave; exit }
@@ -210,7 +221,6 @@ if [ -n "$PLAN_FILE" ]; then
         in_table && /^[^|]/ { in_table=0 }
     ' "$PLAN_FILE" 2>/dev/null)
 
-    # If no Progress table yet (or all complete), default to wave 1
     if [ -z "$CURRENT_WAVE" ]; then
         CURRENT_WAVE=1
     fi

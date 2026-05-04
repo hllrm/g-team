@@ -7,7 +7,36 @@ description: Run the full review pipeline on the current branch diff. Dispatches
 
 You are running the merge gate. Execute these steps in order.
 
-## Step 1 — Gather the diff
+## Step 1 — Run the test suite
+
+Before reviewing any code, verify the test suite passes.
+
+**Detect the test command** using this priority order:
+1. Check `package.json` scripts for `"test"` — if found, use `npm test` (or `bun test` / `yarn test` based on lockfile)
+2. Check for `pytest.ini`, `pyproject.toml` with `[tool.pytest]`, or `tests/` with `.py` files — use `pytest`
+3. Check for `Makefile` with a `test` target — use `make test`
+4. Check `project_brief.md` Tests field for the framework name
+5. If no test command can be detected: ask the developer — "What command runs your test suite?" — wait for answer
+
+**Run the test command.** Capture the output.
+
+**If all tests pass:**
+- Report: `✓ Tests passed — proceeding to code review`
+- Continue to Step 2
+
+**If any tests fail:**
+- Do NOT write `.claude/g-team-approved`
+- Report the failing tests verbatim
+- Stop with verdict: `HOLD — tests failing. Fix all test failures before re-running /g-team review.`
+- Do not proceed to Step 2
+
+**If the project has no tests** (no test directory, no test script, no test framework detected):
+- Report: `⚠ No test suite detected`
+- Ask the developer: "No tests found. Options: (a) dispatch test-writer to add an appropriate test suite now, (b) skip tests for this review (one-time override). Which do you prefer?"
+- **If developer chooses (a):** dispatch the `test-writer` agent with the current diff and project stack context. Ask test-writer to write tests covering the changed code. Once tests are written and pass, continue to Step 2.
+- **If developer chooses (b):** note `⚠ No tests — developer override` in the review output and continue to Step 2. Do not block.
+
+## Step 2 — Gather the diff
 
 Run:
 ```
@@ -18,7 +47,7 @@ If output is empty, run: `git diff --staged`
 
 If both are empty, ask the developer: "What branch or commit range should I review?"
 
-## Step 2 — Gather done conditions
+## Step 3 — Gather done conditions
 
 Check for done conditions in this order:
 1. The relevant plan file (check `docs/plans/` for the most recent `.md` file, or a spec mentioned by the developer)
@@ -27,17 +56,17 @@ Check for done conditions in this order:
 
 If no done conditions can be found, note this — code-lead will flag it as a process gap.
 
-## Step 3 — Dispatch code-lead
+## Step 4 — Dispatch code-lead
 
 Dispatch the `code-lead` agent. Provide:
-- The full diff from Step 1
-- The done conditions from Step 2
+- The full diff from Step 2
+- The done conditions from Step 3
 - The current branch name (from `git branch --show-current`)
 - The task list (if known)
 
 code-lead will verify done conditions and dispatch review-orchestrator internally. Wait for code-lead's complete verdict.
 
-## Step 4 — Present verdict and manage sentinel
+## Step 5 — Present verdict and manage sentinel
 
 Present code-lead's verdict to the developer verbatim.
 

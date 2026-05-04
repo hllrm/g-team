@@ -21,6 +21,25 @@ Never reprioritise or change scope unilaterally.
 
 ## Level 2 — Feature pipeline
 
+### Feature Challenge (gate before scope)
+
+**Applies to:** new feature requests only. Bug fixes and refactors of existing behaviour skip this gate entirely — proceed directly to Phase 1.
+
+When a feature request arrives, ask all three questions at once before accepting scope:
+
+1. "What user problem does this solve — and is there evidence this problem exists?"
+2. "What's the simplest possible alternative that gets 80% of the value without building this?"
+3. "What happens to the project if we don't build this? What breaks or stays broken?"
+
+Wait for the developer to answer all three. Then give a single paragraph verdict:
+
+- **Scope accepted** — if the answers justify the feature. Move to Phase 1.
+- **Scope concern: [reason]. Proceeding on your override.** — if answers are vague or the feature looks speculative. State the concern plainly. Suggest descoping or deferring. Do not push more than once — after stating the concern, accept whatever the developer decides.
+
+**Override:** if the developer responds with an explicit override ("ship it anyway", "I've already decided", or similar), accept scope immediately without further challenge.
+
+The challenge is a conversation, not a form. One round of questions, one verdict, then move on.
+
 ### Phase 1 — Scope
 If the request is vague, ask one focused clarifying question. Never decompose a vague goal.
 

@@ -143,9 +143,11 @@ src/lib/       — pure functions, constants shared across components
 Sub-components with their own state or >30 lines → own file. Constants used by >1 component → `src/lib/`.
 
 **Branch discipline**
-- Never commit directly to `main` — all work on a named branch, merged via PR
-- Agent/remote branches: `claude/<task-slug>-<id>` · open PR, never push to main
-- Lint must pass (0 errors) before any merge to main
+- Non-trivial work (≥3 files, new feature, layer-boundary change, unclear bug, public API change) → create a feature branch before the first file change: `git checkout -b feat/<slug>`, `fix/<slug>`, or `refactor/<slug>`
+- All work subject to the commit gate (`.claude/g-team-approved` required) regardless of branch
+- MERGE READY verdict on a feature branch → HQ merges to main (`git merge --no-ff`) or opens a PR. Never force-push to main.
+- MERGE READY on main is only acceptable for: hotfixes (single-file bug fix), doc-only changes (README, CHANGELOG, comments), or version bumps. Everything else requires a branch.
+- Branch naming: `feat/<slug>` for new features, `fix/<slug>` for bug fixes, `refactor/<slug>` for refactors, `chore/<slug>` for housekeeping
 
 ---
 
