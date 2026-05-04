@@ -1,16 +1,14 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "g-team",
-  "version": "0.1.0",
-  "description": "Multi-agent Claude Code plugin — planned execution, production architecture, enforced review.",
   "owner": {
     "name": "hllrm"
   },
   "plugins": [
     {
       "name": "g-team",
-      "source": "./",
-      "description": "Multi-agent Claude Code plugin — planned execution, production architecture, enforced review. 15 specialist agents and 6 skills.",
+      "source": ".",
+      "description": "Multi-agent Claude Code plugin - planned execution, production architecture, enforced review. 15 specialist agents and 6 skills.",
       "version": "0.1.0",
       "author": {
         "name": "hllrm"
