@@ -27,14 +27,22 @@
     ],
     "SubagentStart": [
       {
-        "type": "command",
-        "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/agent-lifecycle.sh start"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/agent-lifecycle.sh start"
+          }
+        ]
       }
     ],
     "SubagentStop": [
       {
-        "type": "command",
-        "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/agent-lifecycle.sh stop"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/agent-lifecycle.sh stop"
+          }
+        ]
       }
     ]
   }
