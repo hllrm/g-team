@@ -29,7 +29,7 @@ Check if `CLAUDE.md` exists at the project root.
 
 **Workflow (non-trivial tasks: ≥3 files, new feature, layer-boundary change, unclear bug)**:
 1. `/g-team plan` — decompose to atomic tasks, produce wave schedule, get approval
-2. Execute approved waves — agents implement, test, commit per spec; all independent tasks in one parallel wave
+2. `/g-team-execute` — runs the approved wave schedule; dispatches all Wave N tasks in parallel, holds boundary between waves. Never dispatch agents ad-hoc or via `superpowers:dispatching-parallel-agents`.
 3. `/g-team review` — code-lead verifies done conditions + full review pipeline → MERGE READY or HOLD
 4. Merge only after MERGE READY — never before
 
