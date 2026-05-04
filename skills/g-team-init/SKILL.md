@@ -270,7 +270,7 @@ G-Team initialized ✓
   ✓ ROADMAP.md — stub created (or already existed)
   ✓ milestones/M1.md — created (or already existed)
   ✓ todo.md — created (or already existed)
-  ✓ .claude/hooks/ — commit enforcement scripts installed
+  ✓ .claude/hooks/ — check-commit.sh and workflow-checkpoint.sh installed
   ✓ .claude/settings.json — hooks registered
 
 Next: run /g-team plan with your first feature request, or edit milestones/M1.md to define your scope.
