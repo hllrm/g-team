@@ -200,7 +200,7 @@ Once the developer approves (or amends and approves), write `project_brief.md` a
 - [Unresolved decisions that affect scope, stack, or sequencing]
 ```
 
-Tell the developer: "Brief locked. Run /g-team init to scaffold the project, then /g-team specialize to install the right architect agent — it will read this brief to identify your stack."
+Tell the developer: "Brief locked. Run /g-team init to scaffold the project — it will read this brief and then auto-trigger /g-team plan, /g-team execute, and /g-team review in sequence. After init completes, run /g-team specialize to install the right architect agent for your stack."
 
 ## Rules
 - Never write project_brief.md before the developer approves.

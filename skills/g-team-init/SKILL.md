@@ -173,6 +173,32 @@ REVIEW_APPROVED=false
 echo "[G-Team Workflow Checkpoint]"
 if [ -n "$PLAN_FILE" ]; then
     echo "  Active plan: $PLAN_FILE"
+
+    # Count total waves
+    TOTAL_WAVES=$(grep -c "^### Wave" "$PLAN_FILE" 2>/dev/null || echo 0)
+
+    # Find current wave: first wave not marked "complete" in the Progress table
+    # The Progress table rows look like: | 1 | complete | ... | or | 1 | pending | ... |
+    CURRENT_WAVE=$(awk '
+        /^\| Wave \| Status/ { in_table=1; next }
+        in_table && /^\|[[:space:]]*[0-9]/ {
+            # Extract wave number and status from table row
+            split($0, cols, "|")
+            wave = cols[2]; status = cols[3]
+            # Trim whitespace
+            gsub(/^[[:space:]]+|[[:space:]]+$/, "", wave)
+            gsub(/^[[:space:]]+|[[:space:]]+$/, "", status)
+            if (status != "complete") { print wave; exit }
+        }
+        in_table && /^[^|]/ { in_table=0 }
+    ' "$PLAN_FILE" 2>/dev/null)
+
+    # If no Progress table yet (or all complete), default to wave 1
+    if [ -z "$CURRENT_WAVE" ]; then
+        CURRENT_WAVE=1
+    fi
+
+    echo "  Wave: $CURRENT_WAVE of $TOTAL_WAVES"
 else
     echo "  Active plan: none — if this is a non-trivial task, run /g-team plan before any file changes"
 fi

@@ -47,11 +47,50 @@ Ready to execute? Reply 'approved' to begin, or describe changes.
 
 **Do not proceed without explicit developer approval.** If the developer requests changes, update the plan and re-present. Repeat until approved.
 
+## Step 4a — Save approved plan to disk
+
+Once the developer approves, immediately write the plan to `docs/plans/<feature-slug>.md` using the schema defined in the **Plan File Format** section below. Slugify the feature name for the filename (e.g. `user-auth-flow.md`). Create the `docs/plans/` directory if it does not exist. Do this before handing off to g-team-execute.
+
 ## Step 5 — On approval
 
 Once the developer approves, use Glob to find `skills/g-team-execute/SKILL.md` inside `~/.claude/plugins/cache/g-team/g-team/` and read it, then follow its instructions to run the waves.
 
 Do NOT use `superpowers:dispatching-parallel-agents` — wave execution in a g-team project goes through g-team-execute only.
+
+## Plan File Format
+
+All plans produced by this skill are saved to `docs/plans/<feature-slug>.md` immediately after developer approval (before execution begins). Use the feature name slugified as the filename (e.g. `user-auth-flow.md`).
+
+### Schema
+
+````markdown
+# Plan: [Feature Name]
+
+> Created: [date]
+
+## Tasks
+
+| # | Task | Scope | Done condition |
+|---|------|-------|----------------|
+| 1 | [task name] | [files/area] | [verifiable condition] |
+| 2 | ... | ... | ... |
+
+## Wave Schedule
+
+### Wave 1
+- Task 1 — [task name]
+- Task 2 — [task name]
+
+### Wave 2
+- Task 3 — [task name]
+
+## Progress
+
+| Wave | Status | Notes |
+|------|--------|-------|
+| 1 | pending / in progress / complete | |
+| 2 | pending | |
+````
 
 ## Rules
 - Never skip the approval gate.

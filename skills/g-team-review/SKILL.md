@@ -46,6 +46,21 @@ Present code-lead's verdict to the developer verbatim.
 - Write `.claude/g-team-approved` with content: `approved`
 - Tell the developer: "MERGE READY. Commit gate unlocked — you can now run git commit and merge."
 
+**Milestone close-out (MERGE READY only):**
+
+1. Read `todo.md` — identify tasks marked as done or the tasks being reviewed in this session.
+2. Read `ROADMAP.md` — find the current active milestone (look for `🚧 In progress`).
+3. Read the active milestone file from `milestones/` (e.g. `milestones/M1.md`). If the `milestones/` directory does not exist or no matching tasks are found, skip silently — do not report anything.
+4. For each task in the milestone's `## Scope` checklist that matches a completed task from this review, mark it `[x]`.
+5. If ALL scope items in the milestone are now `[x]`:
+   - Update the milestone status header to `✅ Done`
+   - Update the corresponding milestone entry in `ROADMAP.md` from `🚧 In progress` to `✅ Done`
+   - Move the milestone to the `## Done` section of `ROADMAP.md`
+   - Report: `✓ Milestone [ID — Name] closed out`
+6. If only some tasks are done:
+   - Save the partial updates to the milestone file
+   - Report: `✓ [N] milestone tasks checked off — [M] remaining`
+
 **If verdict is HOLD — FIX REQUIRED:**
 - Do NOT write `.claude/g-team-approved`
 - Tell the developer: "HOLD. Fix all blocking items listed above, then re-run /g-team review."
