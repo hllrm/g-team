@@ -2,11 +2,77 @@
 
 Four standard workflows built from G-Team agents. Each pattern shows which agents run, in what order, and what each one receives and returns.
 
+See also: [G-RULES.md §B–C](../G-RULES.md) for enforcement rules, and the individual SKILL.md files under `skills/`.
+
+---
+
+## Auto-Trigger Workflow
+
+Plan, execute, and review fire **automatically** — you do not need to type the commands for non-trivial tasks.
+
+After `/g-team init`, two hooks are installed in `.claude/settings.json`:
+
+**`workflow-checkpoint.sh`** (`UserPromptSubmit`) — fires on every message. Reports:
+- Whether an active plan exists in `docs/plans/`
+- The current wave number and total waves (read from the plan's Progress table)
+- Whether `.claude/g-team-approved` is set (commit gate state)
+
+Claude reads this output and auto-triggers the correct step:
+
+| Checkpoint output | Auto-trigger |
+|---|---|
+| No active plan + non-trivial task detected | `/g-team plan` |
+| Active plan with pending/in-progress wave | `/g-team execute` |
+| All waves complete, no sentinel | `/g-team review` |
+| `g-team-approved` present | Commit gate open — no action needed |
+
+**`check-commit.sh`** (`PreToolUse`) — blocks any `git commit` Bash call unless `.claude/g-team-approved` exists. Cleared automatically by `post-commit-cleanup.sh` (`PostToolUse`) after each successful commit.
+
+You can still invoke `/g-team plan`, `/g-team execute`, and `/g-team review` manually at any time.
+
+---
+
+## Plan File Format
+
+Approved plans are saved to `docs/plans/<feature-slug>.md` by `g-team-plan` immediately after developer approval (before execution begins).
+
+```markdown
+# Plan: [Feature Name]
+
+> Created: [date]
+
+## Tasks
+
+| # | Task | Scope | Done condition |
+|---|------|-------|----------------|
+| 1 | [task name] | [files/area] | [verifiable condition] |
+
+## Wave Schedule
+
+### Wave 1
+- Task 1 — [task name]
+- Task 2 — [task name]
+
+### Wave 2
+- Task 3 — [task name]
+
+## Progress
+
+| Wave | Status | Notes |
+|------|--------|-------|
+| 1 | pending | |
+| 2 | pending | |
+```
+
+The **Progress table** drives auto-resumption: `workflow-checkpoint.sh` reads it to find the first wave not marked `complete` and reports that as the current wave. `g-team-execute` uses the same table to determine the starting wave without prompting the developer (unless a wave is `in progress`, which requires confirmation).
+
+Status values: `pending` | `in progress` | `complete`.
+
 ---
 
 ## Pattern 1 — Feature Build
 
-**Trigger:** `/g-team plan` followed by wave execution.
+**Trigger:** `/g-team plan` — or auto-triggered when a non-trivial task is detected.
 
 **When to use:** Any non-trivial feature — three or more files, a new component, a layer-boundary change, or unclear scope.
 
@@ -24,22 +90,36 @@ Four standard workflows built from G-Team agents. Each pattern shows which agent
 
   └─ [approval gate — developer reviews and approves]
 
-Wave 1 (all tasks in parallel)
-  └─ [implement per task — agents or HQ]
-       each task: implement → test → commit
+  └─ plan saved to docs/plans/<feature-slug>.md
+       (Tasks table + Wave Schedule + Progress table, all waves set to "pending")
 
-Wave 2 (if dependencies exist)
-  └─ [dependent tasks implement]
+/g-team execute   [sole executor for all wave-based dispatch]
+  Wave 1 — all tasks dispatched in a SINGLE parallel message
+    └─ agent per task: implement → test
+         each agent: receives task, done condition, file scope, constraint
+         each agent: returns summary + whether done condition is met
+
+  [wave boundary held — Wave 2 does not start until Wave 1 complete]
+  [Progress table updated: Wave 1 → "complete"]
+
+  Wave 2 (if dependencies exist)
+    └─ dependent tasks dispatched in parallel
+
+  [BLOCKED signal on any task → stop, report, do not advance wave]
 
 /g-team review
   └─ code-lead (Opus)
        receives: diff, done conditions, branch name
        dispatches review-orchestrator →
-         code-reviewer (Opus)        — in parallel
-         security-auditor (Opus)     — in parallel
+         code-reviewer (Opus)         — in parallel
+         security-auditor (Opus)      — in parallel
          performance-auditor (Sonnet) — in parallel
          architecture-enforcer (Opus) — if layer boundaries touched
        returns: MERGE READY or HOLD with fix list
+
+  └─ on MERGE READY:
+       writes .claude/g-team-approved  (commit gate unlocked)
+       runs milestone close-out (see Pattern 2)
 ```
 
 **Example — adding user authentication:**
@@ -67,7 +147,7 @@ wave-planner returns:
 
 ## Pattern 2 — Full Review
 
-**Trigger:** `/g-team review`
+**Trigger:** `/g-team review` — or auto-triggered when all waves are complete.
 
 **When to use:** Before any merge. Non-negotiable — the commit gate is locked until MERGE READY.
 
@@ -76,7 +156,7 @@ wave-planner returns:
 ```
 /g-team review
   └─ [gather diff: git diff main...HEAD]
-  └─ [gather done conditions: from spec or milestone file]
+  └─ [gather done conditions: from docs/plans/*.md or milestones/ file]
 
   └─ code-lead (Opus)
        receives: diff, done conditions, branch name
@@ -107,6 +187,23 @@ wave-planner returns:
          MERGE READY  → skill writes .claude/g-team-approved
          HOLD         → prioritised fix list, no sentinel written
 ```
+
+**Milestone close-out (MERGE READY only):**
+
+On a MERGE READY verdict, `g-team-review` automatically:
+
+1. Reads `todo.md` to identify tasks completed in this session.
+2. Reads `ROADMAP.md` to find the active milestone (`🚧 In progress`).
+3. Reads the matching `milestones/<ID>.md` file.
+4. Checks off each completed task in the milestone's `## Scope` checklist.
+5. If **all** scope items are now `[x]`:
+   - Updates milestone status header to `✅ Done`
+   - Updates the ROADMAP.md entry from `🚧 In progress` to `✅ Done`
+   - Moves the milestone to the `## Done` section of ROADMAP.md
+   - Reports: `✓ Milestone [ID — Name] closed out`
+6. If only some tasks are done — saves partial updates, reports count remaining.
+
+If `milestones/` does not exist or no matching tasks are found, this step is skipped silently.
 
 **Verdict meanings:**
 
@@ -231,3 +328,20 @@ refactor-executor receives: spec
 refactor-executor returns: src/repositories/user.ts created, src/controllers/user.ts updated.
   Report: 3 methods moved, 1 import added, 1 import removed. Nothing outside scope touched.
 ```
+
+---
+
+## Hooks Reference
+
+Installed by `/g-team init` into `.claude/hooks/` and registered in `.claude/settings.json`.
+
+| Hook | Event | File | What it does |
+|------|-------|------|--------------|
+| `workflow-checkpoint.sh` | `UserPromptSubmit` | `.claude/hooks/workflow-checkpoint.sh` | Reports active plan path, current wave, and review-approved state on every message. Claude uses this to auto-trigger plan/execute/review. |
+| `check-commit.sh` | `PreToolUse` (Bash) | `.claude/hooks/check-commit.sh` | Blocks any `git commit` command unless `.claude/g-team-approved` exists. |
+| `post-commit-cleanup.sh` | `PostToolUse` (Bash) | `hooks/post-commit-cleanup.sh` | Deletes `.claude/g-team-approved` after a successful commit, resetting the gate. |
+| `agent-lifecycle.sh` | `SubagentStart` / `SubagentStop` | `hooks/agent-lifecycle.sh` | Logs agent start/stop events to `.claude/g-team-agent-log.jsonl` and echoes a status line to Claude. |
+
+**Sentinel file:** `.claude/g-team-approved` — written by `g-team-review` on MERGE READY, deleted by `post-commit-cleanup.sh` after commit. Its presence is the only condition that unlocks `git commit`.
+
+**Note:** `workflow-checkpoint.sh` and `check-commit.sh` are project-local (written to `.claude/hooks/` by `/g-team init`). The lifecycle and cleanup hooks ship with the plugin at `hooks/`.
