@@ -1,9 +1,12 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "g-team",
   "version": "0.1.0",
   "description": "Multi-agent Claude Code plugin - planned execution, production architecture, enforced review.",
   "author": {
     "name": "hllrm"
   },
+  "homepage": "https://github.com/hllrm/g-team",
+  "repository": "https://github.com/hllrm/g-team",
   "license": "GPL-3.0"
 }

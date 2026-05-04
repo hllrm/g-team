@@ -7,7 +7,7 @@
   "plugins": [
     {
       "name": "g-team",
-      "source": ".",
+      "source": "./",
       "description": "Multi-agent Claude Code plugin - planned execution, production architecture, enforced review. 15 specialist agents and 6 skills.",
       "version": "0.1.0",
       "author": {
