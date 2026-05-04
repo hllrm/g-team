@@ -46,6 +46,21 @@ All three steps are mandatory. Skipping any requires explicit developer override
 
 **If it exists:** Read it. If the text `<!-- G-Team Rules` is not present, append the G-Team Rules block (from `<!-- G-Team Rules` to `<!-- End G-Team Rules -->`) at the end of the file.
 
+## Step 2a — Install G-RULES.md
+
+Copy `[plugin-root]/G-RULES.md` to the project root as `G-RULES.md`.
+
+The plugin root is `~/.claude/plugins/cache/g-team/g-team/` (use Glob to confirm the exact path).
+
+If `G-RULES.md` already exists at the project root, overwrite it — it is g-team managed.
+
+Then ensure `CLAUDE.md` contains a reference to it. Add this line near the top of CLAUDE.md (after the title, before any other content) if not already present:
+```
+@G-RULES.md
+```
+
+Report: `✓ G-RULES.md — installed`
+
 ## Step 3 — Create ROADMAP.md
 
 Create `ROADMAP.md` if it does not exist:
@@ -269,6 +284,7 @@ After all steps, report:
 G-Team initialized ✓
 
   ✓ CLAUDE.md — G-Team rules injected
+  ✓ G-RULES.md — installed
   ✓ ROADMAP.md — stub created (or already existed)
   ✓ milestones/M1.md — created (or already existed)
   ✓ todo.md — created (or already existed)

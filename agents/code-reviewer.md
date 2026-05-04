@@ -16,6 +16,14 @@ A set of changed files or a git diff.
 - **DRY violations**: identical or near-identical logic in two or more places
 - **Edge cases**: null/undefined inputs not handled, empty collections, boundary values missing
 - **Production reliability**: missing error handling at system boundaries (user input, external APIs), silent failures, unhandled promise rejections
+- **Design pattern anti-patterns** (flag these by default):
+  - *God object*: a class or module that owns too many unrelated responsibilities
+  - *Prop drilling*: passing data through 3+ layers that don't use it — should use context, events, or a store
+  - *Business logic in UI*: domain logic (validation, calculation, state transitions) living in view/render code
+  - *Mutable module-level state*: mutable variables at module scope shared across callers
+  - *Premature abstraction*: an abstraction layer with only one implementation and no imminent second use
+  - *Magic values*: bare literal strings/numbers with no named constant or explanation
+  - *Catch-and-continue*: catching an exception and silently swallowing it or logging without re-throwing
 
 ## Output format
 

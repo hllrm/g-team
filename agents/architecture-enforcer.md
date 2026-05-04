@@ -12,6 +12,8 @@ A set of changed files, or a description of the proposed change with the project
 
 ## What to check
 - **Import direction violations**: imports must flow in one direction through the layer hierarchy. If the project defines layers (e.g., pages → organisms → molecules → atoms, or controllers → services → repositories), a lower layer importing from a higher layer is a violation.
+- **Circular dependencies**: module A imports B which imports A (directly or transitively). Flag any cycle regardless of layer.
+- **God object violations**: a single class or module that owns data, business logic, UI coordination, and I/O — more than two distinct responsibilities is a violation.
 - **SRP violations**: a single file handling two distinct responsibilities (e.g., a UI component that also fetches data directly)
 - **State ownership violations**: state mutated from a layer that doesn't own it (e.g., a component directly mutating a store's internal state without going through an action)
 - **Side-effect boundary violations**: I/O operations (HTTP, file system, external APIs) outside the designated side-effect layer (e.g., fetch() called directly in a component instead of a service/composable)

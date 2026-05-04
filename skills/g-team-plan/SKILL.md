@@ -55,8 +55,6 @@ Once the developer approves, immediately write the plan to `docs/plans/<feature-
 
 Once the developer approves, use Glob to find `skills/g-team-execute/SKILL.md` inside `~/.claude/plugins/cache/g-team/g-team/` and read it, then follow its instructions to run the waves.
 
-Do NOT use `superpowers:dispatching-parallel-agents` — wave execution in a g-team project goes through g-team-execute only.
-
 ## Plan File Format
 
 All plans produced by this skill are saved to `docs/plans/<feature-slug>.md` immediately after developer approval (before execution begins). Use the feature name slugified as the filename (e.g. `user-auth-flow.md`).

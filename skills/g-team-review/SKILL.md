@@ -21,7 +21,7 @@ If both are empty, ask the developer: "What branch or commit range should I revi
 ## Step 2 — Gather done conditions
 
 Check for done conditions in this order:
-1. The relevant spec file (typically `docs/superpowers/plans/*.md` or a spec mentioned by the developer)
+1. The relevant plan file (check `docs/plans/` for the most recent `.md` file, or a spec mentioned by the developer)
 2. The current milestone file in `milestones/`
 3. Ask the developer: "What are the done conditions for this implementation?"
 

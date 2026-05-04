@@ -4,6 +4,53 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.0] — 2026-05-04
+
+### Added
+
+- Section F — Design Patterns in `G-RULES.md`: 6 universal principles (composition over inheritance, explicit over implicit, YAGNI, fail-fast at boundaries, observer/event-driven, state machine for discrete modes) and 8 anti-patterns refused by default
+- Object pooling and state machine architecture rules in all 5 game-dev profiles: `unity`, `godot-gdscript`, `godot-csharp`, `unreal`, `cpp-cmake`
+- `G-RULES.md` now installed per-project by `/g-team init` (Step 2a) — `@G-RULES.md` reference added to `CLAUDE.md`
+- `/g-team update` now refreshes per-project `G-RULES.md` from plugin (Step 3a)
+- `/g-team doctor` — 7-point health check: hooks installed, all hooks registered in settings.json, G-Team Rules block present, no stale sentinel, milestone alignment
+
+### Fixed
+
+- `g-team-kickoff` Step 7: removed false claim that `/g-team init` auto-triggers plan/execute/review in sequence
+- `g-team-review` Step 2: fixed stale path `docs/superpowers/plans/*.md` → `docs/plans/`
+- `g-team-plan` Step 5: removed user-facing reference to `superpowers:dispatching-parallel-agents`
+- `code-reviewer` agent: added Section F anti-patterns to "What to look for" (god object, prop drilling, business logic in UI, mutable state, premature abstraction, magic values, catch-and-continue)
+- `architecture-enforcer` agent: added circular dependency detection and god object violation checks
+- `go-fiber` architect agent filename collision with `go-gin` profile (renamed to `go-fiber-architect.md`)
+- `g-team-update` Step 7: now verifies and adds UserPromptSubmit hook in settings.json when `workflow-checkpoint.sh` already exists
+- `marketplace.json`: corrected agent and skill counts
+
+### Changed
+
+- README fully rewritten for 0.3.0: G-RULES.md section, Section F callout, game-dev profile notes, all 3 commit hooks documented, complete skills and agents tables
+
+## [0.2.8] — 2026-05-04
+
+### Fixed
+
+- `g-team-execute` Step 4: now immediately invokes `/g-team review` via Glob+Read after all waves complete (was previously a print suggestion only)
+- `g-team-execute` rules: explicit prohibition on instructing subagents to run `git commit`
+- `g-team-execute` Step 2: wave auto-detection now reads Progress table in plan file (4 rules: absent/all-pending→Wave1, all-complete→stop, in-progress→confirm, mix→auto-resume)
+- G-RULES.md Section B: added commit prohibition to hard stops; updated auto-trigger language
+
+## [0.2.7] — 2026-05-04
+
+### Added
+
+- `/g-team doctor` skill — 7-point health check with ✓/✗ per check and fix instructions
+- CHANGELOG.md — change history tracking from 0.1.0
+
+### Fixed
+
+- `g-team-help`: added missing "Review pending" workflow phase; 7th source is git branch; `/g-team help` added to All commands table
+- `g-team-brief`: added missing announce line; guard check moved to top of Step 1
+- `g-team-plan`: Progress table initial values corrected to `pending`
+
 ## [0.2.6] — 2026-05-04
 
 ### Added

@@ -43,6 +43,9 @@ Read and record:
 **.claude/hooks/workflow-checkpoint.sh:**
 - Note if present.
 
+**G-RULES.md:**
+- Note if present at project root.
+
 Present a summary:
 ```
 Installed g-team content:
@@ -54,6 +57,7 @@ Installed g-team content:
   .claude/agents/:         [vue-architect.md, fastapi-architect.md, ... / none]
   .claude/rules/:          [architecture-vue-pinia.md, ... / none]
   .claude/hooks/:          [check-commit.sh present / not found] [workflow-checkpoint.sh present / not found]
+  G-RULES.md:              [present / not found]
 ```
 
 Ask: **"Ready to update all of the above to the current plugin version? (y/n)"**
@@ -81,6 +85,17 @@ Read `CLAUDE.md`. Find the same marker block. Replace it entirely with the extra
 If the marker is not present in CLAUDE.md, append the block at the end of the file.
 
 Report: `✓ CLAUDE.md — G-Team Rules updated`
+
+---
+
+## Step 3a — Update G-RULES.md
+
+Read `[plugin-root]/G-RULES.md`.
+
+If `G-RULES.md` exists at the project root: overwrite it with the plugin version.
+If it does not exist: copy it from the plugin. Also ensure `CLAUDE.md` has `@G-RULES.md` near the top.
+
+Report: `✓ G-RULES.md — realigned`
 
 ---
 
@@ -155,6 +170,7 @@ Read `[plugin-root]/skills/g-team-init/SKILL.md` once. Extract each hook script'
 g-team update complete ✓
 
   ✓ CLAUDE.md — G-Team Rules realigned
+  ✓ G-RULES.md — realigned
   ✓ CLAUDE.md — vue-pinia architecture rules realigned
   ✓ .claude/agents/vue-architect.md — realigned
   ✓ .claude/hooks/check-commit.sh — realigned
