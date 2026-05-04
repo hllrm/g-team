@@ -20,9 +20,7 @@ Attempt to read each of the following files from the current working directory. 
 4. `.claude/g-team-approved` — presence indicates the commit gate is open
 5. `.claude/hooks/workflow-checkpoint.sh` — presence indicates workflow hooks are installed
 6. `project_brief.md` — presence indicates the project has been onboarded or kicked off
-7. `CLAUDE.md` — check whether a `## G-Team Rules` (or similar G-Team Rules block) is present
-
-Also run `git branch --show-current` (or equivalent) to detect the current branch, if git is available.
+7. Current git branch — run `git branch --show-current` via Bash (skip gracefully if git is unavailable)
 
 ## Step 3 — Determine project name
 
@@ -39,6 +37,7 @@ Apply the following rules in order (first match wins):
 | `CLAUDE.md` exists but has no G-Team Rules block | Not initialized |
 | G-Team Rules block exists, no plan file found in `docs/plans/` | Initialized |
 | Plan file exists AND `.claude/g-team-approved` is absent AND `todo.md` shows tasks remaining | Execution in progress |
+| Plan file exists AND `.claude/g-team-approved` is absent AND `todo.md` shows all tasks done | Review pending |
 | Plan file exists AND `.claude/g-team-approved` is absent | Active plan |
 | `.claude/g-team-approved` exists | Ready to merge |
 
@@ -89,6 +88,7 @@ All commands:
   /g-team brief       — refresh project_brief.md as project evolves
   /g-team status      — quick one-line state snapshot
   /g-team update      — realign all g-team files to current plugin version
+  /g-team help        — context-aware help: assess project state and next step
 ```
 
 ## Rules

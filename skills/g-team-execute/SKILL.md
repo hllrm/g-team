@@ -25,17 +25,20 @@ Read the plan file fully. Extract:
 
 ## Step 2 — Determine starting wave
 
-If `$ARGUMENTS` is a number (e.g. `/g-team execute 2`), start from that wave.
+If `$ARGUMENTS` is a number (e.g. `/g-team execute 2`), start from that wave. No confirmation needed.
 
-Otherwise, scan the plan for tasks already marked done or merged. If some waves are clearly complete, confirm with the developer:
+Otherwise, look for the `## Progress` table in the plan file and apply the first matching rule:
 
-```
-Wave 1 appears complete (all tasks marked done). Starting from Wave 2?
-Tasks: [list Wave 2 tasks]
-(y/n)
-```
-
-Wait for confirmation before proceeding if resuming. If starting fresh, proceed directly to Step 3.
+1. **Table absent or all rows say `pending`** → start from Wave 1. No confirmation needed.
+2. **All waves are `complete`** → tell the developer: "All waves already complete. Run /g-team review." and stop.
+3. **A wave is marked `in progress`** → that wave is the candidate starting wave. Confirm with the developer before proceeding:
+   ```
+   Wave [N] is marked in progress. Resume from Wave [N]?
+   Tasks: [list Wave N tasks]
+   (y/n)
+   ```
+   Wait for confirmation before continuing.
+4. **Mix of `complete` and `pending` (no `in progress`)** → start from the first wave whose status is not `complete`. Announce: "Resuming from Wave [N] (Wave 1–[N-1] complete)." No confirmation needed.
 
 ## Step 3 — Execute waves
 
@@ -78,7 +81,11 @@ For each agent result:
   Do not proceed to the next wave.
 - **Partial / unclear** → flag it but continue unless it affects a dependency
 
-After all tasks in the wave complete without blockers, announce:
+After all tasks in the wave complete without blockers:
+
+1. **Update the Progress table** in the plan file: find the row for Wave N in the `## Progress` table and change its status from `pending` or `in progress` to `complete`. If the plan file or Progress table doesn't exist, skip silently.
+
+2. Announce:
 ```
 ✓ Wave [N] complete. Proceeding to Wave [N+1].
 ```

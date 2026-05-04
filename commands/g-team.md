@@ -1,6 +1,6 @@
 ---
-description: G-Team workflow commands. Subcommands: help, status, init, kickoff, onboard, brief, plan, execute, review, specialize, update.
-argument-hint: <help|status|init|kickoff|onboard|brief|plan|execute|review|specialize|update> [args]
+description: G-Team workflow commands. Subcommands: help, status, doctor, init, kickoff, onboard, brief, plan, execute, review, specialize, update.
+argument-hint: <help|status|doctor|init|kickoff|onboard|brief|plan|execute|review|specialize|update> [args]
 ---
 
 Route to the correct skill file based on the subcommand in $ARGUMENTS.
@@ -9,6 +9,7 @@ For each subcommand, use Glob to find the corresponding SKILL.md inside `~/.clau
 
 - `help`       → `skills/g-team-help/SKILL.md`
 - `status`     → `skills/g-team-status/SKILL.md`
+- `doctor`     → `skills/g-team-doctor/SKILL.md`
 - `init`       → `skills/g-team-init/SKILL.md`
 - `kickoff`    → `skills/g-team-kickoff/SKILL.md`
 - `onboard`    → `skills/g-team-onboard/SKILL.md`
@@ -22,6 +23,7 @@ For each subcommand, use Glob to find the corresponding SKILL.md inside `~/.clau
 If $ARGUMENTS is empty or unrecognized, list available subcommands:
   - `help` — show current project state and next recommended action
   - `status` — quick one-line workflow snapshot (milestone, plan, review gate)
+  - `doctor` — validate project setup health (hooks, settings, CLAUDE.md, milestone alignment)
   - `init` — scaffold CLAUDE.md, ROADMAP.md, milestones/, todo.md, and commit hooks
   - `kickoff` — interview about goals and stack; produce project_brief.md
   - `onboard` — onboard onto an existing codebase; produce project_brief.md

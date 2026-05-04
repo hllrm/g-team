@@ -8,7 +8,7 @@
     {
       "name": "g-team",
       "source": "./",
-      "description": "Multi-agent Claude Code plugin - planned execution, production architecture, enforced review. 15 specialist agents, 6 skills, 44 stack profiles.",
+      "description": "Multi-agent Claude Code plugin - planned execution, production architecture, enforced review. 16 agents, 11 skills, 44 stack profiles.",
       "version": "0.2.6",
       "author": {
         "name": "hllrm"
