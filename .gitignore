@@ -2,6 +2,6 @@
 Thumbs.db
 *.local
 .env
-.claude/settings.local.json
+.claude/
 .worktrees/
 G-RULES.md
