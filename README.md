@@ -16,14 +16,55 @@ G-Team installs a structured development workflow into any Claude Code project: 
 
 ### Install the plugin
 
-Run this in any Claude Code session:
+#### Via Claude Code (any interface)
+
+The `/plugin` commands work in every Claude Code interface — CLI, desktop app, VS Code, and JetBrains. Open a Claude Code session and run:
 
 ```bash
 /plugin marketplace add hllrm/g-team
 /plugin install g-team
 ```
 
+- **CLI:** open a terminal and run `claude`, then type the commands
+- **Desktop app (Mac/Windows):** open Claude Code → start a conversation → type the commands
+- **VS Code:** open the Command Palette → `Claude: Open Chat` → type the commands
+- **JetBrains:** open the Claude tool window → type the commands
+
 All 15 G-Team agents and 6 skills become available globally across all your projects.
+
+#### Manual install (no plugin system)
+
+If you prefer to install directly without the `/plugin` commands:
+
+```bash
+# 1. Clone the repo into Claude's plugin cache
+#    Mac/Linux:
+git clone https://github.com/hllrm/g-team.git \
+  ~/.claude/plugins/cache/hllrm/g-team/0.1.0
+
+#    Windows (PowerShell):
+git clone https://github.com/hllrm/g-team.git `
+  "$env:USERPROFILE\.claude\plugins\cache\hllrm\g-team\0.1.0"
+```
+
+Then register it by adding this entry to `~/.claude/plugins/installed_plugins.json` (Windows: `%USERPROFILE%\.claude\plugins\installed_plugins.json`) inside the `"plugins"` object:
+
+```json
+"g-team@hllrm": [
+  {
+    "scope": "user",
+    "installPath": "/home/<you>/.claude/plugins/cache/hllrm/g-team/0.1.0",
+    "version": "0.1.0",
+    "installedAt": "<current ISO timestamp>",
+    "lastUpdated": "<current ISO timestamp>",
+    "gitCommitSha": ""
+  }
+]
+```
+
+Replace `installPath` with the absolute path where you cloned the repo (use backslashes on Windows). Restart Claude Code after editing the file.
+
+To update manually: `git pull` inside the cloned directory.
 
 ### Verify
 
