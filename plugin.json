@@ -1,9 +1,0 @@
-{
-  "name": "g-team",
-  "version": "0.1.0",
-  "description": "Multi-agent Claude Code plugin — planned execution, production architecture, enforced review.",
-  "author": {
-    "name": "hllrm"
-  },
-  "license": "GPL-3.0"
-}
