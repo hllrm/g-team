@@ -154,7 +154,10 @@ Read `[plugin-root]/skills/g-team-init/SKILL.md` once. Extract each hook script'
 
 **check-commit.sh:** If `.claude/hooks/check-commit.sh` exists, replace with the extracted content. Report: `✓ .claude/hooks/check-commit.sh — updated`. If not present, skip silently.
 
-**post-commit-cleanup.sh:** If `.claude/hooks/post-commit-cleanup.sh` exists, replace with the extracted content. Report: `✓ .claude/hooks/post-commit-cleanup.sh — updated`. If not present, skip silently.
+**post-commit-cleanup.sh:** Two cases:
+
+- **File exists:** Replace with the extracted content. Report: `✓ .claude/hooks/post-commit-cleanup.sh — updated`.
+- **File does not exist:** Create it (along with `.claude/hooks/` if needed), write the content, and register the `PostToolUse` hook in `.claude/settings.json` if not already present (same merge-not-overwrite pattern as other hooks). Report: `✓ .claude/hooks/post-commit-cleanup.sh — created and registered`.
 
 **workflow-checkpoint.sh:** Two cases:
 

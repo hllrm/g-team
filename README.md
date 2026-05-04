@@ -174,7 +174,7 @@ rm .claude/hooks/check-commit.sh   # removes the gate for this project
 |-------|-------------|
 | `/g-team help` | Context-aware state reader — detects current phase and outputs next action + full command reference |
 | `/g-team status` | Fast structured snapshot: milestone · active plan/wave · review gate · handoff line |
-| `/g-team doctor` | 7-point health check: hooks installed, hooks registered in settings.json, G-Team Rules block, no stale sentinel, milestone alignment — ✓/✗ with fix instructions |
+| `/g-team doctor` | 9-point health check: all 3 hooks installed, all hooks registered in settings.json, G-Team Rules block, G-RULES.md present and referenced, no stale sentinel — ✓/✗ with fix instructions |
 | `/g-team kickoff` | Interview → scope challenge → stack deep dive → project_brief.md |
 | `/g-team onboard` | Read existing repo → present findings → interview → optional architecture audit → project_brief.md |
 | `/g-team brief` | Refresh project_brief.md incrementally — reads current state, targeted Q&A, no full re-onboard |
@@ -284,9 +284,9 @@ Quick reference for the most common workflows.
 /g-team status       Fast structured snapshot — no narrative, just facts:
                      Milestone · Active plan + wave · Review gate · Handoff line
 
-/g-team doctor       7-point health check — hooks installed, all three hooks wired in
-                     settings.json, G-Team Rules block in CLAUDE.md, no stale
-                     sentinel, milestone files aligned with ROADMAP.md
+/g-team doctor       9-point health check — all 3 hooks installed, all hooks wired in
+                     settings.json, G-Team Rules block in CLAUDE.md, G-RULES.md
+                     present and referenced, no stale sentinel
                      Reports ✓/✗ per check with a one-line fix instruction
 ```
 

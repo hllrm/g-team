@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.1] — 2026-05-04
+
+### Added
+
+- `g-team-doctor` expanded from 7 to 9 checks: added `post-commit-cleanup.sh` hook check, `G-RULES.md` present check, `@G-RULES.md` referenced in `CLAUDE.md` check
+
+### Fixed
+
+- `g-team-update`: `post-commit-cleanup.sh` now created and registered if missing (previously skipped silently — pre-0.3.0 projects would never get it installed)
+- `g-team-doctor` check 4 fix instruction: now correctly references `/g-team init` as well as `/g-team update`
+- `g-team-doctor` check 5 fix instruction: corrected from "Run `/g-team update`" to "Run `/g-team init` or `/g-team update`"
+- ROADMAP.md: updated to reflect M6-M8 milestones (was stale at M1-M5 only)
+
 ## [0.3.0] — 2026-05-04
 
 ### Added
