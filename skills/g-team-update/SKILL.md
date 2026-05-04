@@ -40,6 +40,9 @@ Read and record:
 **.claude/hooks/check-commit.sh:**
 - Note if present.
 
+**.claude/hooks/workflow-checkpoint.sh:**
+- Note if present.
+
 Present a summary:
 ```
 Installed g-team content:
@@ -50,7 +53,7 @@ Installed g-team content:
 
   .claude/agents/:         [vue-architect.md, fastapi-architect.md, ... / none]
   .claude/rules/:          [architecture-vue-pinia.md, ... / none]
-  .claude/hooks/:          [check-commit.sh present / not found]
+  .claude/hooks/:          [check-commit.sh present / not found] [workflow-checkpoint.sh present / not found]
 ```
 
 Ask: **"Ready to update all of the above to the current plugin version? (y/n)"**
@@ -130,17 +133,15 @@ Report: `✓ .claude/rules/[filename] — updated` for each updated file.
 
 ---
 
-## Step 7 — Update commit hooks
+## Step 7 — Update hook scripts
 
-If `.claude/hooks/check-commit.sh` exists:
+Read `[plugin-root]/skills/g-team-init/SKILL.md` once. Extract each hook script's content from the code blocks in the init skill.
 
-Read `[plugin-root]/skills/g-team-init/SKILL.md`. Extract the check-commit.sh content (the block between the two shell script markers in the init skill).
+**check-commit.sh:** If `.claude/hooks/check-commit.sh` exists, replace with the extracted content. Report: `✓ .claude/hooks/check-commit.sh — updated`. If not present, skip silently.
 
-Replace `.claude/hooks/check-commit.sh` with the extracted content.
+**post-commit-cleanup.sh:** If `.claude/hooks/post-commit-cleanup.sh` exists, replace with the extracted content. Report: `✓ .claude/hooks/post-commit-cleanup.sh — updated`. If not present, skip silently.
 
-Report: `✓ .claude/hooks/check-commit.sh — updated`
-
-If the file doesn't exist, skip silently.
+**workflow-checkpoint.sh:** If `.claude/hooks/workflow-checkpoint.sh` exists, replace with the extracted content. Report: `✓ .claude/hooks/workflow-checkpoint.sh — updated`. If not present, create it (along with `.claude/hooks/` if needed), write the content, and also register the `UserPromptSubmit` hook in `.claude/settings.json` if it isn't already present. Report: `✓ .claude/hooks/workflow-checkpoint.sh — created and registered`.
 
 ---
 
@@ -153,6 +154,7 @@ g-team update complete ✓
   ✓ CLAUDE.md — vue-pinia architecture rules realigned
   ✓ .claude/agents/vue-architect.md — realigned
   ✓ .claude/hooks/check-commit.sh — realigned
+  ✓ .claude/hooks/workflow-checkpoint.sh — realigned
   [skipped] .claude/rules/my-custom-rules.md — not g-team managed
 
 All g-team-managed content is now at plugin version [read version from plugin-root/.claude-plugin/plugin.json].

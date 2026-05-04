@@ -27,11 +27,12 @@ Check if `CLAUDE.md` exists at the project root.
 
 **Models**: Haiku for reads/search · Sonnet for implementation · Opus only after 2 failed attempts on the same task.
 
-**Workflow (non-trivial tasks: ≥3 files, new feature, layer-boundary change, unclear bug)**:
-1. `/g-team plan` — decompose to atomic tasks, produce wave schedule, get approval
-2. `/g-team-execute` — runs the approved wave schedule; dispatches all Wave N tasks in parallel, holds boundary between waves. Never dispatch agents ad-hoc or via `superpowers:dispatching-parallel-agents`.
-3. `/g-team review` — code-lead verifies done conditions + full review pipeline → MERGE READY or HOLD
-4. Merge only after MERGE READY — never before
+**Workflow — auto-triggered, no command needed**:
+Claude detects task complexity and initiates the workflow automatically — never wait for the user to type a command:
+- Non-trivial task? (≥3 files, new feature, layer-boundary change, unclear bug, public API change) → run `/g-team plan` before any file changes
+- Plan approved → run `/g-team execute` to dispatch waves
+- Implementation complete / user wants to merge → run `/g-team review`
+All three steps are mandatory. Skipping any requires explicit developer override.
 
 **Agent discipline**: HQ orchestrates only — dispatches agents, collects results, integrates. Never does grunt work an agent can do. Hard limit: 7 agents per task.
 
@@ -154,6 +155,34 @@ if echo "$CMD" | grep -q "git commit"; then
 fi
 ```
 
+Write `.claude/hooks/workflow-checkpoint.sh` with this exact content:
+
+```bash
+#!/bin/bash
+# G-Team workflow checkpoint — UserPromptSubmit hook.
+# Outputs current workflow state so Claude can auto-trigger the right step.
+
+PLAN_FILE=""
+if [ -d "docs/plans" ]; then
+    PLAN_FILE=$(ls -t docs/plans/*.md 2>/dev/null | head -1)
+fi
+
+REVIEW_APPROVED=false
+[ -f ".claude/g-team-approved" ] && REVIEW_APPROVED=true
+
+echo "[G-Team Workflow Checkpoint]"
+if [ -n "$PLAN_FILE" ]; then
+    echo "  Active plan: $PLAN_FILE"
+else
+    echo "  Active plan: none — if this is a non-trivial task, run /g-team plan before any file changes"
+fi
+if [ "$REVIEW_APPROVED" = true ]; then
+    echo "  Review: approved (commit gate open)"
+else
+    echo "  Review: not yet approved — run /g-team review before merging"
+fi
+```
+
 ## Step 7 — Register hooks in .claude/settings.json
 
 Read `.claude/settings.json` if it exists. If it does not exist, start with `{}`.
@@ -163,6 +192,17 @@ Add the following hook entries under the `hooks` key. If `hooks` already exists,
 ```json
 {
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/workflow-checkpoint.sh",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash",
