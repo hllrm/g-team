@@ -25,7 +25,7 @@ G-Team installs a structured development workflow into any Claude Code project: 
 /plugin install g-team
 ```
 
-All 16 G-Team agents, 8 skills, and 44 stack profiles become available globally across all your projects.
+All 16 G-Team agents, 11 skills, and 44 stack profiles become available globally across all your projects.
 
 #### Desktop app, VS Code, JetBrains
 
@@ -53,7 +53,7 @@ This loads G-Team for that session only. Re-run with `--plugin-dir` each time, o
 
 ### Verify
 
-Type `/g-team` in any Claude Code session. You should see: `kickoff`, `onboard`, `init`, `plan`, `execute`, `review`, `specialize`, `update`.
+Type `/g-team` in any Claude Code session. You should see: `help`, `status`, `kickoff`, `onboard`, `init`, `brief`, `plan`, `execute`, `review`, `specialize`, `update`.
 
 ### Set up a new project
 
@@ -127,15 +127,27 @@ Quick reference for the most common workflows.
 /g-team specialize   Reads project_brief.md → installs architect agent + rules
 ```
 
+### Where am I?
+
+```
+/g-team help         Reads project state (todo.md, ROADMAP.md, plan files, hooks)
+                     Detects current phase and outputs one clear next action
+                     + full command reference
+
+/g-team status       Fast structured snapshot — no narrative, just facts:
+                     Milestone · Active plan + wave · Review gate · Handoff line
+```
+
 ### Planning a feature
 
-`/g-team plan`, `/g-team execute`, and `/g-team review` are **auto-triggered** — Claude detects task complexity and initiates them without you typing the commands. The `workflow-checkpoint.sh` hook fires on every message and reports current state; the G-Rules tell Claude what to do with it.
+`/g-team plan`, `/g-team execute`, and `/g-team review` are **auto-triggered** — Claude detects task complexity and initiates them without you typing the commands. The `workflow-checkpoint.sh` hook fires on every message and reports current state (including active wave progress); the G-Rules tell Claude what to do with it.
 
 You can still invoke them manually if needed:
 
 ```
 /g-team plan         Dispatches task-decomposer → wave-planner
                      Presents wave schedule for approval
+                     Saves approved plan to docs/plans/<feature-slug>.md
                      On approval: hands off to /g-team execute
 
 /g-team execute      Dispatches all Wave 1 tasks in parallel, waits for completion
@@ -146,6 +158,15 @@ You can still invoke them manually if needed:
 /g-team review       Run after all waves complete, before committing
                      Dispatches code-lead → review-orchestrator → parallel reviewers
                      Issues MERGE READY or HOLD with fix list
+                     On MERGE READY: auto-closes completed milestone tasks in ROADMAP.md
+```
+
+### Keeping the brief current
+
+```
+/g-team brief        Refresh project_brief.md as the project evolves
+                     Reads current ROADMAP.md, todo.md, recent git log
+                     Asks at most 4 targeted questions — no full re-onboard
 ```
 
 ### Day-to-day commit flow
@@ -196,13 +217,16 @@ git push
 
 | Skill | What it does |
 |-------|-------------|
+| `/g-team help` | Context-aware state reader — detects current phase and outputs next action + full command reference |
+| `/g-team status` | Fast structured snapshot: milestone · active plan/wave · review gate · handoff line |
 | `/g-team kickoff` | Interview → scope challenge → stack deep dive → project_brief.md |
 | `/g-team onboard` | Read existing repo → present findings → interview → optional architecture audit → project_brief.md |
+| `/g-team brief` | Refresh project_brief.md incrementally — reads current state, targeted Q&A, no full re-onboard |
 | `/g-team init` | Scaffold CLAUDE.md, ROADMAP.md, milestones/, commit enforcement hooks |
 | `/g-team specialize [stack]` | Detect stack from brief + deps → install architect agent + rules |
-| `/g-team plan` | task-decomposer → wave-planner → approval gate |
+| `/g-team plan` | task-decomposer → wave-planner → approval gate → saves plan to docs/plans/ |
 | `/g-team execute [wave]` | Dispatch parallel agents per wave; hold boundary until each wave completes; resume from a specific wave |
-| `/g-team review` | code-lead → full review pipeline → MERGE READY or HOLD |
+| `/g-team review` | code-lead → full review pipeline → MERGE READY or HOLD → auto-closes milestone tasks |
 | `/g-team update` | Realign all g-team-managed files (CLAUDE.md rules, agents, architecture rules, hooks) to the current plugin version |
 
 ---
@@ -236,7 +260,7 @@ git push
 
 Installed per-project by `/g-team specialize`. Each profile adds a stack-specific architect agent and appends architecture rules to `CLAUDE.md`. Once installed, the agent is project-native — no plugin required.
 
-44 profiles ship with 0.2.0. Auto-detected from your project's dependency files when you run `/g-team specialize`.
+44 profiles ship with the plugin. Auto-detected from your project's dependency files when you run `/g-team specialize`.
 
 **Web Frontend**
 `react` · `next-js` · `nuxt` · `vue-pinia` · `sveltekit` · `angular` · `astro` · `remix`
@@ -289,12 +313,20 @@ Existing project:
 /g-team onboard     →   project_brief.md  (current state + planned work)
 
 Then for both:
-/g-team init        →   scaffolded project + commit gate
+/g-team init        →   scaffolded project + commit gate + workflow hooks
 /g-team specialize  →   stack architect agent + architecture rules
-/g-team plan        →   approved wave schedule
+
+Day-to-day (auto-triggered — no command needed):
+/g-team plan        →   approved wave schedule  →  saved to docs/plans/
 /g-team execute     →   parallel agent swarming, wave by wave
-/g-team review      →   MERGE READY or HOLD
+/g-team review      →   MERGE READY or HOLD  →  milestone tasks auto-closed
 git commit          →   gate clears, sentinel removed
+
+Project hygiene:
+/g-team brief       →   refresh project_brief.md as project evolves
+/g-team help        →   where am I + what to do next
+/g-team status      →   fast state snapshot
+/g-team update      →   pull latest G-Team rules into this project
 ```
 
 Full orchestration pattern reference: [docs/orchestration-patterns.md](docs/orchestration-patterns.md)
@@ -310,3 +342,4 @@ Full orchestration pattern reference: [docs/orchestration-patterns.md](docs/orch
 | M3 — Skills & Orchestration | ✅ Done |
 | M4 — Stack Profiles | ✅ Done |
 | M5 — Publish | ✅ Done |
+| M6 — Auto-trigger & Project Hygiene | ✅ Done |
