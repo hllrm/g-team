@@ -49,11 +49,9 @@ Ready to execute? Reply 'approved' to begin, or describe changes.
 
 ## Step 5 — On approval
 
-Once the developer approves, invoke the `g-team:g-team-execute` skill to run the waves.
+Once the developer approves, use Glob to find `skills/g-team-execute/SKILL.md` inside `~/.claude/plugins/cache/g-team/g-team/` and read it, then follow its instructions to run the waves.
 
-Do NOT invoke `superpowers:dispatching-parallel-agents` — wave execution in a g-team project is handled exclusively by `g-team-execute`.
-
-If the skill content does not load, use Glob to find `skills/g-team-execute/SKILL.md` inside `~/.claude/plugins/cache/g-team/g-team/` and read it directly, then follow its instructions.
+Do NOT use `superpowers:dispatching-parallel-agents` — wave execution in a g-team project goes through g-team-execute only.
 
 ## Rules
 - Never skip the approval gate.
