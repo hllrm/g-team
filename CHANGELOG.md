@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.3] — 2026-05-05
+
+### Added
+
+- `claude-plugin` stack profile: architect agent (`profiles/claude-plugin/agents/claude-plugin-architect.md`) validates skill structure, command routing, agent format, hook design, and manifest; architecture rules (`profiles/claude-plugin/rules/architecture.md`) cover all 6 layers with explicit Skill, Agent, Command, and Version rules
+- `/g-team skill-design` — 7-step skill for designing new skills from scratch: gather requirements, check for duplicates, draft and confirm step outline, write SKILL.md, write command file, update router, report
+- `/g-team skill-validate [name]` — 6-step skill for validating skills and agents against structural rules: ✓/✗ checklist across SKILL.md, command file, router registration, and agent frontmatter; issues VALID or NEEDS FIXES verdict
+- `g-team-specialize`: added `claude-plugin` to supported stacks list, detection via `.claude-plugin/plugin.json` or `plugin.json` schema field, and Step 4 file mapping
+
 ## [0.3.2] — 2026-05-05
 
 ### Added

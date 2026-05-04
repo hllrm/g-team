@@ -25,7 +25,7 @@ G-Team installs a structured development workflow into any Claude Code project: 
 /plugin install g-team
 ```
 
-All 16 G-Team agents, 12 skills, and 44 stack profiles become available globally across all your projects.
+All 16 G-Team agents, 14 skills, and 45 stack profiles become available globally across all your projects.
 
 #### Desktop app, VS Code, JetBrains
 
@@ -53,7 +53,7 @@ This loads G-Team for that session only. Re-run with `--plugin-dir` each time, o
 
 ### Verify
 
-Type `/g-team` in any Claude Code session. You should see: `help`, `status`, `doctor`, `kickoff`, `onboard`, `init`, `brief`, `plan`, `execute`, `review`, `specialize`, `update`.
+Type `/g-team` in any Claude Code session. You should see: `help`, `status`, `doctor`, `kickoff`, `onboard`, `init`, `brief`, `plan`, `execute`, `review`, `specialize`, `update`, `skill-design`, `skill-validate`.
 
 ### Set up a new project
 
@@ -184,6 +184,8 @@ rm .claude/hooks/check-commit.sh   # removes the gate for this project
 | `/g-team execute [wave]` | Dispatch parallel agents per wave; hold boundary until each wave completes; resume from a specific wave |
 | `/g-team review` | test suite → code-lead → full review pipeline → MERGE READY or HOLD → auto-closes milestone tasks |
 | `/g-team update` | Realign all g-team-managed files (CLAUDE.md rules, G-RULES.md, agents, architecture rules, hooks) to the current plugin version |
+| `/g-team skill-design` | Design a new g-team skill from scratch — requirements gathering, step drafting, SKILL.md + command file + router wiring |
+| `/g-team skill-validate [name]` | Validate a skill or agent against structural rules — ✓/✗ checklist, VALID or NEEDS FIXES verdict |
 
 ---
 
@@ -216,7 +218,7 @@ rm .claude/hooks/check-commit.sh   # removes the gate for this project
 
 Installed per-project by `/g-team specialize`. Each profile adds a stack-specific architect agent and appends architecture rules to `CLAUDE.md`. Once installed, the agent is project-native — no plugin required at runtime.
 
-44 profiles ship with the plugin. Auto-detected from your project's dependency files when you run `/g-team specialize`.
+45 profiles ship with the plugin. Auto-detected from your project's dependency files when you run `/g-team specialize`.
 
 **Web Frontend**
 `react` · `next-js` · `nuxt` · `vue-pinia` · `sveltekit` · `angular` · `astro` · `remix`
@@ -235,6 +237,9 @@ Installed per-project by `/g-team specialize`. Each profile adds a stack-specifi
 
 **Game Dev + Systems**
 `unity` · `unreal` · `godot-gdscript` · `godot-csharp` · `cpp-cmake` · `rust-cli` · `c-embedded`
+
+**Claude Code Plugin**
+`claude-plugin` — architect agent + architecture rules for Claude Code plugin development (skill structure, command routing, agent format, hook design, manifest validation)
 
 Game-dev profiles (`unity`, `unreal`, `godot-gdscript`, `godot-csharp`, `cpp-cmake`) include object pooling rules and state machine patterns aligned with Section F of G-RULES.md.
 
