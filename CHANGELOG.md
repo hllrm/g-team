@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.2] — 2026-05-05
+
+### Added
+
+- Branch discipline enforced: `G-RULES.md` Section D requires feature branches (`feat/`, `fix/`, `refactor/`, `chore/<slug>`) for non-trivial work; MERGE READY on a branch triggers merge/PR to main; direct main commits limited to hotfixes, docs, and version bumps
+- `workflow-checkpoint.sh` now reports current branch name on every message; warns to stderr when on `main` or `master`
+- `check-commit.sh` adds a non-blocking advisory when committing directly to `main` with approval
+- `project-manager` agent gains a **Feature Challenge gate**: asks 3 questions before accepting any new feature scope; bug fixes and refactors are exempt; one round, one verdict, then proceeds
+- `g-team-plan` Step 1 now dispatches project-manager challenge before task-decomposer fires (bug fixes/refactors skip it)
+- `g-team-review` Step 1 now runs the full test suite before any code review; test failures produce immediate HOLD with no sentinel write; no-test-suite case requires explicit test-writer dispatch or one-time developer override
+- `test-writer` agent expanded: now covers unit, integration, and e2e tests; chooses test type based on what is being tested; handles projects with no obvious test framework by asking the developer
+
+### Fixed
+
+- G-RULES.md Section D branch discipline replaced generic "never commit to main" with specific naming convention, MERGE READY flow, and main-branch exception list
+- `skills/g-team-init/SKILL.md` hook templates synced with updated live scripts
+
 ## [0.3.1] — 2026-05-04
 
 ### Added

@@ -152,9 +152,9 @@ Full orchestration pattern reference: [docs/orchestration-patterns.md](docs/orch
 
 Once `/g-team init` is run in a project, three hooks are installed:
 
-**`workflow-checkpoint.sh`** (`UserPromptSubmit`) — fires on every message. Reports the active plan file, current wave and total waves (parsed from the plan's Progress table), and whether `.claude/g-team-approved` is set. Claude reads this and auto-triggers `/g-team plan`, `/g-team execute`, or `/g-team review` based on current state.
+**`workflow-checkpoint.sh`** (`UserPromptSubmit`) — fires on every message. Reports the current branch (warns if on `main`), the active plan file, current wave and total waves, and whether `.claude/g-team-approved` is set. Claude reads this and auto-triggers `/g-team plan`, `/g-team execute`, or `/g-team review` based on current state.
 
-**`check-commit.sh`** (`PreToolUse`) — blocks `git commit` unless `.claude/g-team-approved` exists.
+**`check-commit.sh`** (`PreToolUse`) — blocks `git commit` unless `.claude/g-team-approved` exists. Prints a non-blocking advisory when committing directly to `main` with approval.
 
 **`post-commit-cleanup.sh`** (`PostToolUse`) — clears `.claude/g-team-approved` after a successful commit.
 
@@ -180,9 +180,9 @@ rm .claude/hooks/check-commit.sh   # removes the gate for this project
 | `/g-team brief` | Refresh project_brief.md incrementally — reads current state, targeted Q&A, no full re-onboard |
 | `/g-team init` | Scaffold CLAUDE.md, G-RULES.md, ROADMAP.md, milestones/, commit enforcement hooks |
 | `/g-team specialize [stack]` | Detect stack from brief + deps → install architect agent + rules |
-| `/g-team plan` | task-decomposer → wave-planner → approval gate → saves plan to docs/plans/ |
+| `/g-team plan` | project-manager challenge gate → task-decomposer → wave-planner → approval gate → saves plan to docs/plans/ |
 | `/g-team execute [wave]` | Dispatch parallel agents per wave; hold boundary until each wave completes; resume from a specific wave |
-| `/g-team review` | code-lead → full review pipeline → MERGE READY or HOLD → auto-closes milestone tasks |
+| `/g-team review` | test suite → code-lead → full review pipeline → MERGE READY or HOLD → auto-closes milestone tasks |
 | `/g-team update` | Realign all g-team-managed files (CLAUDE.md rules, G-RULES.md, agents, architecture rules, hooks) to the current plugin version |
 
 ---
@@ -202,10 +202,10 @@ rm .claude/hooks/check-commit.sh   # removes the gate for this project
 | `performance-auditor` | Sonnet | N+1 queries, O(n²) paths, hot-path issues |
 | `debugger` | Sonnet | Root cause analysis, fix strategy |
 | `error-detective` | Sonnet | Log and stack trace pattern analysis |
-| `project-manager` | Sonnet | End-to-end feature lifecycle coordination |
+| `project-manager` | Sonnet | Feature challenge gate + end-to-end lifecycle coordination |
 | `review-orchestrator` | Sonnet | Parallel review pipeline aggregation |
 | `code-lead` | Opus | Technical sign-off, merge gate verdict |
-| `test-writer` | Haiku | Unit tests from specs, fixed data only |
+| `test-writer` | Haiku | Unit, integration, and e2e tests from specs; fixed data only |
 | `doc-writer` | Haiku | Inline docs explaining WHY not WHAT |
 | `pr-writer` | Haiku | PR descriptions from git diff |
 | `refactor-executor` | Haiku | Spec-exact refactoring, no scope creep |
@@ -297,7 +297,9 @@ Quick reference for the most common workflows.
 You can still invoke them manually if needed:
 
 ```
-/g-team plan         Dispatches task-decomposer → wave-planner
+/g-team plan         Step 1: project-manager challenges the feature request (3 questions,
+                       one verdict — bug fixes and refactors skip this gate)
+                     Dispatches task-decomposer → wave-planner
                      Presents wave schedule for approval
                      Saves approved plan to docs/plans/<feature-slug>.md
                      On approval: hands off to /g-team execute
@@ -307,7 +309,8 @@ You can still invoke them manually if needed:
                      Stops immediately on any BLOCKED signal
                      Resume a partial run: /g-team execute 2
 
-/g-team review       Run after all waves complete, before committing
+/g-team review       Step 1: runs the test suite — failures block with HOLD immediately
+                       No test suite? Must dispatch test-writer or explicitly override
                      Dispatches code-lead → review-orchestrator → parallel reviewers
                      Issues MERGE READY or HOLD with fix list
                      On MERGE READY: auto-closes completed milestone tasks in ROADMAP.md
@@ -324,9 +327,11 @@ You can still invoke them manually if needed:
 ### Day-to-day commit flow
 
 ```
+git checkout -b feat/<slug>   # branch before non-trivial work
 [implement feature or fix]
-/g-team review       → MERGE READY unlocks the gate
+/g-team review       → runs tests, then full pipeline → MERGE READY unlocks the gate
 git commit -m "..."  → gate clears, sentinel auto-removed
+git merge main       → or open a PR
 git push
 ```
 
@@ -356,7 +361,7 @@ git push
 |---------------|-------|---------|
 | Write a PR description | `pr-writer` | `git diff` output |
 | Find security issues | `security-auditor` | files to audit + data flow context |
-| Write tests for a function | `test-writer` | function signature + test framework |
+| Write tests (unit/integration/e2e) | `test-writer` | implementation or spec + test framework |
 | Root cause an error | `error-detective` | stack trace or log output |
 | Write docs for a module | `doc-writer` | the file + any design intent notes |
 | Check architecture violations | `architecture-enforcer` | diff + layer map |
