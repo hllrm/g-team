@@ -1,0 +1,25 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "hllrm-g-team",
+  "description": "G-Team — Multi-agent Claude Code plugin for planned execution, production architecture, and enforced review",
+  "owner": {
+    "name": "hllrm"
+  },
+  "plugins": [
+    {
+      "name": "g-team",
+      "description": "Multi-agent Claude Code plugin — planned execution, production architecture, enforced review. Installs 15 specialist agents and 6 skills into Claude Code.",
+      "author": {
+        "name": "hllrm"
+      },
+      "category": "development",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/hllrm/g-team.git",
+        "path": ".",
+        "ref": "main"
+      },
+      "homepage": "https://github.com/hllrm/g-team"
+    }
+  ]
+}
