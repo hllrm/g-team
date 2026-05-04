@@ -25,7 +25,7 @@ G-Team installs a structured development workflow into any Claude Code project: 
 /plugin install g-team
 ```
 
-All 16 G-Team agents, 11 skills, and 44 stack profiles become available globally across all your projects.
+All 16 G-Team agents, 12 skills, and 44 stack profiles become available globally across all your projects.
 
 #### Desktop app, VS Code, JetBrains
 
@@ -53,7 +53,7 @@ This loads G-Team for that session only. Re-run with `--plugin-dir` each time, o
 
 ### Verify
 
-Type `/g-team` in any Claude Code session. You should see: `help`, `status`, `kickoff`, `onboard`, `init`, `brief`, `plan`, `execute`, `review`, `specialize`, `update`.
+Type `/g-team` in any Claude Code session. You should see: `help`, `status`, `doctor`, `kickoff`, `onboard`, `init`, `brief`, `plan`, `execute`, `review`, `specialize`, `update`.
 
 ### Set up a new project
 
@@ -136,6 +136,11 @@ Quick reference for the most common workflows.
 
 /g-team status       Fast structured snapshot — no narrative, just facts:
                      Milestone · Active plan + wave · Review gate · Handoff line
+
+/g-team doctor       7-point health check — hooks installed, both hooks wired in
+                     settings.json, G-Team Rules block in CLAUDE.md, no stale
+                     sentinel, milestone files aligned with ROADMAP.md
+                     Reports ✓/✗ per check with a one-line fix instruction
 ```
 
 ### Planning a feature
@@ -219,6 +224,7 @@ git push
 |-------|-------------|
 | `/g-team help` | Context-aware state reader — detects current phase and outputs next action + full command reference |
 | `/g-team status` | Fast structured snapshot: milestone · active plan/wave · review gate · handoff line |
+| `/g-team doctor` | 7-point health check: hooks installed, hooks registered in settings.json, G-Team Rules block, no stale sentinel, milestone alignment — ✓/✗ with fix instructions |
 | `/g-team kickoff` | Interview → scope challenge → stack deep dive → project_brief.md |
 | `/g-team onboard` | Read existing repo → present findings → interview → optional architecture audit → project_brief.md |
 | `/g-team brief` | Refresh project_brief.md incrementally — reads current state, targeted Q&A, no full re-onboard |
@@ -326,6 +332,7 @@ Project hygiene:
 /g-team brief       →   refresh project_brief.md as project evolves
 /g-team help        →   where am I + what to do next
 /g-team status      →   fast state snapshot
+/g-team doctor      →   verify hooks, settings, rules block, milestone alignment
 /g-team update      →   pull latest G-Team rules into this project
 ```
 
@@ -343,3 +350,4 @@ Full orchestration pattern reference: [docs/orchestration-patterns.md](docs/orch
 | M4 — Stack Profiles | ✅ Done |
 | M5 — Publish | ✅ Done |
 | M6 — Auto-trigger & Project Hygiene | ✅ Done |
+| M7 — Correctness, Validation & Polish | ✅ Done |
