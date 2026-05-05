@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.3a] — 2026-05-05
+
+### Fixed
+
+- `g-team-specialize` Step 4: replaced fragile "go up two directory levels" path navigation with the same Glob-based plugin root discovery used by `g-team-update` — fixes profile lookup failures (affected tauri and all other profiles) when the plugin cache path structure differed from what the agent navigated manually
+
 ## [0.3.3] — 2026-05-05
 
 ### Added
