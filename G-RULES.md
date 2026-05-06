@@ -202,6 +202,48 @@ Update the map when the stack or data layer changes.
 
 ---
 
+## G · Testing Protocol
+
+**Three tiers — different owners, different rules.**
+
+**Tier 1 — Automated Gates** (Claude owns · blocking on every commit)
+Lint · type-check · unit tests · build verification. Any red = stop, do not commit, report and fix first.
+
+**Tier 2 — Tooling-Assisted** (Claude runs when infrastructure exists)
+E2E, integration, contract tests. If infrastructure is missing and the task touches a critical path, flag the gap explicitly — never silently skip.
+
+**Tier 3 — Human-Driven** (user owns the verdict · Claude never infers pass from output)
+Smoke tests · acceptance · design review · business logic correctness. User exercises the real app against the QA panel. Claude cannot substitute judgement here.
+
+---
+
+**QA Panel — milestone-scoped definition of done**
+
+At the start of every milestone: update the QA panel to reflect what must pass for this milestone and the final product goal. The QA panel is the DoD for all Tier 3 rounds in that milestone.
+
+Rule: no QA panel update = milestone not started. The panel is the spec; without it there is no valid exit condition.
+
+---
+
+**Tier 3 Protocol — Listen Mode**
+
+1. After every wave completes, Claude prompts: `Ready for smoke test?`
+2. User reviews the app against the QA panel and reports findings in chat
+3. Claude enters **listen mode** — no fixes, no suggestions, no edits. Acknowledge each report only:
+   > `Bug N logged — <bug area>`
+4. User declares **"done this round"**
+5. Claude triages the full batch:
+   - Same class ≥ 2 occurrences → **systemic**: grep all instances, treat as one wave
+   - Single occurrence, known location → **isolated**: inline fix
+6. Systemic waves execute first, then isolated fixes
+7. Tier 1 gates run after fixes before next round begins
+8. Next Tier 3 round → back to listen mode
+9. Repeat until user declares DoD met per QA panel
+
+**Hard stops during listen mode:** No file edits. No mid-round fixes. No "quick suggestions." Collect and triage only — never act on a single report in isolation.
+
+---
+
 ## Project Tracking
 
 **`todo.md`** — three sections only:
