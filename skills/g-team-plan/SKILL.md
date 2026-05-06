@@ -37,6 +37,7 @@ Dispatch the `task-decomposer` agent. Provide:
 - The full feature request or task description
 - Any known file paths or constraints
 - Any done conditions already specified
+- Whether the project has a QA panel (from Step 0) — if yes, instruct task-decomposer that any task adding or changing user-facing surface must include "QA panel updated" as an explicit done condition
 
 Wait for the task list before proceeding. Do not proceed if task-decomposer returns any "Clarify:" items — resolve those with the developer first.
 

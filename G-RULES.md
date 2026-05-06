@@ -228,6 +228,15 @@ If the project has a structured manual testing UI (a QA panel), G-Team integrate
 
 Rule: no qa-scope doc = milestone not started. Without a defined scope there is no valid exit condition.
 
+**QA panel currency — mandatory, non-negotiable**
+
+The QA panel must always reflect the current state of the app. It is never allowed to go stale.
+
+- Any task that adds new user-facing surface (new page, feature, tool, workflow, modal) **must** include "QA panel updated with test item(s) for this surface" as a done condition. No exceptions.
+- Any task that removes or significantly changes existing surface **must** include "QA panel updated to reflect the change" as a done condition.
+- MERGE READY is blocked if the QA panel is not current with the changes being merged.
+- G-Team flags the QA panel update requirement at planning time, not as a last-minute reminder.
+
 ---
 
 **Tier 3 Protocol — Listen Mode**
