@@ -7,6 +7,16 @@ description: Decompose the current request into atomic tasks and produce a paral
 
 You are driving the planning phase. Execute these steps in order.
 
+## Step 0 — Tier 3 DoD prerequisite
+
+Ask the developer: "Does this project have a QA panel or structured manual test UI?"
+
+**If yes:** Ask which groups or areas are impacted by this milestone's changes. Then ask what passing looks like for each in-scope group. Compile a QA scope document at `docs/qa-scope/<milestone-slug>.md` using the schema in the **QA Scope Format** section below. This becomes the Tier 3 DoD for the milestone.
+
+**If no:** Ask the developer to state the Tier 3 DoD for this milestone in one or two sentences. Record it in the plan header under `> Tier 3 DoD:`.
+
+Do not proceed to Step 1 until a Tier 3 DoD is defined and written down.
+
 ## Step 1 — Challenge the request (feature requests only)
 
 **Skip this step entirely if the request is a bug fix or a refactor of existing behaviour (not a new capability) — go straight to Step 2.**
@@ -27,6 +37,7 @@ Dispatch the `task-decomposer` agent. Provide:
 - The full feature request or task description
 - Any known file paths or constraints
 - Any done conditions already specified
+- Whether the project has a QA panel (from Step 0) — if yes, instruct task-decomposer that any task adding or changing user-facing surface must include "QA panel updated" as an explicit done condition
 
 Wait for the task list before proceeding. Do not proceed if task-decomposer returns any "Clarify:" items — resolve those with the developer first.
 
@@ -96,7 +107,32 @@ All plans produced by this skill are saved to `docs/plans/<feature-slug>.md` imm
 | 2 | pending | |
 ````
 
+## QA Scope Format
+
+Written to `docs/qa-scope/<milestone-slug>.md`. One file per milestone, compiled through conversation with the developer.
+
+````markdown
+# QA Scope: [Milestone Name]
+
+> Updated: [date]
+> Tier 3 DoD: all in-scope groups reach ✓ pass or ~ partial with no blocking fails
+
+## In-Scope Groups
+
+### [Group Name]
+- What changed: [brief description of what this milestone touches in this group]
+- Must pass: [specific behaviours that must reach ✓]
+- Acceptable partial: [behaviours where ~ is OK for this milestone]
+
+### [Group Name]
+...
+
+## Always-True (never regress regardless of milestone)
+- [core flow that must always pass]
+````
+
 ## Rules
+- Never skip Step 0. No Tier 3 DoD defined = milestone not started.
 - Never skip the approval gate.
 - Never suggest implementation approaches — that is the executor's job.
 - Wave execution always goes through g-team-execute — never inline, never via superpowers.

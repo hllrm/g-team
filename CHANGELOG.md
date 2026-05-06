@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.4] — 2026-05-06
+
+### Added
+
+- `G-RULES.md` Section G — Testing Protocol: three-tier test model (Tier 1 automated gates / Tier 2 tooling-assisted / Tier 3 human-driven); QA panel integration policy (scope doc per milestone, currency enforcement as a hard done condition); Tier 3 listen-mode protocol with `.claude/tier3-active` state file
+- `g-team-plan` Step 0: Tier 3 DoD prerequisite — asks if project has a QA panel, compiles `docs/qa-scope/<milestone-slug>.md` mapping in-scope groups to pass criteria; no Tier 3 DoD = milestone not started
+- `g-team-plan` Step 2: task-decomposer now receives QA panel context; any task adding or changing user-facing surface must include "QA panel updated" as an explicit done condition
+- `workflow-checkpoint.sh`: surfaces Tier 3 listen mode status and logged bug count when `.claude/tier3-active` exists — fires on every prompt so listen mode is never invisible
+
+### Changed
+
+- README: G-RULES.md section count updated to seven; Section G added to table; `workflow-checkpoint.sh` description updated; `/g-team plan` description updated in Skills table and Playbook
+
 ## [0.3.3a] — 2026-05-05
 
 ### Fixed

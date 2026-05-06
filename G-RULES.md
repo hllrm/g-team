@@ -202,6 +202,68 @@ Update the map when the stack or data layer changes.
 
 ---
 
+## G · Testing Protocol
+
+**Three tiers — different owners, different rules.**
+
+**Tier 1 — Automated Gates** (Claude owns · blocking on every commit)
+Lint · type-check · unit tests · build verification. Any red = stop, do not commit, report and fix first.
+
+**Tier 2 — Tooling-Assisted** (Claude runs when infrastructure exists)
+E2E, integration, contract tests. If infrastructure is missing and the task touches a critical path, flag the gap explicitly — never silently skip.
+
+**Tier 3 — Human-Driven** (user owns the verdict · Claude never infers pass from output)
+Smoke tests · acceptance · design review · business logic correctness. User exercises the real app against the QA panel. Claude cannot substitute judgement here.
+
+---
+
+**QA Panel integration**
+
+If the project has a structured manual testing UI (a QA panel), G-Team integrates it into the Tier 3 protocol from the start — not as an afterthought.
+
+- **At project kickoff:** establish that a QA panel exists and understand its test groups / structure.
+- **At milestone planning:** identify which test groups are impacted by this milestone's changes. Compile a `docs/qa-scope/<milestone-slug>.md` mapping each in-scope group to what must pass. This is the Tier 3 DoD for the milestone.
+- **When approaching a testable build:** prompt the developer: "Before smoke testing, open the QA panel and focus on: [groups from qa-scope doc]."
+- **During Tier 3:** the QA panel is the primary instrument. Listen mode applies — Claude logs each finding as reported.
+
+Rule: no qa-scope doc = milestone not started. Without a defined scope there is no valid exit condition.
+
+**QA panel currency — mandatory, non-negotiable**
+
+The QA panel must always reflect the current state of the app. It is never allowed to go stale.
+
+- Any task that adds new user-facing surface (new page, feature, tool, workflow, modal) **must** include "QA panel updated with test item(s) for this surface" as a done condition. No exceptions.
+- Any task that removes or significantly changes existing surface **must** include "QA panel updated to reflect the change" as a done condition.
+- MERGE READY is blocked if the QA panel is not current with the changes being merged.
+- G-Team flags the QA panel update requirement at planning time, not as a last-minute reminder.
+
+---
+
+**Tier 3 Protocol — Listen Mode**
+
+1. After every wave completes, Claude prompts: `Ready for smoke test?`
+2. User reviews the app against the QA panel and reports findings in chat
+3. Claude enters **listen mode** — no fixes, no suggestions, no edits. Acknowledge each report only:
+   > `Bug N logged — <bug area>`
+4. User declares **"done this round"**
+5. Claude triages the full batch:
+   - Same class ≥ 2 occurrences → **systemic**: grep all instances, treat as one wave
+   - Single occurrence, known location → **isolated**: inline fix
+6. Systemic waves execute first, then isolated fixes
+7. Tier 1 gates run after fixes before next round begins
+8. Next Tier 3 round → back to listen mode
+9. Repeat until user declares DoD met per QA panel
+
+**Hard stops during listen mode:** No file edits. No mid-round fixes. No "quick suggestions." Collect and triage only — never act on a single report in isolation.
+
+**Listen mode state file — `.claude/tier3-active`**
+- When entering listen mode: write `0` to `.claude/tier3-active`
+- After each bug is acknowledged: increment the count in `.claude/tier3-active`
+- After triage and fix wave completes: delete `.claude/tier3-active`
+- The workflow-checkpoint hook reads this file and surfaces listen mode status on every prompt
+
+---
+
 ## Project Tracking
 
 **`todo.md`** — three sections only:
