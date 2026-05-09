@@ -204,7 +204,7 @@ rm .claude/hooks/check-commit.sh   # removes the gate for this project
 | `/g-specialize [stack]` | Detect stack from brief + deps → install architect agent + rules |
 | `/g-plan` | QA scope prerequisite (compile docs/qa-scope/<milestone>.md) → project-manager challenge gate → task-decomposer → wave-planner → approval gate → saves plan to docs/plans/ |
 | `/g-execute [wave]` | Dispatch parallel agents per wave; hold boundary until each wave completes; resume from a specific wave |
-| `/g-review` | test suite → code-lead → full review pipeline → MERGE READY or HOLD → auto-closes milestone tasks |
+| `/g-review` | test suite → code-lead → full review pipeline → Tier 3 smoke test (listen mode) → MERGE READY or HOLD → auto-closes milestone tasks |
 | `/g-update` | Pull latest plugin from GitHub, then realign all g-team-managed files (CLAUDE.md rules, G-RULES.md, agents, architecture rules, hooks) to the new version |
 | `/g-listen` | Enter listen mode — collect notes, issues, or observations without acting; triage everything when you say "done" |
 | `/g-skill-design` | Design a new g-team skill from scratch — requirements gathering, step drafting, SKILL.md + command file + router wiring |
@@ -342,6 +342,9 @@ You can still invoke them manually if needed:
 /g-review       Step 1: runs the test suite — failures block with HOLD immediately
                        No test suite? Must dispatch test-writer or explicitly override
                      Dispatches code-lead → review-orchestrator → parallel reviewers
+                     On MERGE READY: enters Tier 3 listen mode — prompts smoke test
+                       against QA panel; collects bug reports; triages after "done this round"
+                       Repeats until a clean round, then writes sentinel
                      Issues MERGE READY or HOLD with fix list
                      On MERGE READY: auto-closes completed milestone tasks in ROADMAP.md
 ```
