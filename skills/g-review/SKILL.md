@@ -58,15 +58,43 @@ If no done conditions can be found, note this — code-lead will flag it as a pr
 
 ## Step 4 — Dispatch code-lead
 
-Dispatch the `code-lead` agent. Provide:
+Dispatch the `code-lead` agent. Provide **all of the following** in the prompt so code-lead does not re-run already-completed checks:
+
+- **Attested test result** — state explicitly: `"Tests: PASS (attested — exit 0, output below)"` and include the captured output from Step 1, OR `"Tests: skipped — developer override"` if the developer chose (b). If tests failed, you do not reach this step.
+- **Attested type-check result** — if a type-checker was run (e.g. `vue-tsc --noEmit`, `tsc --noEmit`) in any prior step or by an implementing agent, include: `"Type-check: PASS (attested — exit 0)"`. If not run, omit this line.
 - The full diff from Step 2
 - The done conditions from Step 3
 - The current branch name (from `git branch --show-current`)
 - The task list (if known)
 
-code-lead will verify done conditions and dispatch review-orchestrator internally. Wait for code-lead's complete verdict.
+code-lead will verify remaining done conditions structurally (file checks, grep, read) and dispatch review-orchestrator internally. It must NOT re-run tests or type-check when attested results are provided. Wait for code-lead's complete verdict.
 
-## Step 5 — Present verdict and manage sentinel
+## Step 5 — Tier 3 Smoke Test (MERGE READY path only)
+
+If code-lead's verdict is **HOLD** or **ESCALATE**, skip to Step 6 — no smoke test needed until blocking issues are fixed.
+
+If code-lead's verdict is **MERGE READY**:
+
+1. Check whether `.claude/tier3-active` exists. If it does, a listen-mode session is already in progress — skip straight to Step 6.
+2. Identify the QA scope doc for this milestone: `docs/qa-scope/<milestone-slug>.md`. If it exists, read it and list the in-scope test groups for the developer. If it does not exist, note that and list any QA panel test groups you know are affected by the diff.
+3. Prompt the developer:
+
+   > "Code review passed. **Tier 3 — open the QA panel** and smoke test the changes.
+   > Focus on: [list of in-scope groups from step 2, or 'all areas touched by this diff'].
+   > I'll enter listen mode. Report each finding in chat — say **'done this round'** when finished."
+
+4. Write `0` to `.claude/tier3-active`.
+5. **Listen mode is now active.** Rules while in listen mode:
+   - Do NOT edit any files.
+   - Do NOT suggest fixes or make comments about what might be wrong.
+   - For each finding the developer reports, respond only with: `Bug N logged — <area>`
+   - Increment the count in `.claude/tier3-active` after each acknowledgement.
+6. When the developer says **"done this round"**:
+   - Delete `.claude/tier3-active`.
+   - If the count was **0** (no bugs reported): proceed to Step 6.
+   - If any bugs were logged: triage the full batch (systemic vs. isolated), dispatch fix waves, re-run from Step 1 after fixes land. Do not proceed to Step 6 until a clean smoke-test round returns 0 bugs.
+
+## Step 6 — Present verdict and manage sentinel
 
 Present code-lead's verdict to the developer verbatim.
 
@@ -101,5 +129,7 @@ Present code-lead's verdict to the developer verbatim.
 ## Rules
 - Never modify code-lead's verdict — present it exactly.
 - Never write `.claude/g-team-approved` for anything other than MERGE READY.
+- Never skip Step 5 (Tier 3 smoke test) on a MERGE READY verdict — the sentinel must not be written until at least one clean smoke-test round completes.
 - If code-lead is blocked by missing information, gather it and re-dispatch — do not guess.
 - The sentinel is automatically cleared after the next `git commit` by the commit hook.
+- In listen mode: zero edits, zero suggestions, acknowledgement only. Violations of listen mode reset the round.
