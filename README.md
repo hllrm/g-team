@@ -51,7 +51,7 @@ Run `/g-update` inside any project that uses G-Team. It does everything in one p
 G-Team also checks for updates automatically. The `workflow-checkpoint.sh` hook fetches the latest version from GitHub once per day (background, zero latency) and surfaces a notice in every session until you update:
 
 ```
-⚡ g-team update available: 0.4.1 → 0.4.2 — run /g-update to pull and sync
+⚡ g-team update available: 0.4.2 → 0.4.3 — run /g-update to pull and sync
 ```
 
 If `/g-update`'s git pull fails (cache is not a git clone), it will tell you to reinstall manually:
