@@ -11,26 +11,57 @@ You are first updating the plugin cache from GitHub, then syncing g-team-managed
 
 ## Step 0 — Pull latest plugin from GitHub
 
-1. Read the installed version:
-   ```bash
-   grep '"version"' ~/.claude/plugins/cache/g-team/g-team/.claude-plugin/plugin.json
+1. Locate the installed manifest. The cache may use either layout:
+   - **Flat**: `~/.claude/plugins/cache/g-team/g-team/.claude-plugin/plugin.json`
+   - **Versioned**: `~/.claude/plugins/cache/g-team/g-team/<version>/.claude-plugin/plugin.json`
+
+   Use Glob to find the manifest:
    ```
-   If the file does not exist, skip to Step 1 (the plugin root check will handle the error).
+   ~/.claude/plugins/cache/g-team/g-team/**/.claude-plugin/plugin.json
+   ```
+   Read whichever match is found and note the full path. Extract the installed version. If nothing is found, skip to Step 1.
 
 2. Fetch the latest version from GitHub:
    ```bash
    curl -sf --max-time 10 https://raw.githubusercontent.com/hllrm/g-team/main/.claude-plugin/plugin.json | grep '"version"'
    ```
-   If the curl fails (no network, timeout), report: "⚠ Could not reach GitHub — skipping plugin update, syncing from installed cache." and continue to Step 1.
+   If curl fails (no network, timeout), report: "⚠ Could not reach GitHub — skipping plugin update, syncing from installed cache." and continue to Step 1.
 
-3. If the versions match, report: "Plugin already at latest ([version]) — skipping pull." and continue to Step 1.
+3. If the versions match, report: "Plugin already at latest ([version]) — proceeding with project sync." and continue to Step 1.
 
-4. If they differ, pull:
+4. If they differ, determine the layout from the manifest path:
+
+   **A — Versioned snapshot** (path contains `/<version>/`):
+   Download the latest from GitHub and extract alongside the existing version:
+   ```bash
+   CACHE_ROOT=~/.claude/plugins/cache/g-team/g-team
+   curl -sL --max-time 60 "https://github.com/hllrm/g-team/archive/refs/heads/main.zip" \
+     -o /tmp/g-team-update.zip
+   unzip -q -o /tmp/g-team-update.zip -d /tmp/g-team-update
+   NEW_VER=$(grep '"version"' /tmp/g-team-update/g-team-main/.claude-plugin/plugin.json \
+     | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?[a-zA-Z0-9]*')
+   mv /tmp/g-team-update/g-team-main "$CACHE_ROOT/$NEW_VER"
+   rm -f /tmp/g-team-update.zip && rm -rf /tmp/g-team-update
+   ```
+   If this succeeds, report: `✓ Plugin updated [old] → [new] at $CACHE_ROOT/$NEW_VER` and continue to Step 1.
+   If it fails (download error, disk full, etc.), fall through to the reinstall notice below.
+
+   **B — Git clone** (no version number in path):
    ```bash
    git -C ~/.claude/plugins/cache/g-team/g-team pull --ff-only
    ```
-   - If the pull succeeds, report: `✓ Plugin updated [old] → [new]`
-   - If git exits non-zero (cache is not a git repo, or diverged), report: "⚠ git pull failed — cache may not be a git clone. To force a full reinstall: `/plugin marketplace add hllrm/g-team` then `/plugin install g-team`." and continue to Step 1 using whatever is in the cache.
+   If this succeeds, report: `✓ Plugin updated [old] → [new]` and continue to Step 1.
+
+5. If all update attempts fail, report:
+   ```
+   ⚠ Could not auto-update the plugin cache.
+   To install v[latest] manually:
+     /plugin marketplace add hllrm/g-team
+     /plugin install g-team
+   Then re-run /g-update to sync project files.
+   ```
+   Ask: "Continue syncing project files from the currently installed v[installed]? (y/n)"
+   Wait for answer. On yes → continue to Step 1. On no → stop.
 
 ---
 
