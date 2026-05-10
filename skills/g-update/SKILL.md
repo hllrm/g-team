@@ -21,14 +21,16 @@ You are first updating the plugin cache from GitHub, then syncing g-team-managed
 
 3. If versions match: report `✓ Plugin already at latest (v[version]) — proceeding with project sync.` and continue to Step 1.
 
-4. If they differ, report:
+4. If they differ, stop immediately:
    ```
-   ⚠ Plugin is at v[installed] — v[latest] is available on GitHub.
-   Plugin updates are UI-only: open the /plugin menu and click Update next to g-team,
-   then re-run /g-update to sync your project files.
+   ⚠ Plugin is at v[installed] — v[latest] is available.
+
+   Update it first:
+     /plugin  →  Installed  →  g-team  →  Update now
+
+   Then re-run /g-update to sync your project files.
    ```
-   Ask: "Continue syncing project files from the currently installed v[installed]? (y/n)"
-   Wait for answer. On yes → continue to Step 1. On no → stop.
+   Do not proceed to Step 1.
 
 ---
 
