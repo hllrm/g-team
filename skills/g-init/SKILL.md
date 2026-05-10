@@ -15,36 +15,23 @@ The project root is the current working directory. If uncertain, ask the develop
 
 Check if `CLAUDE.md` exists at the project root.
 
-**If it does not exist:** Create it with this content (replace [Project Name] with the actual project name, or use a placeholder):
+**If it does not exist:**
+1. Glob the plugin cache for `templates/CLAUDE.md` — pattern: `~/.claude/plugins/cache/g-team/g-team/*/templates/CLAUDE.md`. Use the highest version found.
+2. Read the template file.
+3. Replace `[Project Name]` with the actual project name (use the directory name, or ask if unclear).
+4. Write the result to `CLAUDE.md` at the project root.
+5. Tell the developer: "Fill in the project description, stack table, and conventions sections in CLAUDE.md before proceeding."
+6. Report: `✓ CLAUDE.md — created from template`
+
+**If it exists:** Read it. If the text `<!-- G-Team Rules` is not present, append this block at the end of the file:
 
 ```
-# [Project Name]
-
-[Brief description of what this project does.]
-
 <!-- G-Team Rules — injected by /g-init. Do not edit manually. -->
-## G-Team Workflow
-
-**Models**: Haiku for reads/search · Sonnet for implementation · Opus only after 2 failed attempts on the same task.
-
-**Workflow — auto-triggered, no command needed**:
-Claude detects task complexity and initiates the workflow automatically — never wait for the user to type a command:
-- Non-trivial task? (≥3 files, new feature, layer-boundary change, unclear bug, public API change) → run `/g-plan` before any file changes
-- Plan approved → run `/g-execute` to dispatch waves
-- Implementation complete / user wants to merge → run `/g-review`
-All three steps are mandatory. Skipping any requires explicit developer override.
-
-**Agent discipline**: HQ orchestrates only — dispatches agents, collects results, integrates. Never does grunt work an agent can do. Hard limit: 7 agents per task.
-
-**Architecture gate**: ≥3 files, layer-boundary change, new component, or public API change → plan first (no writes), validate import directions, verify state ownership, get sign-off.
-
-**Commit rule**: `git commit` is HQ-only, after MERGE READY. Never instruct subagents to commit — they implement and return results only. HQ commits once after review clears.
-
-**Hard stops**: No merge without MERGE READY · No plan skip for non-trivial tasks · HOLD = fix all blocking items, re-review · Same bug class × 3 attempts = stop, escalate, try a different mechanism.
+<!-- (rules loaded via @G-RULES.md at top of file) -->
 <!-- End G-Team Rules -->
 ```
 
-**If it exists:** Read it. If the text `<!-- G-Team Rules` is not present, append the G-Team Rules block (from `<!-- G-Team Rules` to `<!-- End G-Team Rules -->`) at the end of the file.
+Report: `✓ CLAUDE.md — verified`
 
 ## Step 2a — Install G-RULES.md
 
