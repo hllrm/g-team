@@ -75,21 +75,25 @@ Flag blocking dependencies explicitly:
 
 Identify the MVP cut: the minimum set of milestones that delivers usable value. State which milestones are MVP and which are post-MVP, and why.
 
-Present the full proposed sequence:
+Present the full proposed sequence. For each milestone, include a suggested target version based on what it delivers — features increment the minor version, bug-fix/polish milestones increment the patch, breaking changes increment the major. State the current version (read from `.claude-plugin/plugin.json`, `package.json`, `pyproject.toml`, or `Cargo.toml` — whichever exists) as the baseline for M1's suggestion:
 
 ```
 M1 — [Title]  [MVP / post-MVP]
      Goal: ...
      Scope: ...
      Depends on: — / M1 / M2 / ...
+     Version: v[suggested]  (minor bump — new capability)
      Risk: ...
 
 M2 — [Title]  ...
+     Version: v[suggested]  (patch — bug fixes and polish)
 ...
 
 Backlog (no milestone assigned yet):
      · [items that don't clearly belong to any milestone]
 ```
+
+Ask the developer to confirm or adjust the version targets before proceeding.
 
 State your sequencing assumptions:
 > "I sequenced this assuming [2–3 key assumptions]. Tell me where I got it wrong."
@@ -111,12 +115,14 @@ M1 — [Title]  [MVP]
     · [item]
     · [item]
   Depends on: —
+  Version: v[x.y.z]
 
 M2 — [Title]  [post-MVP]
   Goal: [one line]
   Scope:
     · [item]
   Depends on: M1
+  Version: v[x.y.z]
 
 ...
 
@@ -145,6 +151,7 @@ Write `ROADMAP.md` with this structure:
 
 ### M1 — [Title]
 **Status:** ⬜ Not started
+**Version:** v[x.y.z]
 **Goal:** [one line]
 **Scope:**
 - [item]
@@ -156,6 +163,7 @@ Write `ROADMAP.md` with this structure:
 
 ### M2 — [Title]
 **Status:** ⬜ Not started
+**Version:** v[x.y.z]
 ...
 
 ## Backlog
