@@ -28,24 +28,43 @@ If all waves are already `complete`, stop:
 ✓ All waves already complete. Run /g-review if you haven't yet.
 ```
 
-**3. Configure auto-permissions.**
-Read `.claude/settings.json`. Under `permissions.allow`, add the following entries if not already present (merge — do not overwrite existing rules):
+**3. Configure auto-permissions with safety deny-list.**
+Read `.claude/settings.json`. Merge the following into the `permissions` block — do not overwrite existing rules:
 
+**Allow** (tool use without prompts):
 ```json
 "Bash(*)", "Read(*)", "Write(*)", "Edit(*)", "Glob(*)", "Grep(*)", "Agent(*)"
 ```
 
-Write the updated settings back. This prevents tool-use permission prompts during autonomous execution.
+**Deny** (hard-blocked — any attempt breaks AFK and stops execution):
+```json
+"Bash(git push*)",
+"Bash(git push --force*)",
+"Bash(rm -rf*)",
+"Bash(rmdir /s*)",
+"Bash(npm publish*)",
+"Bash(cargo publish*)",
+"Bash(pip publish*)",
+"Bash(twine upload*)",
+"Bash(wrangler deploy*)",
+"Bash(vercel deploy*)",
+"Bash(netlify deploy*)",
+"Bash(curl * | bash*)",
+"Bash(wget * | bash*)"
+```
 
-Report the permission state:
+Write the updated settings back.
+
+Report:
 ```
-✓ Permissions configured for autonomous execution
+✓ AFK safety net active — remote push, recursive delete, and publish commands are blocked
 ```
 
-If settings cannot be written, warn but do not stop:
+If settings cannot be written, **stop AFK entirely**:
 ```
-⚠ Could not write .claude/settings.json — permission prompts may interrupt execution.
-  For fully unattended mode, restart the session with: claude --dangerously-skip-permissions
+✗ Could not write safety rules to .claude/settings.json — AFK mode will not run without them.
+  Fix permissions on .claude/settings.json or restart with: claude --dangerously-skip-permissions
+  (which enforces the safety constraints via behavioral rules instead)
 ```
 
 ---
@@ -143,11 +162,42 @@ Non-blocking notes:
 
 ---
 
+## Safety constraints — enforced throughout AFK execution
+
+These apply unconditionally. A violation breaks the AFK cycle immediately — no retry, no workaround.
+
+**Scope boundary — project folder only.**
+Every file write, edit, or delete must target a path inside the current working directory. Any path resolving outside the project root (absolute path, `../` traversal, `~`, `/tmp`, system directories) is a hard stop:
+```
+✗ AFK Safety Violation — attempted write outside project root: [path]
+  AFK mode stopped. No further autonomous actions will be taken.
+```
+
+**No remote or external side-effects.**
+The following are unconditionally prohibited during AFK execution:
+- `git push` in any form — the developer reviews and pushes after AFK completes
+- Publishing to any registry (npm, crates.io, PyPI, Wrangler, Vercel, Netlify, etc.)
+- Recursive deletes (`rm -rf`, `rmdir /s`)
+- Piped remote installs (`curl ... | bash`, `wget ... | bash`)
+- Any command that mutates state outside the project directory
+
+**Violation handling.**
+If a deny-listed or out-of-scope action is attempted (whether caught by the deny list or detected behaviorally):
+1. Stop all execution immediately
+2. Do not attempt the action via any alternative path
+3. Report:
+```
+✗ AFK Safety Violation — [action] is not permitted in autonomous mode
+  AFK stopped at Wave [N], Task [X].
+  Resume manually: fix the underlying need and re-run /g-afk, or handle this step yourself.
+```
+
 ## Rules
 
 - Never skip the Pre-check. No approved plan = stop immediately.
+- Never skip the safety deny-list setup. Settings write failure = stop.
 - Never pause between waves to ask "shall I continue?" — that defeats the purpose.
-- BLOCKED is the only valid autonomous stop. Everything else runs through.
+- BLOCKED and safety violations are the only valid autonomous stops.
 - Never attempt to fix HOLD findings autonomously — surface them for the developer.
-- Always restore or leave `.claude/settings.json` in a valid state (never corrupt it).
+- Always leave `.claude/settings.json` in a valid state — never corrupt it.
 - Opus orchestrates. Dispatch implementation agents at Sonnet; reads/search at Haiku.
