@@ -114,7 +114,44 @@ After building the `Profiles to apply` list, sort the detected stack names alpha
 
 If any detected stacks fully cover a combo's required stacks, add that combo key to `Combos detected`. Combo profiles install rules only — no architect agent.
 
-## Step 2 — Handle edge cases before confirming
+## Step 2 — Research current stable/LTS state
+
+For each stack in `Profiles to apply`, run a WebSearch to verify the current stable and LTS version and identify any best-practice changes that may not be reflected in the installed profile.
+
+**Search queries to run (in parallel, one pair per stack):**
+- `"[stack] stable release [current year]"`
+- `"[stack] best practices [current year]"`
+
+**Scope rules — strict:**
+- Only consider releases tagged as **stable**, **LTS**, or **GA (generally available)**.
+- Ignore anything labelled alpha, beta, RC, canary, nightly, preview, experimental, or unreleased.
+- If the only available information is pre-release, skip and note: "No stable/LTS data found — profile defaults apply."
+
+**Extract per stack (skip if not found in stable/LTS sources):**
+- Current stable version number (and LTS version if the ecosystem tracks both separately)
+- Any **breaking changes or major deprecations** since the prior major version — only if they affect recommended code patterns (file structure, API surface, idioms)
+- Any **updated recommended patterns** that differ from what the profile likely captures (e.g., a new router API replacing the old one, a new state management recommendation, a compiler option that is now the default)
+
+**Do not extract:**
+- Changelogs, release notes verbatim, or lists of bug fixes
+- Minor patch details
+- Anything still behind a feature flag or opt-in experimental API
+
+**Synthesise into a version note per stack:**
+
+```
+[stack] — stable [version] (LTS: [version or "same"])
+Notable since last major:
+  • [change 1 — one line, code-impact only]
+  • [change 2]
+  (or: "No material pattern changes found.")
+```
+
+If a stack returns no stable-version data after searching, note `"stable version not confirmed — profile defaults apply"` and continue.
+
+Store all version notes for use in Step 3 (confirmation) and Step 7 (agent installation).
+
+## Step 3 — Handle edge cases before confirming
 
 **If an explicit stack argument was provided** (e.g. `/g-specialize vue-pinia`):
 - Validate it is one of the 44 supported stacks listed in the description frontmatter. If not, say: "Unknown stack '[arg]'. Run `/g-specialize` with no argument to auto-detect, or pick from the supported list." and stop.
@@ -145,7 +182,7 @@ Present code-lead's response to the developer: "Here is code-lead's stack read �
 - Surface it to the developer before proceeding: "code-lead flagged [stack choice] as [risk level]: [reason]. Do you want to proceed with this profile, or reconsider the stack first?"
 - Wait for answer. Proceed only after confirmation.
 
-## Step 3 — Confirm with developer
+## Step 4 — Confirm with developer
 
 Present the full list of profiles to apply:
 
@@ -158,17 +195,21 @@ Based on [brief / deps / your input], I'll apply these profiles:
 And combo rules (if combos were detected):
   ↳ [combo-key]  →  [combo-key] combo architecture rules (no agent)
 
+Current stable/LTS versions confirmed:
+  [paste each stack's version note from Step 2 — omit stacks with no material changes]
+
 This will:
   ✦ Write [N] agent file(s) to .claude/agents/
   ✦ Append architecture rules for each stack to CLAUDE.md
   ✦ Append combo rules section(s) to CLAUDE.md (if combos apply)
+  ✦ Append version notes to each installed architect agent
 
 Continue? (y/n)
 ```
 
 Wait for confirmation before writing anything.
 
-## Step 4 — Locate profile files
+## Step 5 — Locate profile files
 
 For each profile to apply:
 
@@ -249,7 +290,7 @@ Combo → file mapping:
 
 Read the combo rules file before writing anything.
 
-## Step 5 — Write agents to .claude/agents/
+## Step 6 — Write agents to .claude/agents/
 
 Create `.claude/agents/` directory if it does not exist.
 
@@ -261,9 +302,24 @@ Agent filename: use the filename of the agent file from the stack → file mappi
 
 If the file already exists, read it first. If the `name:` field in frontmatter matches, tell the developer: "[agent-name] is already installed. Overwrite? (y/n)" and wait for confirmation before proceeding.
 
+**After writing each agent file**, append the stack's version note from Step 2 as a versioned addendum at the end of the file:
+
+```
+---
+<!-- Stable/LTS version note — injected by /g-specialize, [date]. Do not edit manually. -->
+[stack] stable [version] (LTS: [version or "same"])
+Notable current patterns:
+  • [change 1]
+  • [change 2]
+  (or: "No material pattern changes found — profile defaults apply.")
+<!-- End version note -->
+```
+
+If no version note was produced for a stack (Step 2 returned no stable data), skip the addendum for that agent.
+
 Combo profiles have no agent file — skip agent installation for any combo key in the install list.
 
-## Step 6 — Append architecture rules to CLAUDE.md
+## Step 7 — Append architecture rules to CLAUDE.md
 
 Read `CLAUDE.md` in the current project root. If it does not exist, create it with just a `# [Project]` header first.
 
@@ -279,7 +335,7 @@ For each profile whose rules are not yet present, append:
 
 Repeat this same loop for each combo key in `Combos detected` — same marker format, same duplication check, same append pattern. Use `profiles/<combo-key>/rules/architecture.md` as the content source.
 
-## Step 7 — Report
+## Step 8 — Report
 
 ```
 Stack profiles applied ✓
@@ -297,9 +353,11 @@ Dispatch them during any review or planning task that touches their stack.
 List only the profiles that were actually applied.
 
 ## Rules
-- Never write any file before the developer confirms in Step 3.
+- Never write any file before the developer confirms in Step 4.
 - Never overwrite an existing agent without user confirmation.
 - Profile files are read from the plugin directory — never embedded or hardcoded here.
 - If the plugin directory cannot be located, tell the developer the expected path and ask them to verify the plugin is installed.
 - code-lead is consulted only when the picture is ambiguous or a brief flags a risky stack choice — not on every run.
-- If the developer provides an explicit stack arg, skip all detection and go straight to Step 3.
+- If the developer provides an explicit stack arg, skip all detection and go straight to Step 2 (research) then Step 4 (confirm).
+- Research (Step 2) covers stable and LTS releases only. Pre-release, canary, experimental, and RC versions are ignored regardless of recency.
+- Version notes are informational — they do not override profile rules. If a current stable pattern contradicts a profile rule, surface the conflict to the developer during confirmation; do not silently rewrite the rules file.
