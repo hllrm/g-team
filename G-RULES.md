@@ -116,12 +116,19 @@ For an existing project without g-team: run `/g-onboard` instead of the above se
 
 ## D · Code Quality
 
+**SOLID**
+- **Single Responsibility (SRP)** — one reason to change per module/class/function. A unit that handles data access *and* business logic needs splitting. Symptom: the name contains "and" or "also", or the file has two clearly separable sections.
+- **Open/Closed (OCP)** — extend behaviour by adding new code, not by modifying existing code. A switch/if-else chain that must be edited every time a new type is added is a violation — replace with a strategy map, polymorphic dispatch, or registry.
+- **Liskov Substitution (LSP)** — subtypes must honour the full contract of their supertype. An override that throws where the base returns a value, accepts a narrower input type, or silently ignores part of the supertype's behaviour is a violation. Prefer composition over inheritance to sidestep LSP traps.
+- **Interface Segregation (ISP)** — depend only on what you use. A function that receives a large object and reads two fields out of ten should accept a narrower type or destructured params. A class that implements an interface but leaves half the methods as `throw new Error('not implemented')` needs the interface split.
+- **Dependency Inversion (DIP)** — high-level modules depend on abstractions, not concrete implementations. Business logic must not `new` its own services — receive them via constructor/function injection. An import of a concrete adapter (database driver, HTTP client, third-party SDK) inside a domain or business-logic module is a DIP violation; wrap it behind an interface and inject it.
+
 **Style**
 - `const` everywhere; `let` only when reassignment is unavoidable; never `var`
 - Module-level `let` requires a WHY comment — explain why it's not a reactive/store value
 - Named exports only (no `export default` in lib/composables; components/classes are the exception)
 - Return early / fail fast — validate at top, minimise nesting
-- One responsibility per module/component (SRP). No duplication — extract shared logic.
+- No duplication — extract shared logic.
 
 **Naming — files**
 

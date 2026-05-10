@@ -17,6 +17,8 @@ A set of changed files, or a description of the proposed change with the project
 - **SRP violations**: a single file handling two distinct responsibilities (e.g., a UI component that also fetches data directly)
 - **State ownership violations**: state mutated from a layer that doesn't own it (e.g., a component directly mutating a store's internal state without going through an action)
 - **Side-effect boundary violations**: I/O operations (HTTP, file system, external APIs) outside the designated side-effect layer (e.g., fetch() called directly in a component instead of a service/composable)
+- **OCP violations**: a central dispatcher or factory that uses a type-switch/if-else chain and must be modified every time a new variant is added. The pattern is a violation when it is pervasive — strategy maps, registries, or polymorphic dispatch are the remedy.
+- **DIP violations**: a high-level module (domain, use-case, business service) importing a concrete low-level module (specific ORM model, HTTP adapter, third-party SDK) directly rather than depending on an interface that a low-level adapter implements. The dependency arrow must point toward the abstraction, not toward the concrete implementation.
 
 ## Output format
 
