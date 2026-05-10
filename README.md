@@ -204,7 +204,7 @@ rm .claude/hooks/check-commit.sh   # removes the gate for this project
 | `/g-doctor` | 9-point health check: all 3 hooks installed, all hooks registered in settings.json, G-Team Rules block, G-RULES.md present and referenced, no stale sentinel — ✓/✗ with fix instructions |
 | `/g-kickoff` | Interview → scope challenge → stack deep dive → project_brief.md |
 | `/g-onboard` | Read existing repo → present findings → interview → optional architecture audit → project_brief.md |
-| `/g-roadmap` | Four-phase milestone planner: feature dump → cluster (narrated) → sequence (narrated) → approve → ROADMAP.md. Auto-triggers on any feature idea or empty milestone list. |
+| `/g-roadmap` | Four-phase milestone planner: feature dump → cluster (narrated) → sequence with dependency + version justification → approve → ROADMAP.md. Assigns a target semver version to every milestone and writes a version plan. Auto-triggers on any feature idea or empty milestone list. |
 | `/g-brief` | Refresh project_brief.md incrementally — reads current state, targeted Q&A, no full re-onboard |
 | `/g-init` | Scaffold CLAUDE.md, G-RULES.md, ROADMAP.md, milestones/, commit enforcement hooks |
 | `/g-specialize [stack]` | Detect stack from brief + deps → install architect agent + rules |
@@ -319,6 +319,15 @@ Quick reference for the most common workflows.
                        decision — what blocks what, where the MVP cut is
                      Four gated phases: dump → cluster → sequence → approve
                      Writes ROADMAP.md only after you type "approve"
+
+                     Reads current version (plugin.json / package.json /
+                       pyproject.toml / Cargo.toml) as the baseline
+                     Assigns a target version to every milestone during
+                       sequencing — minor for new capabilities, patch for
+                       fixes, major for breaking changes
+                     Buy-in gate shows the full version plan:
+                       v[current] → v[M1] → v[M2] → ...
+                     Writes **Version:** field to each milestone in ROADMAP.md
 
 Auto-triggers:  — no ROADMAP.md exists in the project
                 — no active (🔄) or unstarted (⬜) milestones in ROADMAP.md
