@@ -25,7 +25,7 @@ G-Team installs a structured development workflow into any Claude Code project: 
 /plugin install g-team
 ```
 
-All 16 G-Team agents, 16 skills, 45 stack profiles, and 4 combo profiles become available globally across all your projects.
+All 16 G-Team agents, 17 skills, 45 stack profiles, and 4 combo profiles become available globally across all your projects.
 
 #### Desktop app, VS Code, JetBrains
 
@@ -74,7 +74,7 @@ This loads G-Team for that session only. Re-run with `--plugin-dir` each time, o
 
 ### Verify
 
-Type `/g-help` in any Claude Code session. You should see the current project state and a full command reference. Commands follow the `/g-<name>` pattern: `/g-plan`, `/g-execute`, `/g-review`, `/g-init`, `/g-kickoff`, `/g-onboard`, `/g-specialize`, `/g-roadmap`, `/g-brief`, `/g-listen`, `/g-help`, `/g-status`, `/g-doctor`, `/g-update`, `/g-skill-design`, `/g-skill-validate`.
+Type `/g-help` in any Claude Code session. You should see the current project state and a full command reference. Commands follow the `/g-<name>` pattern: `/g-plan`, `/g-execute`, `/g-review`, `/g-afk`, `/g-init`, `/g-kickoff`, `/g-onboard`, `/g-specialize`, `/g-roadmap`, `/g-brief`, `/g-listen`, `/g-help`, `/g-status`, `/g-doctor`, `/g-update`, `/g-skill-design`, `/g-skill-validate`.
 
 ### Set up a new project
 
@@ -160,6 +160,9 @@ Day-to-day (auto-triggered — no command needed):
 /g-review      →   MERGE READY or HOLD  →  milestone tasks auto-closed
 git commit          →   gate clears, sentinel removed
 
+Unattended execution (requires approved plan):
+/g-afk         →   all waves + review, no check-ins  →  handoff report when done
+
 Project hygiene:
 /g-brief       →   refresh project_brief.md as project evolves
 /g-help        →   where am I + what to do next
@@ -209,6 +212,7 @@ rm .claude/hooks/check-commit.sh   # removes the gate for this project
 | `/g-execute [wave]` | Dispatch parallel agents per wave; hold boundary until each wave completes; resume from a specific wave |
 | `/g-review` | test suite → code-lead → full review pipeline → Tier 3 smoke test (listen mode) → MERGE READY or HOLD → auto-closes milestone tasks |
 | `/g-update` | Pull latest plugin from GitHub, then realign all g-team-managed files (CLAUDE.md rules, G-RULES.md, agents, architecture rules, hooks) to the new version |
+| `/g-afk` | Autonomous milestone executor — runs all pending waves + review unattended. Requires approved plan. Safety net blocks remote push, recursive delete, and publish commands. Structured cycle-break report on any stop. |
 | `/g-listen` | Enter listen mode — collect notes, issues, or observations without acting; triage everything when you say "done" |
 | `/g-skill-design` | Design a new g-team skill from scratch — requirements gathering, step drafting, SKILL.md + command file + router wiring |
 | `/g-skill-validate [name]` | Validate a skill or agent against structural rules — ✓/✗ checklist, VALID or NEEDS FIXES verdict |
@@ -387,6 +391,29 @@ You can still invoke them manually if needed:
 /g-brief        Refresh project_brief.md as the project evolves
                      Reads current ROADMAP.md, todo.md, recent git log
                      Asks at most 4 targeted questions — no full re-onboard
+```
+
+### Going AFK — unattended milestone execution
+
+```
+/g-afk          Pre-checks: approved plan must exist in docs/plans/
+                     Configures permissions.allow (no tool prompts) +
+                       permissions.deny (safety net):
+                       blocks git push, rm -rf, all publish commands,
+                       and writes outside the project folder
+                     One final confirmation, then goes heads-down:
+                       executes all pending waves in sequence
+                       runs /g-review automatically after the last wave
+                     Only stops for: BLOCKED task or safety violation
+                     Both produce a structured cycle-break report:
+                       what completed · what was written · exact violation ·
+                       two resume options
+                     Ends with full handoff: verdict · Tier 3 test plan ·
+                       open items
+
+Tip: for fully unattended mode (no prompts at all), start the session with:
+  claude --dangerously-skip-permissions
+then run /g-afk
 ```
 
 ### Day-to-day commit flow
