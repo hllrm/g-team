@@ -4,7 +4,7 @@
 - `commands/` — thin routing .md files; Glob+Read to SKILL.md; no hardcoded logic; no Skill() calls
 - `skills/<name>/SKILL.md` — multi-step workflow instructions; no Skill() invocations; must have Announce line and Rules section; no argument-hint in frontmatter
 - `agents/` — specialist .md agents; Read, Glob, Grep tools only; output findings, never fixes; must include name, description, model, tools frontmatter
-- `profiles/<stack>/` — stack architect agent + architecture rules; installed per-project by /g-team specialize; architect agent must be read-only
+- `profiles/<stack>/` — stack architect agent + architecture rules; installed per-project by /g-specialize; architect agent must be read-only
 - `hooks/` — standalone bash scripts; read stdin JSON; exit 1 to block; no Claude runtime dependency; must have #!/bin/bash shebang
 - `.claude-plugin/` — plugin.json + marketplace.json; schema-valid; version numbers must match across both files
 

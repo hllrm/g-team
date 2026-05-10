@@ -10,7 +10,7 @@ See also: [G-RULES.md §B–C](../G-RULES.md) for enforcement rules, and the ind
 
 Plan, execute, and review fire **automatically** — you do not need to type the commands for non-trivial tasks.
 
-After `/g-team init`, two hooks are installed in `.claude/settings.json`:
+After `/g-init`, two hooks are installed in `.claude/settings.json`:
 
 **`workflow-checkpoint.sh`** (`UserPromptSubmit`) — fires on every message. Reports:
 - Whether an active plan exists in `docs/plans/`
@@ -21,14 +21,14 @@ Claude reads this output and auto-triggers the correct step:
 
 | Checkpoint output | Auto-trigger |
 |---|---|
-| No active plan + non-trivial task detected | `/g-team plan` |
-| Active plan with pending/in-progress wave | `/g-team execute` |
-| All waves complete, no sentinel | `/g-team review` |
+| No active plan + non-trivial task detected | `/g-plan` |
+| Active plan with pending/in-progress wave | `/g-execute` |
+| All waves complete, no sentinel | `/g-review` |
 | `g-team-approved` present | Commit gate open — no action needed |
 
 **`check-commit.sh`** (`PreToolUse`) — blocks any `git commit` Bash call unless `.claude/g-team-approved` exists. Cleared automatically by `post-commit-cleanup.sh` (`PostToolUse`) after each successful commit.
 
-You can still invoke `/g-team plan`, `/g-team execute`, and `/g-team review` manually at any time.
+You can still invoke `/g-plan`, `/g-execute`, and `/g-review` manually at any time.
 
 ---
 
@@ -72,14 +72,14 @@ Status values: `pending` | `in progress` | `complete`.
 
 ## Pattern 1 — Feature Build
 
-**Trigger:** `/g-team plan` — or auto-triggered when a non-trivial task is detected.
+**Trigger:** `/g-plan` — or auto-triggered when a non-trivial task is detected.
 
 **When to use:** Any non-trivial feature — three or more files, a new component, a layer-boundary change, or unclear scope.
 
 **Flow:**
 
 ```
-/g-team plan
+/g-plan
   └─ task-decomposer (Sonnet)
        receives: feature request, file paths, constraints
        returns:  numbered task list with done conditions
@@ -93,7 +93,7 @@ Status values: `pending` | `in progress` | `complete`.
   └─ plan saved to docs/plans/<feature-slug>.md
        (Tasks table + Wave Schedule + Progress table, all waves set to "pending")
 
-/g-team execute   [sole executor for all wave-based dispatch]
+/g-execute   [sole executor for all wave-based dispatch]
   Wave 1 — all tasks dispatched in a SINGLE parallel message
     └─ agent per task: implement → test
          each agent: receives task, done condition, file scope, constraint
@@ -107,7 +107,7 @@ Status values: `pending` | `in progress` | `complete`.
 
   [BLOCKED signal on any task → stop, report, do not advance wave]
 
-/g-team review
+/g-review
   └─ code-lead (Opus)
        receives: diff, done conditions, branch name
        dispatches review-orchestrator →
@@ -147,14 +147,14 @@ wave-planner returns:
 
 ## Pattern 2 — Full Review
 
-**Trigger:** `/g-team review` — or auto-triggered when all waves are complete.
+**Trigger:** `/g-review` — or auto-triggered when all waves are complete.
 
 **When to use:** Before any merge. Non-negotiable — the commit gate is locked until MERGE READY.
 
 **Flow:**
 
 ```
-/g-team review
+/g-review
   └─ [gather diff: git diff main...HEAD]
   └─ [gather done conditions: from docs/plans/*.md or milestones/ file]
 
@@ -208,7 +208,7 @@ If `milestones/` does not exist or no matching tasks are found, this step is ski
 **Verdict meanings:**
 
 - **MERGE READY** — all done conditions met, no BLOCKING findings. Commit gate unlocked.
-- **HOLD — FIX REQUIRED** — one or more BLOCKING findings or done conditions not met. Fix all items and re-run `/g-team review`.
+- **HOLD — FIX REQUIRED** — one or more BLOCKING findings or done conditions not met. Fix all items and re-run `/g-review`.
 - **ESCALATE** — code-lead cannot determine verdict (missing context, contradictory requirements). Needs developer input before proceeding.
 
 ---
@@ -239,7 +239,7 @@ test-writer (Haiku)
 
 [implement fix]
 
-/g-team review    ← always run before committing the fix
+/g-review    ← always run before committing the fix
 ```
 
 **Example — N+1 query bug:**
@@ -299,7 +299,7 @@ code-reviewer (Opus)
   receives: diff of the refactor
   returns:  quality findings — logic errors, missed renames, broken references
 
-/g-team review    ← always run before committing
+/g-review    ← always run before committing
 ```
 
 **Example — extracting a service layer:**
@@ -333,7 +333,7 @@ refactor-executor returns: src/repositories/user.ts created, src/controllers/use
 
 ## Hooks Reference
 
-Installed by `/g-team init` into `.claude/hooks/` and registered in `.claude/settings.json`.
+Installed by `/g-init` into `.claude/hooks/` and registered in `.claude/settings.json`.
 
 | Hook | Event | File | What it does |
 |------|-------|------|--------------|
@@ -344,4 +344,4 @@ Installed by `/g-team init` into `.claude/hooks/` and registered in `.claude/set
 
 **Sentinel file:** `.claude/g-team-approved` — written by `g-team-review` on MERGE READY, deleted by `post-commit-cleanup.sh` after commit. Its presence is the only condition that unlocks `git commit`.
 
-**Note:** `workflow-checkpoint.sh` and `check-commit.sh` are project-local (written to `.claude/hooks/` by `/g-team init`). The lifecycle and cleanup hooks ship with the plugin at `hooks/`.
+**Note:** `workflow-checkpoint.sh` and `check-commit.sh` are project-local (written to `.claude/hooks/` by `/g-init`). The lifecycle and cleanup hooks ship with the plugin at `hooks/`.

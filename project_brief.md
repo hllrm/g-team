@@ -27,8 +27,8 @@ The immediate goals are:
 - Install g-team into this repo: `CLAUDE.md` with G-rules, `G-RULES.md`, commit enforcement hooks, `.claude/settings.json` hook registration
 - Create milestone files for M6, M7, M8 (files exist in ROADMAP but have no corresponding `milestones/` entries)
 - `claude-plugin` stack profile: architect agent + architecture rules covering skill format, agent format, command routing, hook patterns, output contracts
-- `/g-team skill-design` skill: guided workflow for designing a new skill or agent — asks about purpose, trigger conditions, step structure, output format; produces a SKILL.md or agent .md draft
-- `/g-team skill-validate` skill: validates an existing SKILL.md or agent file against quality criteria — checks announce line, step completeness, output format, rules section, ambiguity
+- `/g-skill-design` skill: guided workflow for designing a new skill or agent — asks about purpose, trigger conditions, step structure, output format; produces a SKILL.md or agent .md draft
+- `/g-skill-validate` skill: validates an existing SKILL.md or agent file against quality criteria — checks announce line, step completeness, output format, rules section, ambiguity
 - Best practice rules for plugin/skill development baked into the `claude-plugin` architecture rules
 
 ### Out of scope
@@ -38,7 +38,7 @@ The immediate goals are:
 
 ### Known risks / existing issues
 - **No automated tests** — all skill/agent quality is validated by hand. Changes to skills or hooks can introduce regressions that aren't caught until the plugin is used in a real project. Addressing this is lower priority but worth tracking.
-- **milestones/ directory is stale** — M6, M7, M8 have no files; milestone close-out logic in `/g-team review` will silently skip them.
+- **milestones/ directory is stale** — M6, M7, M8 have no files; milestone close-out logic in `/g-review` will silently skip them.
 - **docs/superpowers/** — stale subdirectory from an earlier development phase; may contain outdated references.
 
 ## Tech decisions

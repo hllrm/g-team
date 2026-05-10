@@ -1,6 +1,6 @@
 # G-Team Agents
 
-All 16 agents ship with every install. Stack-specific architect agents are installed per-project by `/g-team specialize` and are not listed here.
+All 16 agents ship with every install. Stack-specific architect agents are installed per-project by `/g-specialize` and are not listed here.
 
 ---
 
@@ -29,7 +29,7 @@ Agents that coordinate other agents and own the feature or review lifecycle end-
 ### `code-lead`
 **Tier:** Opus  
 **Role:** Guards technical quality at every level — milestone feasibility, commit reviews, and merge gates — by verifying done conditions and running the full review pipeline via `review-orchestrator`.  
-**Use when:** Running `/g-team review` after implementation waves complete; this is the merge gate. Also consult during milestone planning for technical feasibility and sequencing risk.  
+**Use when:** Running `/g-review` after implementation waves complete; this is the merge gate. Also consult during milestone planning for technical feasibility and sequencing risk.  
 **Give it:** The branch diff, done conditions, branch name, and task list.  
 **Returns:** MERGE READY or HOLD with a prioritised fix list; at the roadmap level, a sequencing recommendation with reasoning.
 
