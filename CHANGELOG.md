@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.7.0] — 2026-05-10
+
+### Added
+
+- **SOLID principles as coding standards** — `G-RULES.md` §D now has a dedicated SOLID block with one concrete, actionable rule per principle (SRP, OCP, LSP, ISP, DIP), replacing the previous single SRP one-liner. `code-reviewer` gains a SOLID violations checklist with per-principle severity guidance (LSP = Critical, SRP/OCP/DIP = Major, ISP = Minor). `architecture-enforcer` gains OCP and DIP architectural checks covering type-switch dispatchers and wrong-direction imports from concrete adapters.
+- **`/g-audit [path|all]`** — code quality audit skill. Grep-based parallel scanner covering SOLID violations, code smells, dead code markers, and test coverage gaps. Each finding is scored `(severity × impact) / change_risk` and bucketed into P0–P3 priority tiers. Targeted mode produces an inline report; whole-codebase mode writes a prioritised `milestones/M-audit-YYYY-MM.md` and appends a milestone entry to `ROADMAP.md`.
+- **`/g-optimize [path|all]`** — performance audit skill. Detects O(n²) nested loops, N+1 queries, regex construction in hot functions, deep clones on state change, re-render waste (React inline object props, Vue whole-store subscriptions), listener/timer leaks without cleanup, and whole-library imports. Stack-aware: UI checks only run when a UI framework is detected; N+1 checks only when an ORM is detected. Same two-mode output and roadmap integration as `/g-audit`.
+- **`/g-refactor [path|milestone]`** — guided refactor orchestration skill. Accepts a file/path scope or an audit/optimize milestone file. Pipeline: test coverage check (offers `test-writer` if thin) → parallel pre-analysis (`code-reviewer` + `architecture-enforcer`) → `spec-writer` dispatch → human approval gate → wave execution via `refactor-executor` with Tier 1 gates between waves → `/g-review` merge gate → milestone file updated if launched from an audit milestone.
+- **Live stable/LTS research in `/g-specialize`** — new Step 2 runs `WebSearch` for each detected stack before installation. Scope is strict: stable and LTS releases only; alpha/beta/RC/canary/experimental results are ignored. Findings (confirmed version, material best-practice changes since prior major) are shown in the confirmation prompt and appended as a dated addendum to the installed architect agent file.
+- **Astro island combo profiles** — three new combo profiles (`astro-react`, `astro-vue`, `astro-svelte`) covering patterns that emerge only when using island frameworks with Astro: island placement convention (`src/islands/` not `src/components/`), serializable prop contract, island isolation rules (React Context / Pinia instances don't cross island boundaries), cross-island state strategy (nanostores for React and Vue; native Svelte module-scope stores also work for Svelte islands), hydration directive defaults (`client:visible` not `client:load`), and the callout that `$app/*` SvelteKit APIs are unavailable in Astro context.
+
+### Fixed
+
+- **`next-js` architect agent filename** — `g-specialize` referenced `next-architect.md`; actual file is `next-js-architect.md`. Would have silently failed to install the Next.js architect on every project.
+- **React Router v7 not detected** — Remix rebranded to React Router v7 (`react-router` package + `@react-router/dev` in devDependencies, or `react-router.config.ts` present). Added detection path mapping to the existing `remix` profile (file-based routing + loader/action architecture is identical).
+
+### Changed
+
+- `G-RULES.md` §B maintenance skills table updated with `/g-audit`, `/g-optimize`, `/g-refactor` entries.
+- `g-specialize` combo detection table and combo file mapping extended with the three Astro combos.
+- README: skill count 17 → 20, combo profile count 4 → 7, command list and combo table updated.
+
+---
+
 ## [0.3.5a] — 2026-05-08
 
 ### Fixed

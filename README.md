@@ -41,7 +41,7 @@ The goal isn't to automate your project. It's to give it a better chance of succ
 /plugin install g-team
 ```
 
-All 16 G-Team agents, 17 skills, 45 stack profiles, and 4 combo profiles become available globally across all your projects.
+All 16 G-Team agents, 20 skills, 45 stack profiles, and 7 combo profiles become available globally across all your projects.
 
 #### Desktop app, VS Code, JetBrains
 
@@ -90,7 +90,7 @@ This loads G-Team for that session only. Re-run with `--plugin-dir` each time, o
 
 ### Verify
 
-Type `/g-help` in any Claude Code session. You should see the current project state and a full command reference. Commands follow the `/g-<name>` pattern: `/g-plan`, `/g-execute`, `/g-review`, `/g-afk`, `/g-init`, `/g-kickoff`, `/g-onboard`, `/g-specialize`, `/g-roadmap`, `/g-brief`, `/g-listen`, `/g-help`, `/g-status`, `/g-doctor`, `/g-update`, `/g-skill-design`, `/g-skill-validate`.
+Type `/g-help` in any Claude Code session. You should see the current project state and a full command reference. Commands follow the `/g-<name>` pattern: `/g-plan`, `/g-execute`, `/g-review`, `/g-afk`, `/g-init`, `/g-kickoff`, `/g-onboard`, `/g-specialize`, `/g-roadmap`, `/g-brief`, `/g-listen`, `/g-help`, `/g-status`, `/g-doctor`, `/g-update`, `/g-skill-design`, `/g-skill-validate`, `/g-audit`, `/g-optimize`, `/g-refactor`.
 
 ### Set up a new project
 
@@ -291,7 +291,7 @@ Game-dev profiles (`unity`, `unreal`, `godot-gdscript`, `godot-csharp`, `cpp-cma
 
 ### Combo Profiles
 
-4 combo profiles are detected automatically by `/g-specialize` when your project uses two stacks that have emergent cross-stack patterns — patterns that aren't in either tool's docs alone.
+7 combo profiles are detected automatically by `/g-specialize` when your project uses two stacks that have emergent cross-stack patterns — patterns that aren't in either tool's docs alone.
 
 | Combo | Required stacks | Patterns covered |
 |-------|-----------------|-----------------|
@@ -299,6 +299,9 @@ Game-dev profiles (`unity`, `unreal`, `godot-gdscript`, `godot-csharp`, `cpp-cma
 | `electron-vue-pinia` | electron + vue-pinia | contextBridge + Pinia IPC integration, cross-window state |
 | `react-tauri` | react + tauri | `invoke()` typed API layer, Tauri event hooks in React, capability scoping |
 | `tauri-vue-pinia` | tauri + vue-pinia | `invoke()` typed API layer, Pinia + Tauri event subscriptions, capability scoping |
+| `astro-react` | astro + react | Island isolation, serializable prop contract, cross-island state via nanostores, React hydration directives |
+| `astro-vue` | astro + vue-pinia | Island isolation, serializable prop contract, cross-island state via nanostores, Vue hydration directives |
+| `astro-svelte` | astro + sveltekit | Island isolation, serializable prop contract, native Svelte store sharing across islands, hydration directives |
 
 Combo profiles install rules only — no architect agent. Detected automatically; no explicit argument needed.
 

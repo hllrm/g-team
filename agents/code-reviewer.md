@@ -24,6 +24,12 @@ A set of changed files or a git diff.
   - *Premature abstraction*: an abstraction layer with only one implementation and no imminent second use
   - *Magic values*: bare literal strings/numbers with no named constant or explanation
   - *Catch-and-continue*: catching an exception and silently swallowing it or logging without re-throwing
+- **SOLID violations** (flag by severity):
+  - *SRP*: a function or class that mixes two distinct concerns (e.g. fetches data AND formats it AND handles UI state). Flag as Major. Suggest splitting at the responsibility boundary.
+  - *OCP*: a switch/if-else chain that dispatches on a type discriminant and must be edited to support each new variant. Flag as Major. Suggest a strategy map or polymorphic dispatch.
+  - *LSP*: a subtype method that throws where the base always returns, narrows accepted input types, or skips part of the supertype's contract. Flag as Critical — callers that depend on the base type will break silently.
+  - *ISP*: a parameter that is a large object where the function uses ≤2 fields, or an interface with stub/`throw` implementations because the class doesn't need those methods. Flag as Minor; suggest narrowing the type or splitting the interface.
+  - *DIP*: `new ConcreteService()` inside business logic or a domain module; an import of a concrete infrastructure module (ORM model, HTTP client, third-party SDK) directly in a service or use-case layer. Flag as Major. Suggest constructor/function injection with an interface type.
 
 ## Output format
 
