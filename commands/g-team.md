@@ -1,6 +1,6 @@
 ---
-description: G-Team workflow commands. Subcommands: help, status, doctor, init, kickoff, onboard, brief, roadmap, plan, execute, review, specialize, update, skill-design, skill-validate.
-argument-hint: <help|status|doctor|init|kickoff|onboard|brief|roadmap|plan|execute|review|specialize|update|skill-design|skill-validate> [args]
+description: G-Team workflow commands. Subcommands: help, status, doctor, init, kickoff, onboard, brief, roadmap, plan, execute, review, afk, specialize, update, skill-design, skill-validate.
+argument-hint: <help|status|doctor|init|kickoff|onboard|brief|roadmap|plan|execute|review|afk|specialize|update|skill-design|skill-validate> [args]
 ---
 
 Route to the correct skill file based on the subcommand in $ARGUMENTS.
@@ -18,6 +18,7 @@ For each subcommand, use Glob to find the corresponding SKILL.md inside `~/.clau
 - `plan`       → `skills/g-plan/SKILL.md`
 - `execute`    → `skills/g-execute/SKILL.md`  (remaining args: $ARGUMENTS)
 - `review`     → `skills/g-review/SKILL.md`
+- `afk`        → `skills/g-afk/SKILL.md`
 - `specialize` → `skills/g-specialize/SKILL.md`  (remaining args: $ARGUMENTS)
 - `update`     → `skills/g-update/SKILL.md`
 - `skill-design` → `skills/g-skill-design/SKILL.md`
@@ -35,6 +36,7 @@ If $ARGUMENTS is empty or unrecognized, list available subcommands:
   - `plan` — decompose request into atomic tasks and parallel wave schedule
   - `execute [wave]` — dispatch parallel agents per wave; optionally resume from a specific wave number
   - `review` — run full review pipeline; issues MERGE READY or HOLD
+  - `afk` — autonomous milestone executor: runs all waves + review unattended, requires approved plan
   - `specialize [stack]` — auto-detect or apply a named stack profile
   - `update` — realign all g-team-managed files to the current plugin version
   - `skill-design` — design a new skill from scratch (SKILL.md, command file, router entry)
