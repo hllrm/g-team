@@ -188,8 +188,8 @@ Write `.claude/hooks/workflow-checkpoint.sh` with this exact content:
 # Outputs current workflow state so Claude can auto-trigger the right step.
 
 ACTIVE_CONTEXT=""
-if [ -f "ROADMAP.md" ]; then
-    ACTIVE_CONTEXT=$(grep -m1 'Active context:' ROADMAP.md | sed 's/.*Active context:[[:space:]]*//')
+if [ -f "todo.md" ]; then
+    ACTIVE_CONTEXT=$(grep -m1 'Active context:' todo.md | sed 's/.*Active context:[[:space:]]*//')
 fi
 
 REVIEW_APPROVED=false

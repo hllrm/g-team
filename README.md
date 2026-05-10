@@ -125,7 +125,7 @@ G-RULES.md has seven sections:
 | Section | What it governs |
 |---------|----------------|
 | **A — Session Rules** | Model selection, planning discipline, token optimisation, delivery standards, Three-Strikes escalation |
-| **B — G-Team Workflow** | Auto-trigger rules for plan/execute/review; wave execution; hard stops; subagent commit prohibition |
+| **B — G-Team Workflow** | Project lifecycle (kickoff → roadmap → init → specialize); per-task auto-trigger loop (plan/execute/review); maintenance skills reference table; hard stops |
 | **C — Agent Discipline** | HQ vs. agent boundaries; wave model; when to spawn vs. inline; agent prompt requirements; agent caps |
 | **D — Code Quality** | Style (const/let/var), naming conventions, comments, error handling, testing standards, component structure, branch discipline |
 | **E — Architecture Gate** | Mandatory plan-first sequence for non-trivial changes; import direction validation; state ownership; hard stops |

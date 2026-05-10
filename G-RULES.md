@@ -1,7 +1,6 @@
 # G-Rules — Claude Code Session Discipline
 
 Drop at project root. In `CLAUDE.md` add: `@G-RULES.md`
-Set `.claude/rules/architecture-<stack>.md` and `.claude/agents/architecture-review.md` for Part D.
 
 ---
 
@@ -13,9 +12,9 @@ Set `.claude/rules/architecture-<stack>.md` and `.claude/agents/architecture-rev
 
 **A3 Execution workflow**
 - Execute 1st pass only (no scope creep mid-wave)
-- Before committing — mandatory gate: `npm test` all green + `npm run lint` 0 errors
+- Before committing — mandatory gate: run the project's lint and test commands (check `package.json`, `Makefile`, `pyproject.toml`, or CI config for the right commands). Any red = stop, fix first.
 - Business logic / public API / bug fix → tests required. Pure UI render → skip is OK, state why explicitly. Silence = not acceptable.
-- Pure functions inside a component → extract to `src/lib/` first, then test
+- Pure functions inside a component → extract to the project's lib/utils layer first, then test
 - After each commit: update `todo.md` (remove closed rows + Details), append to `todo-done.md`, commit immediately — never leave either file dirty
 - End of pass: rewrite `## Handoff` block in `todo.md` (replace, never append), commit, post the same block in chat
 
@@ -36,24 +35,51 @@ Warning signs: error message changes but bug class persists · you're explaining
 
 ---
 
-## B · G-Team Workflow (mandatory)
+## B · G-Team Workflow
 
-**Every non-trivial task starts with `project-manager`.** Non-trivial = ≥3 files, new feature, layer-boundary change, bug fix with unclear root cause, or anything with multiple dependent steps. Single-file edits with a known location may proceed inline.
+### Project lifecycle (run once at project start)
 
-**Auto-triggered sequence — Claude initiates without being asked:**
-1. `/g-plan` — non-trivial task detected → immediately run before any file changes. Drives task-decomposer → wave-planner → spec-writer, presents plan, waits for approval.
-2. `/g-execute` — plan approved → immediately dispatch waves. Runs agents in parallel per wave, holds boundary between waves.
-3. `/g-review` — implementation complete / user wants to merge → immediately run. `code-lead` verifies done conditions + dispatches review-orchestrator. Issues MERGE READY or HOLD.
-4. HQ merges only after MERGE READY — never before.
+```
+/g-kickoff    → interview developer, produce project_brief.md
+/g-roadmap    → milestone plan → ROADMAP.md + milestones/M*.md
+/g-init       → scaffold files, hook scripts, settings.json
+/g-specialize → detect stack, install architect agent + rules profile
+```
+
+For an existing project without g-team: run `/g-onboard` instead of the above sequence.
+
+### Per-task loop — auto-triggered, Claude initiates without being asked
+
+```
+/g-plan       → decompose task, schedule waves, write specs — wait for approval
+/g-execute    → dispatch waves in parallel, hold boundary between waves
+/g-review     → code-lead gate — issues MERGE READY or HOLD
+```
+
+**Non-trivial** = ≥3 files, new feature, layer-boundary change, bug fix with unclear root cause, or anything with multiple dependent steps. Single-file edits with a known location may proceed inline.
 
 **Auto-trigger rule:** Do not wait for the user to type `/g-plan`, `/g-execute`, or `/g-review`. Detect the condition and trigger automatically.
 
-**Wave execution rule:** always use `/g-execute` for wave-based parallel dispatch. Never use `superpowers:dispatching-parallel-agents` in a g-team project — that skill is superseded by g-execute.
+**Wave execution rule:** always use `/g-execute` for wave-based parallel dispatch.
 
-**Hard stops:**
-- Never commit agent work without `code-lead` sign-off
-- Never skip `project-manager` for non-trivial tasks — "it's quick" is not an exception
-- `code-lead` HOLD = fix everything listed, then re-review. No partial merges.
+### Maintenance and support skills
+
+| Skill | Purpose |
+|-------|---------|
+| `/g-update` | Pull latest plugin from GitHub, realign all g-team-managed project files |
+| `/g-brief` | Refresh `project_brief.md` from the current conversation |
+| `/g-status` | One-shot snapshot: branch, active milestone, next task |
+| `/g-help` | Context-aware help — reads project state and detects workflow phase |
+| `/g-doctor` | Health check: missing files, broken hooks, config drift, sentinel state |
+| `/g-listen` | Enter Tier 3 listen mode for smoke test collection |
+| `/g-skill-design` | Design a new plugin skill from a brief |
+| `/g-skill-validate` | Validate a skill or agent file against plugin architecture rules |
+
+### Hard stops
+
+- Never commit without `.claude/g-team-approved` — the commit gate will block it
+- Never skip `/g-plan` for non-trivial tasks — "it's quick" is not an exception
+- `code-lead` HOLD = fix everything listed, re-review. No partial merges.
 - `git commit` is HQ-only, after MERGE READY. Never instruct subagents to commit — they implement and return results only.
 
 ---
@@ -68,8 +94,8 @@ Warning signs: error message changes but bug class persists · you're explaining
 
 | Situation | Action |
 |-----------|--------|
-| Non-trivial feature or multi-step task | `project-manager` first |
-| All agent commits ready to merge | `code-lead` gate before merge |
+| Non-trivial feature or multi-step task | `/g-plan` first |
+| All agent work ready to merge | `/g-review` gate before commit |
 | Open-ended search, unknown locations, >3 files | Spawn **Explore** agent |
 | Self-contained implementation, inputs fully known | Spawn **general-purpose** agent |
 | Long task that would bloat main context | Spawn agent |
@@ -130,17 +156,7 @@ Composable export matches filename: `useFoo.ts` → `export function useFoo`.
 - Mandatory: bug fixes · critical business logic · public APIs
 - Optional: internal helpers tested indirectly via integration tests
 
-**Component structure**
-```
-src/components/
-  atoms/       — single-purpose, no app-state deps
-  molecules/   — combine 2-3 atoms, stateless
-  organisms/   — stateful, use stores or composables
-  layout/      — app shell, navigation
-src/pages/     — thin: layout + state wiring only, no logic >30 lines
-src/lib/       — pure functions, constants shared across components
-```
-Sub-components with their own state or >30 lines → own file. Constants used by >1 component → `src/lib/`.
+**Component / module structure** — Stack-specific. See `.claude/rules/architecture-<stack>.md` installed by `/g-specialize`.
 
 **Branch discipline**
 - Non-trivial work (≥3 files, new feature, layer-boundary change, unclear bug, public API change) → create a feature branch before the first file change: `git checkout -b feat/<slug>`, `fix/<slug>`, or `refactor/<slug>`
@@ -153,9 +169,10 @@ Sub-components with their own state or >30 lines → own file. Constants used by
 
 ## E · Architecture Gate
 
-Architecture map: `.claude/rules/architecture-<stack>.md`
-Architecture reviewer: `.claude/agents/architecture-review.md`
-Update the map when the stack or data layer changes.
+Architecture rules: `.claude/rules/architecture-<stack>.md` — installed by `/g-specialize`
+Architecture reviewer: `.claude/agents/<stack>-architect.md` — installed by `/g-specialize`
+
+Run `/g-specialize` once after `/g-init` to detect the project stack and install the correct profile. Re-run if the stack or data layer changes significantly.
 
 **Non-trivial** = any of: ≥3 files · layer-boundary path · new component/store/composable/route · public API change · refactor / migrate / restructure / new feature.
 
@@ -213,36 +230,31 @@ Lint · type-check · unit tests · build verification. Any red = stop, do not c
 E2E, integration, contract tests. If infrastructure is missing and the task touches a critical path, flag the gap explicitly — never silently skip.
 
 **Tier 3 — Human-Driven** (user owns the verdict · Claude never infers pass from output)
-Smoke tests · acceptance · design review · business logic correctness. User exercises the real app against the QA panel. Claude cannot substitute judgement here.
+Smoke tests · acceptance · design review · business logic correctness. User exercises the real app and reports findings in chat. Claude cannot substitute judgement here.
 
 ---
 
-**QA Panel integration**
+**Tier 3 Instrument — QA Panel or Test Plan**
 
-If the project has a structured manual testing UI (a QA panel), G-Team integrates it into the Tier 3 protocol from the start — not as an afterthought.
+Tier 3 requires a testing instrument. Which one depends on the project:
 
-- **At project kickoff:** establish that a QA panel exists and understand its test groups / structure.
-- **At milestone planning:** identify which test groups are impacted by this milestone's changes. Compile a `docs/qa-scope/<milestone-slug>.md` mapping each in-scope group to what must pass. This is the Tier 3 DoD for the milestone.
-- **When approaching a testable build:** prompt the developer: "Before smoke testing, open the QA panel and focus on: [groups from qa-scope doc]."
-- **During Tier 3:** the QA panel is the primary instrument. Listen mode applies — Claude logs each finding as reported.
+- **QA panel present** — a structured in-app testing UI. G-Team integrates it from the start, not as an afterthought.
+  - At milestone planning: identify which test groups are impacted. Compile `docs/qa-scope/<milestone-slug>.md` mapping each in-scope group to what must pass.
+  - QA panel currency: any task adding/removing user-facing surface must include "QA panel updated" as a done condition. MERGE READY is blocked if the panel is stale.
+- **No QA panel** — at milestone planning, generate a test plan and print it in chat. The test plan lists scenarios to exercise, grouped by feature area, derived from the milestone scope. The developer uses this as their checklist during Tier 3. No file saved — it is a live prompt artifact.
 
-Rule: no qa-scope doc = milestone not started. Without a defined scope there is no valid exit condition.
-
-**QA panel currency — mandatory, non-negotiable**
-
-The QA panel must always reflect the current state of the app. It is never allowed to go stale.
-
-- Any task that adds new user-facing surface (new page, feature, tool, workflow, modal) **must** include "QA panel updated with test item(s) for this surface" as a done condition. No exceptions.
-- Any task that removes or significantly changes existing surface **must** include "QA panel updated to reflect the change" as a done condition.
-- MERGE READY is blocked if the QA panel is not current with the changes being merged.
-- G-Team flags the QA panel update requirement at planning time, not as a last-minute reminder.
+The instrument is established at milestone start. Tier 3 without an instrument (no QA panel and no generated test plan) is not valid.
 
 ---
 
 **Tier 3 Protocol — Listen Mode**
 
-1. After every wave completes, Claude prompts: `Ready for smoke test?`
-2. User reviews the app against the QA panel and reports findings in chat
+Run `/g-listen` to enter listen mode. It writes the state file, prints the instrument, and enforces the collect-only discipline automatically.
+
+Manual protocol (if `/g-listen` is unavailable):
+
+1. Print the instrument: QA panel scope (from `docs/qa-scope/<milestone-slug>.md`) or the test plan generated at milestone start.
+2. Prompt: `Ready for smoke test? Work through the list above and report each finding in chat — say "done this round" when finished.`
 3. Claude enters **listen mode** — no fixes, no suggestions, no edits. Acknowledge each report only:
    > `Bug N logged — <bug area>`
 4. User declares **"done this round"**
@@ -252,7 +264,7 @@ The QA panel must always reflect the current state of the app. It is never allow
 6. Systemic waves execute first, then isolated fixes
 7. Tier 1 gates run after fixes before next round begins
 8. Next Tier 3 round → back to listen mode
-9. Repeat until user declares DoD met per QA panel
+9. Repeat until user declares DoD met
 
 **Hard stops during listen mode:** No file edits. No mid-round fixes. No "quick suggestions." Collect and triage only — never act on a single report in isolation.
 
@@ -265,6 +277,28 @@ The QA panel must always reflect the current state of the app. It is never allow
 ---
 
 ## Project Tracking
+
+### File hierarchy
+
+| File | Written by | Purpose |
+|------|-----------|---------|
+| `project_brief.md` | `/g-kickoff` | Project goals, constraints, stack decisions |
+| `ROADMAP.md` | `/g-roadmap` | Milestone plan — current, backlog, done |
+| `milestones/M*.md` | `/g-roadmap`, `/g-plan` | Per-milestone scope, tasks, done conditions |
+| `todo.md` | HQ | Active task ledger — Handoff + Tasks + Details |
+| `todo-done.md` | HQ | Archive of closed tasks and pass reports |
+
+### Commit gate infrastructure
+
+Three hook scripts installed by `/g-init` under `.claude/hooks/`:
+
+- **`check-commit.sh`** (PreToolUse) — blocks `git commit` if `.claude/g-team-approved` is absent. `/g-review` writes the sentinel after issuing MERGE READY.
+- **`post-commit-cleanup.sh`** (PostToolUse) — deletes `.claude/g-team-approved` after each successful commit. The gate resets automatically.
+- **`workflow-checkpoint.sh`** (UserPromptSubmit) — reads branch, milestone, review state, and Tier 3 listen mode on every prompt. Output appears as a system reminder at the top of each turn.
+
+Never bypass the commit gate with `--no-verify` or by manually writing the sentinel.
+
+### todo.md structure
 
 **`todo.md`** — three sections only:
 1. `## Handoff` — one block, replaced (never appended) each pass. Cold-start context.

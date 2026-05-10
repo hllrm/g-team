@@ -76,12 +76,14 @@ If code-lead's verdict is **HOLD** or **ESCALATE**, skip to Step 6 — no smoke 
 If code-lead's verdict is **MERGE READY**:
 
 1. Check whether `.claude/tier3-active` exists. If it does, a listen-mode session is already in progress — skip straight to Step 6.
-2. Identify the QA scope doc for this milestone: `docs/qa-scope/<milestone-slug>.md`. If it exists, read it and list the in-scope test groups for the developer. If it does not exist, note that and list any QA panel test groups you know are affected by the diff.
+2. Print the testing instrument:
+   - Check for `docs/qa-scope/<milestone-slug>.md`. If it exists, read it and print the in-scope test groups.
+   - If no QA scope doc: check whether the project has a QA panel (README, project docs). If it does, list the known affected test groups.
+   - If no QA panel: retrieve or regenerate the test plan that was produced at milestone planning. Print it in full — the developer uses it as their checklist.
 3. Prompt the developer:
 
-   > "Code review passed. **Tier 3 — open the QA panel** and smoke test the changes.
-   > Focus on: [list of in-scope groups from step 2, or 'all areas touched by this diff'].
-   > I'll enter listen mode. Report each finding in chat — say **'done this round'** when finished."
+   > "Code review passed. **Tier 3 — smoke test the changes.**
+   > Work through the list above and report each finding in chat — say **'done this round'** when finished."
 
 4. Write `0` to `.claude/tier3-active`.
 5. **Listen mode is now active.** Rules while in listen mode:
