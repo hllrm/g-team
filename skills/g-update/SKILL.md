@@ -9,35 +9,26 @@ You are first updating the plugin cache from GitHub, then syncing g-team-managed
 
 ---
 
-## Step 0 — Update the plugin
+## Step 0 — Check plugin version
 
 1. Fetch the latest version from GitHub:
    ```bash
    curl -sf --max-time 10 https://raw.githubusercontent.com/hllrm/g-team/main/.claude-plugin/plugin.json | grep '"version"'
    ```
-   If curl fails (no network, timeout), report: "⚠ Could not reach GitHub — skipping plugin update, syncing from installed cache." and continue to Step 1.
+   If curl fails (no network, timeout), report: "⚠ Could not reach GitHub — skipping version check, syncing from installed cache." and continue to Step 1.
 
-2. Find the installed version using Glob on `~/.claude/plugins/cache/g-team/g-team` for any `plugin.json` inside `.claude-plugin/`. Read it and extract the version. If nothing found, continue to Step 1.
+2. Find the installed version: Glob `~/.claude/plugins/cache/g-team/g-team/` for subdirectories, pick the highest semver, read its `.claude-plugin/plugin.json`, extract the version. If nothing found, continue to Step 1.
 
-3. If versions match, report: "Plugin already at latest ([version]) — proceeding with project sync." and continue to Step 1.
+3. If versions match: report `✓ Plugin already at latest (v[version]) — proceeding with project sync.` and continue to Step 1.
 
-4. If they differ, run the plugin update:
-   ```bash
-   claude plugin update g-team
+4. If they differ, report:
    ```
-
-5. After the update attempt, re-fetch the installed version (same Glob as step 2) and compare to the GitHub version again.
-   - If now matching: report `✓ Plugin updated [old] → [new]` and continue to Step 1.
-   - If still behind: report:
-     ```
-     ⚠ Plugin is still at v[installed] — /plugin update did not pick up v[latest].
-     To force the update:
-       /plugin marketplace add hllrm/g-team
-       /plugin install g-team
-     Then re-run /g-update.
-     ```
-     Ask: "Continue syncing project files from the currently installed v[installed]? (y/n)"
-     Wait for answer. On yes → continue to Step 1. On no → stop.
+   ⚠ Plugin is at v[installed] — v[latest] is available on GitHub.
+   Plugin updates are UI-only: open the /plugin menu and click Update next to g-team,
+   then re-run /g-update to sync your project files.
+   ```
+   Ask: "Continue syncing project files from the currently installed v[installed]? (y/n)"
+   Wait for answer. On yes → continue to Step 1. On no → stop.
 
 ---
 
