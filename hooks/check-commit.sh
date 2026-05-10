@@ -16,7 +16,7 @@ except Exception:
 
 if echo "$CMD" | grep -q "git commit"; then
     if [ ! -f ".claude/g-team-approved" ]; then
-        echo "G-Team: No code-lead sign-off. Run /g-team review and wait for MERGE READY before committing." >&2
+        echo "G-Team: No code-lead sign-off. Run /g-review and wait for MERGE READY before committing." >&2
         exit 1
     fi
     # Advisory: warn when committing directly to main with approval

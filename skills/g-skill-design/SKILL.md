@@ -14,7 +14,7 @@ Ask the developer:
 > "What should this skill do? Describe:
 > 1. The trigger — what user action or workflow state invokes it?
 > 2. The output — what does running this skill produce? (files, reports, modified state, user guidance)
-> 3. The name — what will the slash command be? (e.g. `/g-team foo` → skill name `g-team-foo`)"
+> 3. The name — what will the slash command be? (e.g. `foo` → command `/g-foo`, files `commands/g-foo.md` + `skills/g-foo/SKILL.md`)"
 
 Wait for answers before continuing.
 

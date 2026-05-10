@@ -25,7 +25,7 @@ fi
 if [ "$REVIEW_APPROVED" = true ]; then
     echo "  Review: approved (commit gate open)"
 else
-    echo "  Review: not yet approved — run /g-team review before merging"
+    echo "  Review: not yet approved — run /g-review before merging"
 fi
 
 if [ -f ".claude/tier3-active" ]; then
