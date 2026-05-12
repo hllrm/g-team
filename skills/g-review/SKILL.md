@@ -124,6 +124,8 @@ Present code-lead's verdict to the developer verbatim.
        Run /g-update after bumping to sync project files.
      ```
    - Do not bump the version automatically — the developer decides and commits it separately.
+   - **Auto-retro:** Immediately run `/g-retro` — use Glob to find `skills/g-retro/SKILL.md` inside `~/.claude/plugins/cache/g-team/g-team/` and read it, then follow its instructions. Use the milestone name as the topic slug (e.g. `M3-auth-refactor`). Do not wait for the developer to trigger it.
+   - **Every-other-milestone health check:** Read `.claude/milestone-count` if it exists (contains an integer, default 0 if absent). Increment by 1. If the result is odd, run `/g-doctor` immediately after `/g-retro` — use Glob to find `skills/g-doctor/SKILL.md` inside `~/.claude/plugins/cache/g-team/g-team/` and read it, then follow its instructions. Write the new count back to `.claude/milestone-count`.
 6. If only some tasks are done:
    - Save the partial updates to the milestone file
    - Report: `✓ [N] milestone tasks checked off — [M] remaining`
