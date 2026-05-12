@@ -173,7 +173,7 @@ Then for both:
 Day-to-day (auto-triggered — no command needed):
 /g-plan        →   approved wave schedule  →  saved to docs/plans/
 /g-execute     →   parallel agent swarming, wave by wave
-/g-review      →   MERGE READY or HOLD  →  milestone tasks auto-closed
+/g-review      →   MERGE READY or HOLD  →  milestone tasks auto-closed → /g-retro auto-runs → /g-doctor every other milestone
 git commit          →   gate clears, sentinel removed
 
 Unattended execution (requires approved plan):
