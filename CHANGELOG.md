@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.8.0] — 2026-05-12
+
+### Added
+
+- **`/g-retro`** — session retrospective skill. After any non-trivial session, saves a structured retro to `docs/retros/YYYY-MM-DD-topic.md` capturing: what was done, decisions made, patterns that worked/failed, and a cold-start context block (branch, active milestone, next up, key files touched, carry-over context). Interactive: infers the topic from `todo.md` + `git log`, confirms with the developer, interviews for decisions and patterns, then writes and surfaces the file.
+- **`pre-compact.sh` hook (`PreCompact` event)** — fires before Claude context compression. Writes `.claude/compact-state.md` containing the current branch, last 5 commits, and the Handoff block from `todo.md` at the moment of compaction. Exits 0 always — never blocks compression. Registered in `hooks/hooks.json` and wired into per-project `settings.json` by `/g-init`.
+- **MCP recommendations in `/g-init`** — Step 8 report now lists recommended MCPs (`context7`, `github`, `supabase`) with descriptions and installation guidance.
+- **PreCompact hook check in `/g-doctor`** — new check 10 verifies that `.claude/hooks/pre-compact.sh` is installed and `PreCompact` is registered in `settings.json`.
+
 ## [0.7.5] — 2026-05-11
 
 ### Added

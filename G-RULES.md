@@ -72,6 +72,7 @@ For an existing project without g-team: run `/g-onboard` instead of the above se
 | `/g-help` | Context-aware help — reads project state and detects workflow phase |
 | `/g-doctor` | Health check: missing files, broken hooks, config drift, sentinel state |
 | `/g-listen` | Enter Tier 3 listen mode for smoke test collection |
+| `/g-retro` | Record a session retrospective — what was done, decisions, patterns, and cold-start context for the next session |
 | `/g-skill-design` | Design a new plugin skill from a brief |
 | `/g-skill-validate` | Validate a skill or agent file against plugin architecture rules |
 | `/g-audit [path\|all]` | Code quality audit — SOLID violations, smells, dead code, coverage gaps. Targeted: inline report. Whole-codebase: prioritised roadmap milestone. |

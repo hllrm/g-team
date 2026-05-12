@@ -1,11 +1,11 @@
 ---
 name: g-doctor
-description: Health check for g-team project setup. Verifies all 3 hooks installed, all hooks registered in settings.json, G-Team Rules block in CLAUDE.md, G-RULES.md present and referenced, no stale sentinel. Reports ✓/✗ per check with fix instructions.
+description: Health check for g-team project setup. Verifies all 4 hooks installed, all hooks registered in settings.json, G-Team Rules block in CLAUDE.md, G-RULES.md present and referenced, no stale sentinel. Reports ✓/✗ per check with fix instructions.
 ---
 
 Announce: "Using g-doctor to check project health."
 
-Run all 9 checks below against the current working directory, then output the report in the exact format specified.
+Run all 10 checks below against the current working directory, then output the report in the exact format specified.
 
 ## Checks
 
@@ -63,6 +63,14 @@ Check if `.claude/g-team-approved` exists. It should NOT exist (it is auto-clear
 - Fail (file present): ✗ Stale approval sentinel found
   → A stale approval sentinel exists. Delete it: `rm .claude/g-team-approved`
 
+**10. PreCompact hook installed and registered**
+Check if `.claude/hooks/pre-compact.sh` exists AND `.claude/settings.json` contains a `PreCompact` hook entry pointing to `pre-compact.sh`.
+- Pass: ✓ PreCompact hook installed and registered
+- Fail (file missing): ✗ PreCompact hook script missing
+  → Run `/g-init` or `/g-update` to install pre-compact.sh.
+- Fail (not registered): ✗ PreCompact hook not registered in settings.json
+  → Run `/g-init` or `/g-update` to register the PreCompact hook.
+
 **Note:** Milestone alignment is no longer a numbered check — it is contextual and covered by `/g-status`. Doctor focuses on hook and rules infrastructure only.
 
 ## Output format
@@ -88,8 +96,10 @@ G-Team Doctor ──────────────────────
     [→ fix instruction if failed]
   [✓/✗ line for check 9]
     [→ fix instruction if failed]
+  [✓/✗ line for check 10]
+    [→ fix instruction if failed]
 ────────────────────────────────────────────────
-[N/9 checks passed]
+[N/10 checks passed]
 ```
 
 Fix instructions are indented with four spaces and prefixed with `→ `, and appear only on failing checks.

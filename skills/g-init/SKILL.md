@@ -167,6 +167,13 @@ if echo "$CMD" | grep -q "git commit"; then
 fi
 ```
 
+Copy `pre-compact.sh` from the plugin hooks directory to `.claude/hooks/pre-compact.sh`:
+- Plugin hooks path: `~/.claude/plugins/cache/g-team/g-team/` (Glob to confirm exact path) + `/hooks/pre-compact.sh`
+- Destination: `.claude/hooks/pre-compact.sh`
+- If the file already exists at the destination, overwrite it — it is g-team managed.
+
+Report: `✓ .claude/hooks/pre-compact.sh — installed`
+
 Write `.claude/hooks/workflow-checkpoint.sh` with this exact content:
 
 ```bash
@@ -249,6 +256,17 @@ Add the following hook entries under the `hooks` key. If `hooks` already exists,
           }
         ]
       }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'bash \"$(git rev-parse --git-common-dir)/../.claude/hooks/pre-compact.sh\"'",
+            "timeout": 5000
+          }
+        ]
+      }
     ]
   }
 }
@@ -268,10 +286,17 @@ G-Team initialized ✓
   ✓ ROADMAP.md — stub created (or already existed)
   ✓ milestones/M1.md — created (or already existed)
   ✓ todo.md — created (or already existed)
-  ✓ .claude/hooks/ — check-commit.sh and workflow-checkpoint.sh installed
+  ✓ .claude/hooks/ — check-commit.sh, workflow-checkpoint.sh, and pre-compact.sh installed
   ✓ .claude/settings.json — hooks registered
 
 Next: run /g-plan with your first feature request, or edit milestones/M1.md to define your scope.
+
+**Recommended MCPs** — install these in Claude Code for best results with G-Team:
+- `context7` — pulls current library docs into context, eliminates stale-training hallucinations
+- `github` — read PRs, diffs, issues directly from chat
+- `supabase` — SQL, migrations, schemas from chat (install if your project uses Supabase)
+
+To install: Claude Code → Settings → MCP Servers, or add to `~/.claude/settings.json` under `mcpServers`.
 ```
 
 ## Rules
