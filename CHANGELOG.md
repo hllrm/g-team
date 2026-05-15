@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.8.1] — 2026-05-15
+
+### Added
+
+- **Versioning & release flow rules** in `G-RULES.md` §D — codifies the project's existing semver conventions: `MAJOR.MINOR.PATCH[a]` format, dual version source rule (`plugin.json` + `marketplace.json`), milestone-scoped bumps, hotfix `a` suffix convention, 7-step release commit sequence, mid-milestone scope-creep policy, and git tag stance.
+
 ## [0.8.0] — 2026-05-12
 
 ### Added
