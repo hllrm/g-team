@@ -178,6 +178,43 @@ Composable export matches filename: `useFoo.ts` → `export function useFoo`.
 - MERGE READY on main is only acceptable for: hotfixes (single-file bug fix), doc-only changes (README, CHANGELOG, comments), or version bumps. Everything else requires a branch.
 - Branch naming: `feat/<slug>` for new features, `fix/<slug>` for bug fixes, `refactor/<slug>` for refactors, `chore/<slug>` for housekeeping
 
+**Versioning & release flow**
+
+The project uses [Semantic Versioning](https://semver.org/) (semver) with an optional hotfix suffix. Versions are milestone-scoped — every milestone gets a target version at planning time, and the bump happens when the milestone closes.
+
+*Version format:* `MAJOR.MINOR.PATCH[a]`
+- **MINOR** bump (`x.Y.0`) — new user-facing capability, new public API, new skill/command, new profile
+- **PATCH** bump (`x.y.Z`) — bug fixes, internal refactors, polish, dependency updates, doc-only changes
+- **MAJOR** bump (`X.0.0`) — breaking change to public API or incompatible behaviour change
+- **Hotfix suffix** (`a`) — appended to patch for out-of-band fixes after a release (e.g. `0.3.3a`, `0.3.5a`). Used when a critical fix must ship without bundling into the next planned release. Resets on next planned version.
+
+*Version sources — must always agree:*
+
+| File | Field |
+|------|-------|
+| `.claude-plugin/plugin.json` | `version` |
+| `.claude-plugin/marketplace.json` | `plugins[0].version` |
+
+Both files are updated in the same commit. Disagreement between them is a release-blocking defect.
+
+*When to bump:*
+- `/g-roadmap` assigns a target version to each milestone at planning time (Step 3). The developer confirms before milestones are written.
+- `/g-review` prompts a version bump when all tasks in a milestone are closed. The developer decides and commits it — never auto-bumped.
+- Hotfix patches (`a` suffix) bypass the milestone cycle: fix on `main`, bump `PATCH` + append `a`, commit, push.
+
+*Release commit sequence:*
+1. All milestone work merged to `main` and MERGE READY
+2. Update version in `plugin.json` and `marketplace.json`
+3. Add CHANGELOG entry under the new version heading (Keep a Changelog format)
+4. Update README if skill/profile counts, command lists, or capability descriptions changed
+5. Single commit: `chore: bump to vX.Y.Z` or `vX.Y.Z — <milestone summary>`
+6. Push immediately — never leave a version bump unpushed
+7. Run `/g-update` on any downstream projects to sync installed files
+
+*Version never changes mid-milestone.* If scope creeps enough to change the bump type (e.g. patch → minor), update the milestone's `**Version:**` field in `ROADMAP.md` and note the reason before continuing.
+
+*Git tags:* not used. The CHANGELOG heading `## [X.Y.Z] — YYYY-MM-DD` is the authoritative version record. If tags are needed in the future, tag the release commit as `vX.Y.Z` (lightweight tag, no GPG).
+
 ---
 
 ## E · Architecture Gate
