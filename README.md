@@ -41,7 +41,7 @@ The goal isn't to automate your project. It's to give it a better chance of succ
 /plugin install g-team
 ```
 
-All 16 G-Forge agents, 22 skills, 45 stack profiles, and 7 combo profiles become available globally across all your projects.
+All 16 G-Forge agents, 24 skills, 45 stack profiles, and 7 combo profiles become available globally across all your projects.
 
 #### Desktop app, VS Code, JetBrains
 
@@ -90,7 +90,7 @@ This loads G-Forge for that session only. Re-run with `--plugin-dir` each time, 
 
 ### Verify
 
-Type `/g-help` in any Claude Code session. You should see the current project state and a full command reference. Commands follow the `/g-<name>` pattern: `/g-plan`, `/g-execute`, `/g-review`, `/g-afk`, `/g-init`, `/g-kickoff`, `/g-onboard`, `/g-specialize`, `/g-roadmap`, `/g-brief`, `/g-listen`, `/g-help`, `/g-status`, `/g-doctor`, `/g-update`, `/g-skill-design`, `/g-skill-validate`, `/g-audit`, `/g-optimize`, `/g-refactor`, `/g-docs`, `/g-adr`, `/g-retro`.
+Type `/g-help` in any Claude Code session. You should see the current project state and a full command reference. Commands follow the `/g-<name>` pattern: `/g-plan`, `/g-execute`, `/g-review`, `/g-afk`, `/g-init`, `/g-kickoff`, `/g-onboard`, `/g-specialize`, `/g-roadmap`, `/g-brief`, `/g-listen`, `/g-help`, `/g-status`, `/g-doctor`, `/g-update`, `/g-skill-design`, `/g-skill-validate`, `/g-audit`, `/g-optimize`, `/g-refactor`, `/g-docs`, `/g-adr`, `/g-retro`, `/g-patterns`.
 
 ### Set up a new project
 
@@ -233,6 +233,7 @@ rm .claude/hooks/check-commit.sh   # removes the gate for this project
 | `/g-skill-design` | Design a new g-team skill from scratch — requirements gathering, step drafting, SKILL.md + command file + router wiring |
 | `/g-skill-validate [name]` | Validate a skill or agent against structural rules — ✓/✗ checklist, VALID or NEEDS FIXES verdict |
 | `/g-retro` | Save a structured session retrospective to `docs/retros/YYYY-MM-DD-topic.md` — what was done, decisions made, patterns that worked/failed, and cold-start context for the next session |
+| `/g-patterns` | Mine `docs/retros/` and `todo-done.md` for recurring failure patterns; bucket by frequency (isolated / emerging / systemic); propose concrete profile-rule edits for any ≥2-occurrence pattern with apply/defer/dismiss per suggestion |
 
 ---
 
@@ -502,4 +503,11 @@ git push
 | M5 — Publish | ✅ Done |
 | M6 — Auto-trigger & Project Hygiene | ✅ Done |
 | M7 — Correctness, Validation & Polish | ✅ Done |
-| M8 — Deploy & Use (gaps, debug, improve) | 🚧 In progress |
+| M8 — Deploy & Use | ✅ Done |
+| M9 — Intelligence Foundation | ✅ Done |
+| M10 — Organizational Learning Loop | ✅ Done |
+| M11 — Planning Intelligence | ⬜ Not started |
+| M12 — Reliability & Adaptive Systems | ⬜ Not started |
+| M13 — Profile Additions | ⬜ Not started |
+| M14 — Advanced Production Modeling | ⬜ Not started |
+| M15 — Hook / Behavioral Integration Pass | ⬜ Not started |

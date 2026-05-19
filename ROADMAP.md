@@ -6,11 +6,11 @@
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-HANDOFF — g-team | branch: main
+HANDOFF — g-forge | branch: feat/m10-organizational-learning-loop
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Done this pass:   · M8 complete — pre-compact hook, M6/M7 retroactive files, v0.9.0 bump
-Next up:          · M9 — Intelligence Foundation (context profiles + memory layer taxonomy)
-Active context:   · M8 closed; M9 not started
+Done this pass:   · M10 — /g-patterns skill (pattern mining + rule-edit suggestions), v0.11.0 bump
+Next up:          · M11 — Planning Intelligence (/g-forecast, premortem, in-flight health)
+Active context:   · M10 implemented; awaiting /g-review before merge to main
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -98,7 +98,7 @@ Active context:   · M8 closed; M9 not started
 ---
 
 ### M10 — Organizational Learning Loop
-**Status:** ⬜ Not started
+**Status:** ✅ Complete
 **Version:** v0.11.0
 **Goal:** G-Forge detects recurring failure patterns and proposes self-corrections
 **Scope:**
