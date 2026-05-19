@@ -1,6 +1,6 @@
 ---
 name: g-doctor
-description: Health check for g-team project setup. Verifies all 4 hooks installed, all hooks registered in settings.json, G-Team Rules block in CLAUDE.md, G-RULES.md present and referenced, no stale sentinel. Reports ✓/✗ per check with fix instructions.
+description: Health check for g-team project setup. Verifies all 4 hooks installed, all hooks registered in settings.json, G-Forge Rules block in CLAUDE.md, G-RULES.md present and referenced, no stale sentinel. Reports ✓/✗ per check with fix instructions.
 ---
 
 Announce: "Using g-doctor to check project health."
@@ -39,11 +39,11 @@ Read `.claude/settings.json` and check if it contains a `UserPromptSubmit` hook 
 - Fail: ✗ UserPromptSubmit hook not registered
   → Run `/g-init` or `/g-update` to register the workflow checkpoint hook.
 
-**6. G-Team Rules block**
-Read `CLAUDE.md` and check if it contains the string `<!-- G-Team Rules`.
-- Pass: ✓ G-Team Rules block present in CLAUDE.md
-- Fail: ✗ G-Team Rules block missing from CLAUDE.md
-  → Run `/g-init` to inject G-Team rules into CLAUDE.md.
+**6. G-Forge Rules block**
+Read `CLAUDE.md` and check if it contains the string `<!-- G-Forge Rules`.
+- Pass: ✓ G-Forge Rules block present in CLAUDE.md
+- Fail: ✗ G-Forge Rules block missing from CLAUDE.md
+  → Run `/g-init` to inject G-Forge rules into CLAUDE.md.
 
 **7. G-RULES.md present**
 Check if `G-RULES.md` exists at the project root.
@@ -78,7 +78,7 @@ Check if `.claude/hooks/pre-compact.sh` exists AND `.claude/settings.json` conta
 Print the report exactly as shown:
 
 ```
-G-Team Doctor ─────────────────────────────────
+G-Forge Doctor ─────────────────────────────────
   [✓/✗ line for check 1]
   [✓/✗ line for check 2]
     [→ fix instruction if failed]

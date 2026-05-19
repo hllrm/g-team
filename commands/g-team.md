@@ -1,5 +1,5 @@
 ---
-description: G-Team workflow commands. Subcommands: help, status, doctor, init, kickoff, onboard, brief, roadmap, plan, execute, review, afk, specialize, update, skill-design, skill-validate.
+description: G-Forge workflow commands. Subcommands: help, status, doctor, init, kickoff, onboard, brief, roadmap, plan, execute, review, afk, specialize, update, skill-design, skill-validate.
 argument-hint: <help|status|doctor|init|kickoff|onboard|brief|roadmap|plan|execute|review|afk|specialize|update|skill-design|skill-validate> [args]
 ---
 
@@ -40,4 +40,4 @@ If $ARGUMENTS is empty or unrecognized, list available subcommands:
   - `specialize [stack]` — auto-detect or apply a named stack profile
   - `update` — realign all g-team-managed files to the current plugin version
   - `skill-design` — design a new skill from scratch (SKILL.md, command file, router entry)
-  - `skill-validate [name]` — validate a skill or agent against G-Team structural rules
+  - `skill-validate [name]` — validate a skill or agent against G-Forge structural rules

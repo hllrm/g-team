@@ -1,6 +1,6 @@
 ---
 name: g-update
-description: Realign all g-team-managed files in this project to the current plugin version. Updates the G-Team Rules block in CLAUDE.md, all installed architect agents, all installed architecture rules, and commit hooks. Safe — only touches content between g-team markers.
+description: Realign all g-team-managed files in this project to the current plugin version. Updates the G-Forge Rules block in CLAUDE.md, all installed architect agents, all installed architecture rules, and commit hooks. Safe — only touches content between g-team markers.
 ---
 
 **Announce:** "Using g-update to pull the latest plugin from GitHub and realign project files."
@@ -52,8 +52,8 @@ If not found, tell the developer: "Could not find the g-team plugin in ~/.claude
 Read and record:
 
 **CLAUDE.md:**
-- Does `<!-- G-Team Rules` marker exist? Note current content between markers.
-- How many `<!-- G-Team [stack] Architecture Rules` blocks exist? List each stack name found.
+- Does `<!-- G-Forge Rules` marker exist? Note current content between markers.
+- How many `<!-- G-Forge [stack] Architecture Rules` blocks exist? List each stack name found.
 
 **.claude/agents/:**
 - List all `.md` files. For each, read the `name:` field from frontmatter.
@@ -76,7 +76,7 @@ Present a summary:
 Installed g-team content:
 
   CLAUDE.md:
-    G-Team Rules block:   [present / not found]
+    G-Forge Rules block:  [present / not found]
     Architecture stacks:  [vue-pinia, fastapi, ... / none]
 
   .claude/agents/:         [vue-architect.md, fastapi-architect.md, ... / none]
@@ -91,17 +91,17 @@ Wait for confirmation.
 
 ---
 
-## Step 3 — Update G-Team Rules block in CLAUDE.md
+## Step 3 — Update G-Forge Rules block in CLAUDE.md
 
 Read `[plugin-root]/skills/g-init/SKILL.md`.
 
 Extract the content between:
 ```
-<!-- G-Team Rules — injected by /g-init. Do not edit manually. -->
+<!-- G-Forge Rules — injected by /g-init. Do not edit manually. -->
 ```
 and:
 ```
-<!-- End G-Team Rules -->
+<!-- End G-Forge Rules -->
 ```
 (inclusive of both marker lines).
 
@@ -109,7 +109,7 @@ Read `CLAUDE.md`. Find the same marker block. Replace it entirely with the extra
 
 If the marker is not present in CLAUDE.md, append the block at the end of the file.
 
-Report: `✓ CLAUDE.md — G-Team Rules updated`
+Report: `✓ CLAUDE.md — G-Forge Rules updated`
 
 ---
 
@@ -126,17 +126,17 @@ Report: `✓ G-RULES.md — realigned`
 
 ## Step 4 — Update architecture rules in CLAUDE.md
 
-For each `<!-- G-Team [stack] Architecture Rules` block found in Step 2:
+For each `<!-- G-Forge [stack] Architecture Rules` block found in Step 2:
 
 1. Extract the stack name from the marker (e.g. `vue-pinia`, `fastapi`)
 2. Read the current rules from `[plugin-root]/profiles/[stack]/rules/architecture.md`
 3. In CLAUDE.md, replace everything between:
    ```
-   <!-- G-Team [stack] Architecture Rules — injected by /g-specialize. Do not edit manually. -->
+   <!-- G-Forge [stack] Architecture Rules — injected by /g-specialize. Do not edit manually. -->
    ```
    and:
    ```
-   <!-- End G-Team [stack] Architecture Rules -->
+   <!-- End G-Forge [stack] Architecture Rules -->
    ```
    with the fresh content from the plugin (keeping both marker lines).
 
@@ -197,7 +197,7 @@ Read `[plugin-root]/skills/g-init/SKILL.md` once. Extract each hook script's con
 ```
 g-team update complete ✓
 
-  ✓ CLAUDE.md — G-Team Rules realigned
+  ✓ CLAUDE.md — G-Forge Rules realigned
   ✓ G-RULES.md — realigned
   ✓ CLAUDE.md — vue-pinia architecture rules realigned
   ✓ .claude/agents/vue-architect.md — realigned

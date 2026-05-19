@@ -32,10 +32,10 @@ Apply the following rules in order (first match wins):
 
 | Condition | Phase |
 |---|---|
-| `CLAUDE.md` is missing OR has no G-Team Rules block, AND `project_brief.md` is missing | Not initialized |
+| `CLAUDE.md` is missing OR has no G-Forge Rules block, AND `project_brief.md` is missing | Not initialized |
 | `project_brief.md` is missing | Not initialized |
-| `CLAUDE.md` exists but has no G-Team Rules block | Not initialized |
-| G-Team Rules block exists, no plan file found in `docs/plans/` | Initialized |
+| `CLAUDE.md` exists but has no G-Forge Rules block | Not initialized |
+| G-Forge Rules block exists, no plan file found in `docs/plans/` | Initialized |
 | Plan file exists AND `.claude/g-team-approved` is absent AND `todo.md` shows tasks remaining | Execution in progress |
 | Plan file exists AND `.claude/g-team-approved` is absent AND `todo.md` shows all tasks done | Review pending |
 | Plan file exists AND `.claude/g-team-approved` is absent | Active plan |
@@ -46,7 +46,7 @@ Default to "Initialized" if none of the above conditions clearly match and the p
 **Next step mapping:**
 
 - Not initialized (no project_brief.md) → suggest `/g-kickoff` (new project) or `/g-onboard` (existing repo)
-- Not initialized (project_brief.md exists, no G-Team Rules block) → suggest `/g-init`
+- Not initialized (project_brief.md exists, no G-Forge Rules block) → suggest `/g-init`
 - Initialized (no plan file) → suggest `/g-plan`
 - Active plan → suggest `/g-execute` to dispatch waves
 - Execution in progress → summarize remaining tasks from `todo.md` and suggest continuing or running `/g-review` if all tasks are done
@@ -58,7 +58,7 @@ Default to "Initialized" if none of the above conditions clearly match and the p
 Print the following block, filling in values from what you read. Omit the "Branch" line if git is unavailable.
 
 ```
-## G-Team Status
+## G-Forge Status
 
 Project: [name]
 Branch: [current git branch]
@@ -87,7 +87,7 @@ All commands:
   /g-review      — full review pipeline → MERGE READY or HOLD
   /g-brief       — refresh project_brief.md as project evolves
   /g-status      — quick one-line state snapshot
-  /g-update      — realign all g-team files to current plugin version
+  /g-update      — realign all g-forge files to current plugin version
   /g-help        — context-aware help: assess project state and next step
 ```
 

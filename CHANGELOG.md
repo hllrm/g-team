@@ -4,11 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.10.0] — 2026-05-19
+
+### Added
+- **Rename: G-Forge** — project renamed from G-Team to G-Forge across all display strings, docs, and manifest name fields
+- **Memory layer taxonomy** — `docs/memory-taxonomy.md` defining 6 tiers (Working, Task, Sprint, Architectural, Institutional, Human Preference) with lifetime, audience, and example content
+- **Context profiles v1** — `context:` frontmatter field for skills and agents; g-plan, g-execute, g-review, and g-retro updated with appropriate tier declarations
+- **ADR lineage fields** — `/g-adr` now captures rejected alternatives, assumptions, and constraints that drove the decision; template updated with corresponding sections; pre-M9 ADRs are pre-lineage
+- **Memory taxonomy in G-RULES** — new § I · Memory Layers section referencing the taxonomy and the `context:` convention
+
 ## [0.9.0] — 2026-05-19
 
 ### Added
 
-- **G-Team self-hosting** — the g-team plugin repo now runs on its own tooling. `CLAUDE.md`, `G-RULES.md`, hooks (`check-commit.sh`, `post-commit-cleanup.sh`, `workflow-checkpoint.sh`, `pre-compact.sh`), and `settings.json` are installed and active on the repo itself.
+- **G-Forge self-hosting** — the g-team plugin repo now runs on its own tooling. `CLAUDE.md`, `G-RULES.md`, hooks (`check-commit.sh`, `post-commit-cleanup.sh`, `workflow-checkpoint.sh`, `pre-compact.sh`), and `settings.json` are installed and active on the repo itself.
 - **`pre-compact.sh` installed** — PreCompact hook wired into `.claude/hooks/` and registered in `.claude/settings.json`. Fires before context compression; writes `.claude/compact-state.md` with branch, last 5 commits, and the Handoff block from `todo.md`.
 - **Retroactive milestone files** — `milestones/M6-auto-trigger.md` and `milestones/M7-correctness.md` added to complete the milestone file history (M1–M8 now all present).
 - **`claude-plugin` stack profile** — architect agent (`profiles/claude-plugin/agents/claude-plugin-architect.md`) validates skill structure, command routing, agent format, hook design, and manifest; architecture rules (`profiles/claude-plugin/rules/architecture.md`) cover all 6 layers with explicit Skill, Agent, Command, and Version rules. Profile is auto-detected by `/g-specialize` via `.claude-plugin/plugin.json` presence.
@@ -134,7 +143,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Object pooling and state machine architecture rules in all 5 game-dev profiles: `unity`, `godot-gdscript`, `godot-csharp`, `unreal`, `cpp-cmake`
 - `G-RULES.md` now installed per-project by `/g-team init` (Step 2a) — `@G-RULES.md` reference added to `CLAUDE.md`
 - `/g-team update` now refreshes per-project `G-RULES.md` from plugin (Step 3a)
-- `/g-team doctor` — 7-point health check: hooks installed, all hooks registered in settings.json, G-Team Rules block present, no stale sentinel, milestone alignment
+- `/g-team doctor` — 7-point health check: hooks installed, all hooks registered in settings.json, G-Forge Rules block present, no stale sentinel, milestone alignment
 
 ### Fixed
 

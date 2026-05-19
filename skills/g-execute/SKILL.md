@@ -1,6 +1,7 @@
 ---
 name: g-execute
 description: Execute an approved wave plan by dispatching parallel subagents per wave. Use after /g-plan is approved, or to resume a plan that was interrupted. Argument: optional wave number to start from (default: Wave 1).
+context: [task, sprint]
 ---
 
 **Announce:** "Using g-execute to run the wave schedule."

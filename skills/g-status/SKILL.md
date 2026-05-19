@@ -18,7 +18,7 @@ Produce a single structured status block. Fast — no interviews, no back-and-fo
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-G-Team Status
+G-Forge Status
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Milestone:    [M1 — Name · 🚧 In progress / ✅ Done]
 Plan:         [docs/plans/filename.md · Wave N of M / none]

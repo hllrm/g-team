@@ -51,7 +51,7 @@ Read whichever of these exist in the current working directory:
 - `requirements.txt` or `pyproject.toml` — read full contents:
   - `fastapi` → **fastapi**
   - `django` or `djangorestframework` → **django**
-  - `flask` → note: flask has no G-Team profile yet
+  - `flask` → note: flask has no G-Forge profile yet
   - `textual` → **python-textual**
   - `click` or `typer` → **python-cli**
   - `torch` or `tensorflow` or `scikit-learn` → **python-ml**
@@ -166,7 +166,7 @@ Store all version notes for use in Step 3 (confirmation) and Step 7 (agent insta
 - Wait for answer. Use it as the confirmed profile list.
 
 **If unsupported stacks were detected (flask, etc.):**
-- Note them in the confirmation: "I detected [stack] which doesn't have a G-Team profile yet. I'll skip that one."
+- Note them in the confirmation: "I detected [stack] which doesn't have a G-Forge profile yet. I'll skip that one."
 
 **If the picture is ambiguous or there are conflicts:**
 
@@ -178,7 +178,7 @@ Before asking the user, dispatch `code-lead` with:
 - The dependency file contents
 
 Ask code-lead:
-> "Based on this project's brief and dependencies, which G-Team stack profiles should be applied? The supported profiles are: angular, asp-net-core, astro, bun, c-embedded, capacitor, cpp-cmake, django, electron, express, fastapi, flutter, go-fiber, go-gin, godot-csharp, godot-gdscript, hono, kotlin-android, kotlin-ktor, laravel, maui, nest-js, next-js, node-ts, nuxt, phoenix-liveview, python-cli, python-data, python-ml, python-textual, rails, react, react-native, remix, rust-axum, rust-cli, spring-boot, sveltekit, swift-ios, tauri, unity, unreal, vue-pinia, wpf-csharp. If the project is multi-stack, list all that apply. Flag anything that looks like a mismatch or a risky stack choice."
+> "Based on this project's brief and dependencies, which G-Forge stack profiles should be applied? The supported profiles are: angular, asp-net-core, astro, bun, c-embedded, capacitor, cpp-cmake, django, electron, express, fastapi, flutter, go-fiber, go-gin, godot-csharp, godot-gdscript, hono, kotlin-android, kotlin-ktor, laravel, maui, nest-js, next-js, node-ts, nuxt, phoenix-liveview, python-cli, python-data, python-ml, python-textual, rails, react, react-native, remix, rust-axum, rust-cli, spring-boot, sveltekit, swift-ios, tauri, unity, unreal, vue-pinia, wpf-csharp. If the project is multi-stack, list all that apply. Flag anything that looks like a mismatch or a risky stack choice."
 
 Present code-lead's response to the developer: "Here is code-lead's stack read — does this match what you're building?"
 
@@ -222,7 +222,7 @@ For each profile to apply:
 profiles/<stack>/agents/*.md
 ```
 
-If found, use these local files — this is the correct path when working inside the G-Team plugin repo itself. Skip the plugin cache lookup.
+If found, use these local files — this is the correct path when working inside the G-Forge plugin repo itself. Skip the plugin cache lookup.
 
 **If not found locally**, use Glob to find the plugin root in the cache:
 ```
@@ -330,14 +330,14 @@ Combo profiles have no agent file — skip agent installation for any combo key 
 
 Read `CLAUDE.md` in the current project root. If it does not exist, create it with just a `# [Project]` header first.
 
-For each profile, check whether rules are already present by searching for `<!-- G-Team [stack] Architecture Rules -->`. If found, tell the developer: "Architecture rules for [stack] already in CLAUDE.md. Skipping." and skip that profile's rules.
+For each profile, check whether rules are already present by searching for `<!-- G-Forge [stack] Architecture Rules -->`. If found, tell the developer: "Architecture rules for [stack] already in CLAUDE.md. Skipping." and skip that profile's rules.
 
 For each profile whose rules are not yet present, append:
 
 ```
-<!-- G-Team [stack] Architecture Rules — injected by /g-specialize. Do not edit manually. -->
+<!-- G-Forge [stack] Architecture Rules — injected by /g-specialize. Do not edit manually. -->
 [full content of profiles/[stack]/rules/architecture.md]
-<!-- End G-Team [stack] Architecture Rules -->
+<!-- End G-Forge [stack] Architecture Rules -->
 ```
 
 Repeat this same loop for each combo key in `Combos detected` — same marker format, same duplication check, same append pattern. Use `profiles/<combo-key>/rules/architecture.md` as the content source.

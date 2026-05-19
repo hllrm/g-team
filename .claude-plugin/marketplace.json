@@ -1,15 +1,15 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
-  "name": "g-team",
+  "name": "g-forge",
   "owner": {
     "name": "hllrm"
   },
   "plugins": [
     {
-      "name": "g-team",
+      "name": "g-forge",
       "source": "./",
       "description": "Multi-agent Claude Code plugin - planned execution, production architecture, enforced review. 16 agents, 23 skills, 45 stack profiles, 7 combo profiles.",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "author": {
         "name": "hllrm"
       },

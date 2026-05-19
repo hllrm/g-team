@@ -1,4 +1,4 @@
-# G-Team
+# G-Forge
 
 > Multi-agent Claude Code plugin — planned execution, production architecture, enforced review.
 
@@ -84,10 +84,11 @@ Active context:   · M8 closed; M9 not started
 ---
 
 ### M9 — Intelligence Foundation
-**Status:** ⬜ Not started
+**Status:** ✅ Complete
 **Version:** v0.10.0
 **Goal:** Structural substrate for agent context management and decision memory
 **Scope:**
+- **Rename pass** — project renamed from G-Team → G-Forge; update all display strings, doc references, CHANGELOG heading, README, plugin.json `name`/`display_name`, marketplace.json, and any in-file prose mentioning "G-Team" across the full repo
 - Context profiles v1 — memory slice declared in skill/agent frontmatter
 - Memory layer taxonomy — 6 tiers (Working / Task / Sprint / Architectural / Institutional / Human Preference) with lifetime + audience
 - ADR lineage fields — rejected alternatives, assumptions that held, constraints that drove the decision
@@ -99,7 +100,7 @@ Active context:   · M8 closed; M9 not started
 ### M10 — Organizational Learning Loop
 **Status:** ⬜ Not started
 **Version:** v0.11.0
-**Goal:** G-Team detects recurring failure patterns and proposes self-corrections
+**Goal:** G-Forge detects recurring failure patterns and proposes self-corrections
 **Scope:**
 - /g-patterns skill — mines retros + todo-done for recurring failure modes; surfaces systemic health report
 - Self-evolution — detected systemic pattern surfaces suggested fix to architecture profile rules, not just a report
@@ -138,12 +139,14 @@ Active context:   · M8 closed; M9 not started
 ### M13 — Profile Additions
 **Status:** ⬜ Not started
 **Version:** v0.14.0
-**Goal:** Expand stack coverage
+**Goal:** Expand stack coverage and deepen existing frontend profiles
 **Scope:**
 - flask profile
 - pygame profile
 - xamarin profile
 - dependency-auditor agent
+- `frontend-data-flow` supplementary profile — rules + architect agent implementing the two-network model (read/write), dead-end component rule, and V1–V4 violation patterns; installed alongside any component-framework profile by `/g-specialize`
+  - **Implementation note:** `/g-specialize` detection logic must be updated to auto-install `frontend-data-flow` whenever a component-framework stack is detected (vue-pinia, react, nuxt, next-js, sveltekit, angular, remix, astro, and composites). The profile is supplementary — it lives in its own directory and must be explicitly wired into the specialize skill's profile map; it will not activate automatically just by existing.
 
 **Depends on:** M8 (independent of intelligence milestones; slots here as pacing break between M12 and M14)
 
@@ -165,7 +168,7 @@ Active context:   · M8 closed; M9 not started
 ### M15 — Hook / Behavioral Integration Pass
 **Status:** ⬜ Not started
 **Version:** v1.0.0
-**Goal:** G-Team becomes a coherent production intelligence system, not a collection of additions
+**Goal:** G-Forge becomes a coherent production intelligence system, not a collection of additions
 **Scope:**
 - Full hook audit and behavioral flow wiring end-to-end
 - Health surfaces in /g-help; premortem auto-runs in /g-plan; pattern suggestions feed /g-retro output

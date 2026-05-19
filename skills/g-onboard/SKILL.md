@@ -1,6 +1,6 @@
 ---
 name: g-onboard
-description: Onboard G-Team onto an existing codebase. Reads deeply before asking anything — treats existing CLAUDE.md, rules, agents, and task ledgers as first-class inputs. Only interviews for what it genuinely doesn't know yet. Produces or updates project_brief.md.
+description: Onboard G-Forge onto an existing codebase. Reads deeply before asking anything — treats existing CLAUDE.md, rules, agents, and task ledgers as first-class inputs. Only interviews for what it genuinely doesn't know yet. Produces or updates project_brief.md.
 ---
 
 **Announce:** "Using g-onboard to onboard this codebase."
@@ -18,7 +18,7 @@ List the project root (top 2 levels). Note top-level directories and their appar
 
 **Core files:**
 - `README.md`
-- `CLAUDE.md` — read fully if present; note length, structure, and whether G-Team rules are embedded
+- `CLAUDE.md` — read fully if present; note length, structure, and whether G-Forge rules are embedded
 - `project_brief.md` — read fully if present
 - `package.json` / `pyproject.toml` / `Cargo.toml` / `build.gradle` / `pubspec.yaml` — whichever exist
 - `requirements.txt`
@@ -26,7 +26,7 @@ List the project root (top 2 levels). Note top-level directories and their appar
 - `todo.md` — read fully if present; note schema, blocked tasks, active branch references
 - `todo-done.md` — note if present (signals an active task ledger convention)
 
-**G-Team state:**
+**G-Forge state:**
 - `.claude/rules/` — list all files if directory exists
 - `.claude/agents/` — list all files if directory exists
 - `.claude/settings.json` — check if commit hook is registered
@@ -78,7 +78,7 @@ Tests:           [framework · N files — or "no test directory found"]
 Branch:          [current branch name]
 Commits:         [e.g. "active — 3 commits today" or "last commit 6 days ago"]
 
-G-Team state:
+G-Forge state:
   CLAUDE.md:     [Not present / Thin (<50 lines) / Detailed (Nnn lines, G-rules embedded)]
   .claude/rules: [Not present / N files: rule1.md, rule2.md]
   .claude/agents:[Not present / N files: agent1.md, agent2.md]
@@ -105,9 +105,9 @@ Wait for confirmation before continuing.
 
 ---
 
-## Step 4 — Resolve G-Team state conflicts
+## Step 4 — Resolve G-Forge state conflicts
 
-Before interviewing, resolve any existing G-Team infrastructure so specialize doesn't clobber it.
+Before interviewing, resolve any existing G-Forge infrastructure so specialize doesn't clobber it.
 
 **If `.claude/rules/` has files:**
 > "I found existing rules in `.claude/rules/`: [list files]. When we run `/g-specialize`, it will install architect rules. Should it overlay (append to existing), replace, or skip rules installation entirely?"
@@ -119,13 +119,13 @@ Wait for answer. Record preference.
 
 Wait for answer. Record preference.
 
-**If `CLAUDE.md` is >100 lines and G-Team rules are already embedded:**
-> "Your CLAUDE.md already has G-Team rules embedded. `/g-init` would normally inject them — should I skip that injection and treat your current CLAUDE.md as authoritative?"
+**If `CLAUDE.md` is >100 lines and G-Forge rules are already embedded:**
+> "Your CLAUDE.md already has G-Forge rules embedded. `/g-init` would normally inject them — should I skip that injection and treat your current CLAUDE.md as authoritative?"
 
 Wait for answer.
 
 **If `todo.md` exists with an established schema:**
-> "I see a `todo.md` already in use with its own schema. G-Team's init scaffold would normally create one. Should I: (a) integrate with your existing todo.md, (b) scaffold alongside it, or (c) skip todo.md scaffolding?"
+> "I see a `todo.md` already in use with its own schema. G-Forge's init scaffold would normally create one. Should I: (a) integrate with your existing todo.md, (b) scaffold alongside it, or (c) skip todo.md scaffolding?"
 
 Wait for answer.
 

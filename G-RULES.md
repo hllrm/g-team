@@ -35,7 +35,7 @@ Warning signs: error message changes but bug class persists · you're explaining
 
 ---
 
-## B · G-Team Workflow
+## B · G-Forge Workflow
 
 ### Project lifecycle (run once at project start)
 
@@ -339,7 +339,7 @@ Smoke tests · acceptance · design review · business logic correctness. User e
 
 Tier 3 requires a testing instrument. Which one depends on the project:
 
-- **QA panel present** — a structured in-app testing UI. G-Team integrates it from the start, not as an afterthought.
+- **QA panel present** — a structured in-app testing UI. G-Forge integrates it from the start, not as an afterthought.
   - At milestone planning: identify which test groups are impacted. Compile `docs/qa-scope/<milestone-slug>.md` mapping each in-scope group to what must pass.
   - QA panel currency: any task adding/removing user-facing surface must include "QA panel updated" as a done condition. MERGE READY is blocked if the panel is stale.
 - **No QA panel** — at milestone planning, generate a test plan and print it in chat. The test plan lists scenarios to exercise, grouped by feature area, derived from the milestone scope. The developer uses this as their checklist during Tier 3. No file saved — it is a live prompt artifact.
@@ -424,3 +424,20 @@ Active context:   · <file:line, state, in-flight logic>
 ```
 
 Same content in both the committed file and the chat message — chat is for paste, file is the persistent record.
+
+---
+
+## I · Memory Layers
+
+G-Forge uses a 6-tier memory layer taxonomy. Full definitions, ownership rules, and eviction policy are in `docs/memory-taxonomy.md`.
+
+| Layer | Lifetime | Scope |
+|-------|----------|-------|
+| Working | Current session | Agent-scoped |
+| Task | Single task / wave | HQ-scoped |
+| Sprint | Current milestone | Team-scoped |
+| Architectural | Project lifetime | HQ + architect |
+| Institutional | Cross-project | Org-scoped |
+| Human Preference | Cross-project | User-scoped |
+
+Skills and agents declare which layers they need via `context:` in their YAML frontmatter (e.g. `context: [task, sprint]`). Orchestrators must load all declared layers before invoking the skill.

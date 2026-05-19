@@ -42,6 +42,15 @@ Ask each question in sequence. Wait for the answer before asking the next. Do no
 > - **Deprecated** — was accepted but is being phased out
 > - **Superseded** — replaced by a newer ADR (which one?)"
 
+**Question 6 — Rejected alternatives:**
+> "What alternatives did you seriously consider and reject? For each, what was the deciding factor against it?"
+
+**Question 7 — Assumptions that held:**
+> "What assumptions is this decision relying on? Which of these are most likely to be invalidated later?"
+
+**Question 8 — Constraints that drove the decision:**
+> "What constraints (time, team, compatibility, compliance, cost) were the primary drivers? Would you decide differently without them?"
+
 ## Step 3 — Determine ADR number
 
 ```bash
@@ -90,6 +99,20 @@ Write to `docs/decisions/[NNN]-[kebab-title].md`:
 **Harder / constrained:** [what this makes more difficult or rules out]
 **Follow-up decisions:** [any decisions this creates or defers — or "none"]
 **Risks:** [known risks — or "none identified"]
+
+## Rejected Alternatives
+
+| Alternative | Why rejected |
+|-------------|--------------|
+| [name] | [deciding factor] |
+
+## Assumptions That Held
+
+- [assumption and its fragility]
+
+## Constraints That Drove This Decision
+
+- [constraint: time/team/compliance/cost/etc.]
 ```
 
 ## Step 5 — Surface follow-up actions
@@ -114,3 +137,4 @@ Status: [Accepted | Proposed | ...]
 - Do not editorialize or second-guess the decision in the ADR — record it faithfully.
 - If a decision is still being debated, use status **Proposed** and record the current leading option — update to **Accepted** when confirmed.
 - ADR numbers are permanent. Never renumber existing ADRs.
+- ADRs written before M9 (v0.10.0) are pre-lineage — they do not have Rejected Alternatives, Assumptions, or Constraints sections. No backfill is required.

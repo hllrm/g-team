@@ -1,4 +1,4 @@
-# G-Team Agents
+# G-Forge Agents
 
 All 16 agents ship with every install. Stack-specific architect agents are installed per-project by `/g-specialize` and are not listed here.
 

@@ -5,7 +5,7 @@ description: Scaffold a new project with CLAUDE.md (compact G-rules injected), R
 
 **Announce:** "Using g-init to scaffold the project."
 
-You are initializing a G-Team project. Execute these steps in order. Do not skip any step.
+You are initializing a G-Forge project. Execute these steps in order. Do not skip any step.
 
 ## Step 1 — Confirm project root
 
@@ -23,12 +23,12 @@ Check if `CLAUDE.md` exists at the project root.
 5. Tell the developer: "Fill in the project description, stack table, and conventions sections in CLAUDE.md before proceeding."
 6. Report: `✓ CLAUDE.md — created from template`
 
-**If it exists:** Read it. If the text `<!-- G-Team Rules` is not present, append this block at the end of the file:
+**If it exists:** Read it. If the text `<!-- G-Forge Rules` is not present, append this block at the end of the file:
 
 ```
-<!-- G-Team Rules — injected by /g-init. Do not edit manually. -->
+<!-- G-Forge Rules — injected by /g-init. Do not edit manually. -->
 <!-- (rules loaded via @G-RULES.md at top of file) -->
-<!-- End G-Team Rules -->
+<!-- End G-Forge Rules -->
 ```
 
 Report: `✓ CLAUDE.md — verified`
@@ -118,7 +118,7 @@ Write `.claude/hooks/check-commit.sh` with this exact content:
 
 ```bash
 #!/bin/bash
-# G-Team commit gate — PreToolUse hook.
+# G-Forge commit gate — PreToolUse hook.
 # Blocks git commit if .claude/g-team-approved does not exist.
 # Input: Claude Code PreToolUse JSON on stdin.
 
@@ -135,13 +135,13 @@ except Exception:
 
 if echo "$CMD" | grep -q "git commit"; then
     if [ ! -f ".claude/g-team-approved" ]; then
-        echo "G-Team: No code-lead sign-off. Run /g-review and wait for MERGE READY before committing." >&2
+        echo "G-Forge: No code-lead sign-off. Run /g-review and wait for MERGE READY before committing." >&2
         exit 1
     fi
     # Advisory: warn when committing directly to main with approval
     BRANCH=$(git branch --show-current 2>/dev/null)
     if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
-        echo "G-Team: Note — committing directly to main. Non-trivial work should be on a feature branch (feat/<slug>, fix/<slug>)." >&2
+        echo "G-Forge: Note — committing directly to main. Non-trivial work should be on a feature branch (feat/<slug>, fix/<slug>)." >&2
     fi
 fi
 ```
@@ -150,7 +150,7 @@ Write `.claude/hooks/post-commit-cleanup.sh` with this exact content:
 
 ```bash
 #!/bin/bash
-# G-Team post-commit cleanup — PostToolUse hook.
+# G-Forge post-commit cleanup — PostToolUse hook.
 # Clears .claude/g-team-approved after a successful git commit.
 INPUT=$(cat)
 CMD=$(echo "$INPUT" | python3 -c "
@@ -178,7 +178,7 @@ Write `.claude/hooks/workflow-checkpoint.sh` with this exact content:
 
 ```bash
 #!/bin/bash
-# G-Team workflow checkpoint — UserPromptSubmit hook.
+# G-Forge workflow checkpoint — UserPromptSubmit hook.
 # Outputs current workflow state so Claude can auto-trigger the right step.
 
 ACTIVE_CONTEXT=""
@@ -191,7 +191,7 @@ REVIEW_APPROVED=false
 
 CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
 
-echo "[G-Team Workflow Checkpoint]"
+echo "[G-Forge Workflow Checkpoint]"
 echo "  Branch: $CURRENT_BRANCH"
 if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
     echo "  ⚠  on main — non-trivial work should be on a feature branch (feat/<slug>, fix/<slug>)" >&2
@@ -279,9 +279,9 @@ Write the merged result back to `.claude/settings.json`.
 After all steps, report:
 
 ```
-G-Team initialized ✓
+G-Forge initialized ✓
 
-  ✓ CLAUDE.md — G-Team rules injected
+  ✓ CLAUDE.md — G-Forge rules injected
   ✓ G-RULES.md — installed
   ✓ ROADMAP.md — stub created (or already existed)
   ✓ milestones/M1.md — created (or already existed)
@@ -291,7 +291,7 @@ G-Team initialized ✓
 
 Next: run /g-plan with your first feature request, or edit milestones/M1.md to define your scope.
 
-**Recommended MCPs** — install these in Claude Code for best results with G-Team:
+**Recommended MCPs** — install these in Claude Code for best results with G-Forge:
 - `context7` — pulls current library docs into context, eliminates stale-training hallucinations
 - `github` — read PRs, diffs, issues directly from chat
 - `supabase` — SQL, migrations, schemas from chat (install if your project uses Supabase)

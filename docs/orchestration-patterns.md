@@ -1,6 +1,6 @@
-# G-Team Orchestration Patterns
+# G-Forge Orchestration Patterns
 
-Four standard workflows built from G-Team agents. Each pattern shows which agents run, in what order, and what each one receives and returns.
+Four standard workflows built from G-Forge agents. Each pattern shows which agents run, in what order, and what each one receives and returns.
 
 See also: [G-RULES.md §B–C](../G-RULES.md) for enforcement rules, and the individual SKILL.md files under `skills/`.
 

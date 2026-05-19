@@ -1,6 +1,7 @@
 ---
 name: g-retro
 description: Save a structured session retrospective to docs/retros/YYYY-MM-DD-topic.md — captures what was done, decisions made, patterns that worked or failed, and cold-start context for the next session.
+context: [task, sprint, institutional]
 ---
 
 **Announce:** "Using g-retro to record a session retrospective."

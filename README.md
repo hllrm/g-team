@@ -1,16 +1,16 @@
-# G-Team
+# G-Forge
 
 > Multi-agent Claude Code plugin — planned execution, production architecture, enforced review.
 
-G-Team installs a structured development workflow into any Claude Code project: decompose tasks into parallel waves, implement with specialist agents, gate every commit behind a full review pipeline.
+G-Forge installs a structured development workflow into any Claude Code project: decompose tasks into parallel waves, implement with specialist agents, gate every commit behind a full review pipeline.
 
 ---
 
-## Why G-Team
+## Why G-Forge
 
 Most AI coding tools are built around a single idea: automate as much as possible and get the human out of the loop. The result is tools that are complex to configure, fragmented across a dozen commands, and optimised for the appearance of productivity — not for whether the project actually succeeds.
 
-G-Team is built on a different assumption: **the human is the most valuable part of the loop.** Claude handles the structured, repetitive, and cost-optimisable work. The decisions that determine whether a project succeeds — what to build, in what order, and whether it's actually done — stay with you.
+G-Forge is built on a different assumption: **the human is the most valuable part of the loop.** Claude handles the structured, repetitive, and cost-optimisable work. The decisions that determine whether a project succeeds — what to build, in what order, and whether it's actually done — stay with you.
 
 That means:
 
@@ -41,7 +41,7 @@ The goal isn't to automate your project. It's to give it a better chance of succ
 /plugin install g-team
 ```
 
-All 16 G-Team agents, 22 skills, 45 stack profiles, and 7 combo profiles become available globally across all your projects.
+All 16 G-Forge agents, 22 skills, 45 stack profiles, and 7 combo profiles become available globally across all your projects.
 
 #### Desktop app, VS Code, JetBrains
 
@@ -58,13 +58,13 @@ Then open the desktop app or IDE extension as normal — the agents and skills w
 
 ### Update the plugin
 
-Run `/g-update` inside any project that uses G-Team. It does everything in one pass:
+Run `/g-update` inside any project that uses G-Forge. It does everything in one pass:
 
 1. Compares the installed cache version against GitHub
 2. `git pull`s the plugin cache if behind
 3. Syncs all project-level files (hooks, CLAUDE.md rules, G-RULES.md, architect agents, architecture rules) to the new version
 
-G-Team also checks for updates automatically. The `workflow-checkpoint.sh` hook fetches the latest version from GitHub once per day (background, zero latency) and surfaces a notice in every session until you update:
+G-Forge also checks for updates automatically. The `workflow-checkpoint.sh` hook fetches the latest version from GitHub once per day (background, zero latency) and surfaces a notice in every session until you update:
 
 ```
 ⚡ g-team update available: 0.4.4 → 0.5.0 — run /g-update to pull and sync
@@ -86,7 +86,7 @@ git clone https://github.com/hllrm/g-team.git
 claude --plugin-dir ./g-team
 ```
 
-This loads G-Team for that session only. Re-run with `--plugin-dir` each time, or use the CLI install above for permanent access.
+This loads G-Forge for that session only. Re-run with `--plugin-dir` each time, or use the CLI install above for permanent access.
 
 ### Verify
 
@@ -141,7 +141,7 @@ G-RULES.md has seven sections:
 | Section | What it governs |
 |---------|----------------|
 | **A — Session Rules** | Model selection, planning discipline, token optimisation, delivery standards, Three-Strikes escalation |
-| **B — G-Team Workflow** | Project lifecycle (kickoff → roadmap → init → specialize); per-task auto-trigger loop (plan/execute/review); maintenance skills reference table; hard stops |
+| **B — G-Forge Workflow** | Project lifecycle (kickoff → roadmap → init → specialize); per-task auto-trigger loop (plan/execute/review); maintenance skills reference table; hard stops |
 | **C — Agent Discipline** | HQ vs. agent boundaries; wave model; when to spawn vs. inline; agent prompt requirements; agent caps |
 | **D — Code Quality** | Style (const/let/var), naming conventions, comments, error handling, testing standards, component structure, branch discipline, versioning & release flow |
 | **E — Architecture Gate** | Mandatory plan-first sequence for non-trivial changes; import direction validation; state ownership; hard stops |
@@ -184,7 +184,7 @@ Project hygiene:
 /g-help        →   where am I + what to do next
 /g-status      →   fast state snapshot
 /g-doctor      →   verify hooks, settings, rules block, milestone alignment
-/g-update      →   pull latest G-Team rules into this project
+/g-update      →   pull latest G-Forge rules into this project
 ```
 
 Full orchestration pattern reference: [docs/orchestration-patterns.md](docs/orchestration-patterns.md)
@@ -217,7 +217,7 @@ rm .claude/hooks/check-commit.sh   # removes the gate for this project
 |-------|-------------|
 | `/g-help` | Context-aware state reader — detects current phase and outputs next action + full command reference |
 | `/g-status` | Fast structured snapshot: milestone · active plan/wave · review gate · handoff line |
-| `/g-doctor` | 9-point health check: all 3 hooks installed, all hooks registered in settings.json, G-Team Rules block, G-RULES.md present and referenced, no stale sentinel — ✓/✗ with fix instructions |
+| `/g-doctor` | 9-point health check: all 3 hooks installed, all hooks registered in settings.json, G-Forge Rules block, G-RULES.md present and referenced, no stale sentinel — ✓/✗ with fix instructions |
 | `/g-kickoff` | Interview → scope challenge → stack deep dive → project_brief.md |
 | `/g-onboard` | Read existing repo → present findings → interview → optional architecture audit → project_brief.md |
 | `/g-roadmap` | Four-phase milestone planner: feature dump → cluster (narrated) → sequence with dependency + version justification → approve → ROADMAP.md. Assigns a target semver version to every milestone and writes a version plan. Auto-triggers on any feature idea or empty milestone list. |
@@ -378,7 +378,7 @@ Auto-triggers:  — no ROADMAP.md exists in the project
                      Milestone · Active plan + wave · Review gate · Handoff line
 
 /g-doctor       9-point health check — all 3 hooks installed, all hooks wired in
-                     settings.json, G-Team Rules block in CLAUDE.md, G-RULES.md
+                     settings.json, G-Forge Rules block in CLAUDE.md, G-RULES.md
                      present and referenced, no stale sentinel
                      Reports ✓/✗ per check with a one-line fix instruction
 ```

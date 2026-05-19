@@ -5,7 +5,7 @@ description: Design a new g-team skill from scratch. Gathers requirements, draft
 
 **Announce:** "Using g-skill-design to design the new skill."
 
-You are designing a new G-Team skill. Follow these steps in order.
+You are designing a new G-Forge skill. Follow these steps in order.
 
 ## Step 1 — Understand the skill's purpose
 

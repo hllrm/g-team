@@ -1,6 +1,7 @@
 ---
 name: g-review
 description: Run the full review pipeline on the current branch diff. Dispatches code-lead which verifies done conditions and runs review-orchestrator. Issues MERGE READY or HOLD.
+context: [task, sprint, architectural]
 ---
 
 **Announce:** "Using g-review to run the full review pipeline."

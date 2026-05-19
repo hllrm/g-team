@@ -1,11 +1,11 @@
 ---
 name: g-skill-validate
-description: Validate a skill or agent file against G-Team structural rules. Checks SKILL.md format, command file, router registration, and agent frontmatter. Issues VALID or NEEDS FIXES verdict.
+description: Validate a skill or agent file against G-Forge structural rules. Checks SKILL.md format, command file, router registration, and agent frontmatter. Issues VALID or NEEDS FIXES verdict.
 ---
 
 **Announce:** "Using g-skill-validate to validate the skill."
 
-You are validating a G-Team skill or agent against structural rules. Run all checks, produce a ✓/✗ checklist, and issue a final verdict.
+You are validating a G-Forge skill or agent against structural rules. Run all checks, produce a ✓/✗ checklist, and issue a final verdict.
 
 ## Step 1 — Identify what to validate
 

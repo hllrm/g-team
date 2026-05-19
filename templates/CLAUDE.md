@@ -52,10 +52,10 @@
 
 ---
 
-<!-- G-Team Rules — injected by /g-init. Do not edit manually. -->
+<!-- G-Forge Rules — injected by /g-init. Do not edit manually. -->
 <!-- (rules loaded via @G-RULES.md at top of file) -->
-<!-- End G-Team Rules -->
+<!-- End G-Forge Rules -->
 
-<!-- G-Team [stack] Architecture Rules — injected by /g-specialize. Do not edit manually. -->
+<!-- G-Forge [stack] Architecture Rules — injected by /g-specialize. Do not edit manually. -->
 <!-- Replace this block: @.claude/rules/architecture-[stack].md -->
-<!-- End G-Team [stack] Architecture Rules -->
+<!-- End G-Forge [stack] Architecture Rules -->
