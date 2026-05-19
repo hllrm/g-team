@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.0] — 2026-05-19
+
+### Added
+- **8 reliability metrics defined** — `docs/telemetry-metrics.md` documents hallucination rate, review catch rate, regression frequency, rework rate, spec deviation, escalation frequency, token efficiency, and retry dependency. Each metric carries its observable source, computation formula, expected range, ⚠ threshold, and the downstream skill that consumes it. Profile-derivation table maps `⚠ count` to one of four health profiles: `stable` / `cautious` / `defensive` / `recovery`.
+- **`/g-telemetry` skill** — computes the 8 metrics from accumulated history (retros, git log, escalation log, forecast outcomes), derives the health profile, writes `.claude/telemetry-profile` (single-line bare-word value), and persists a structured snapshot to `docs/telemetry/YYYY-MM-DD.md`. Applies the same `None recorded.` sentinel filter as `/g-patterns` and `/g-forecast`. Bootstrapping projects (<3 retros AND <30 commits) skip computation and default to `stable` with a `cold-start` note.
+- **Adaptive orchestration in `/g-execute`** — Step 0 reads the telemetry profile and applies dispatch adjustments: `defensive` caps waves at 3 agents and bumps Sonnet → Opus; `recovery` forces serial dispatch (1 agent/wave) and Opus on every dispatch. Adds a profile-specific extra clause to every agent prompt under `defensive` and `recovery`. The developer-approved plan is never silently rewritten — wave size is adjusted at dispatch time only.
+- **Governance intelligence in `/g-review`** — Step 0 reads the same profile and scales reviewer count: `cautious` adds one extra `code-reviewer`; `defensive` adds `code-reviewer` + `architecture-enforcer` and a `debugger` pre-pass; `recovery` runs the full reviewer set unconditionally plus `debugger` + `error-detective` pre-passes. HOLD verdicts under `defensive`/`recovery` increment `.claude/review-holds` — this counter feeds back into the next telemetry snapshot, closing the adaptive loop.
+
 ## [0.12.0] — 2026-05-19
 
 ### Added
