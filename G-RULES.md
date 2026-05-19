@@ -58,7 +58,9 @@ For an existing project without g-team: run `/g-onboard` instead of the above se
 
 **Non-trivial** = ≥3 files, new feature, layer-boundary change, bug fix with unclear root cause, or anything with multiple dependent steps. Single-file edits with a known location may proceed inline.
 
-**Auto-trigger rule:** Do not wait for the user to type `/g-plan`, `/g-execute`, or `/g-review`. Detect the condition and trigger automatically.
+**Auto-trigger rule:** Do not wait for the user to type `/g-plan`, `/g-execute`, or `/g-review`. Detect the condition and trigger automatically — **but only on the `full` integration tier.** The `workflow-checkpoint.sh` hook prints a `Tier:` line on every prompt: if it reads `balanced`, do not auto-trigger any skill; if it reads `light`, the commit gate is also off and G-Forge stays silent until explicitly invoked. See `docs/integration-tiers.md` for the full tier model and `/g-tier` to switch.
+
+**Voice rule:** Every skill output, prompt, and confirmation honors the voice profile in `.claude/voice-profile` — `dev` (terse, default), `mid` (one context sentence per major result), or `eli5` (plain language, conversational). The profile changes **rendering**, never verdicts or numeric values. See `docs/voice-profiles.md` and `/g-voice` to switch.
 
 **Wave execution rule:** always use `/g-execute` for wave-based parallel dispatch.
 
@@ -85,6 +87,8 @@ For an existing project without g-team: run `/g-onboard` instead of the above se
 | `/g-telemetry` | Compute the 8 reliability metrics defined in `docs/telemetry-metrics.md`, derive a health profile (`stable` / `cautious` / `defensive` / `recovery`), and write `.claude/telemetry-profile` for adaptive orchestration. `/g-execute` and `/g-review` read the profile in their Step 0 and adjust wave size, model tier, and reviewer count accordingly. Read-only on history. |
 | `/g-blast-radius [file\|plan\|feature]` | Map a planned change's blast radius: forward references (what the targets depend on), reverse references (what depends on the targets), and per-file volatility from git history. Outputs an aggregate rating (Narrow / Moderate / Wide) and persists to `docs/blast-radius/<slug>.md` so `/g-forecast` Step 2b can fold the rating into its complexity score. Read-only. |
 | `/g-identity` | Synthesise the project's operational personality from accumulated retros, forecasts, telemetry, ADRs, and git history. Produces a narrative description (what the project is, how it ships, what it does well, where it struggles, what it's becoming) written to `docs/identity.md`. Qualitative complement to `/g-telemetry`'s quantitative snapshot. Refuses to run on a thin corpus. Read-only. |
+| `/g-tier [full\|balanced\|light]` | Switch the G-Forge integration tier. `full` (default) = all hooks + auto-triggers; `balanced` = state hooks only, no auto-triggers, commit gate on; `light` = workflow-checkpoint only, commit gate off (opt-out mode, requires confirmation). Writes `.claude/integration-tier`. |
+| `/g-voice [dev\|mid\|eli5]` | Switch the G-Forge voice profile. `dev` (default) = terse, jargon-dense; `mid` = explained-but-concise; `eli5` = plain language, conversational. Profile changes rendering across every skill — same facts, same verdicts. Writes `.claude/voice-profile`. |
 
 ### Hard stops
 

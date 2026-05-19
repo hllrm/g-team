@@ -6,11 +6,11 @@
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-HANDOFF — g-forge | branch: main
+HANDOFF — g-forge | branch: feat/m15-cohesion-pass
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Done this pass:   · M10–M14 shipped (v0.10.0 → v0.15.0) — pattern mining, premortem, telemetry, profile additions, advanced production modeling
-Next up:          · M15 — Hook / Behavioral Integration Pass (v1.0.0 cohesion milestone)
-Active context:   · Pre-shipping complete on main; M15 not started
+Done this pass:   · M15 — integration tiers (full/balanced/light), voice profiles (dev/mid/eli5), /g-help cohesion, /g-retro pattern feed, v1.0.0 ship
+Next up:          · v1.0.0 shipped — backlog open for v1.x
+Active context:   · M15 implemented; v1.0.0 release pass complete; awaiting /g-review before merge to main
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -166,7 +166,7 @@ Active context:   · Pre-shipping complete on main; M15 not started
 ---
 
 ### M15 — Hook / Behavioral Integration Pass
-**Status:** ⬜ Not started
+**Status:** ✅ Complete — v1.0.0 shipped
 **Version:** v1.0.0
 **Goal:** G-Forge becomes a coherent production intelligence system, not a collection of additions
 **Scope:**
@@ -188,7 +188,7 @@ Active context:   · Pre-shipping complete on main; M15 not started
 
 ```
 v0.8.1 → v0.9.0 (M8) → v0.10.0 (M9) → v0.11.0 (M10) → v0.12.0 (M11)
-       → v0.13.0 (M12) → v0.14.0 (M13) → v0.15.0 (M14) → v1.0.0 (M15)
+       → v0.13.0 (M12) → v0.14.0 (M13) → v0.15.0 (M14) → **v1.0.0 (M15) ✅ shipped**
 ```
 
 MVP cut: M9 + M10 + M11 — context structure + failure detection + intelligent planning with premortems.

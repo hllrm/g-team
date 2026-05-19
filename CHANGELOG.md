@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.0] — 2026-05-19
+
+**🚀 First stable release.** G-Forge becomes a coherent production-intelligence system — not a collection of additions. M15 — Hook / Behavioral Integration Pass — wires every prior milestone into a unified experience the developer can tune to their preferences and project phase.
+
+### Added
+- **Three integration tiers** — `.claude/integration-tier` selects how present G-Forge is in your project. `full` (default) fires all hooks, auto-triggers `/g-plan`/`/g-execute`/`/g-review`, and runs telemetry-driven adaptive orchestration. `balanced` keeps state hooks but never auto-triggers a workflow — you invoke skills manually; the commit gate stays on. `light` is the opt-out mode — workflow-checkpoint fires for branch info only, the commit gate is **off**, and G-Forge stays silent until you call it. Switch with `/g-tier full|balanced|light`. Switching to `light` requires confirmation because it disables the commit gate. Full spec in `docs/integration-tiers.md`.
+- **Three voice profiles** — `.claude/voice-profile` selects how G-Forge talks to you. `dev` (default) is terse and jargon-dense — what every G-Forge skill has always sounded like. `mid` adds one explanatory sentence per major result, jargon defined inline. `eli5` is plain language, conversational, no jargon — designed for non-engineer collaborators or revisiting unfamiliar areas. Profile changes **rendering** only; same facts, same verdicts. Switch with `/g-voice dev|mid|eli5`. Full spec in `docs/voice-profiles.md`.
+- **`/g-tier` skill** — read or switch the integration tier. Read mode shows current tier + what hooks fire + commit-gate state. Switch mode confirms before destructive changes (light disables commit gate).
+- **`/g-voice` skill** — read or switch the voice profile. Read mode shows the current profile plus side-by-side samples of all three so the developer can compare.
+- **First-chat onboarding in `/g-init`** — new Step 7a asks the developer which voice and which tier they want, writes both `.claude/voice-profile` and `.claude/integration-tier`. Subsequent skills honor the choices immediately.
+- **Tier-aware `workflow-checkpoint.sh`** — emits a new `Tier:` line on every prompt. `light` exits after Branch + Tier; `balanced` emits all state lines but signals "no auto-triggers"; `full` is the historical full output.
+- **Tier-aware `check-commit.sh`** — short-circuits to exit 0 when tier is `light`. The commit gate is genuinely off in light mode.
+- **`/g-help` cohesion overhaul** — surfaces Configuration block (tier · voice · telemetry health profile) and Recent intelligence block (last telemetry snapshot date, last forecast slug, identity-file presence). All commands grouped by purpose: Setup / Per-task loop / Intelligence / Configuration / Hygiene / Audit-refactor / Skill-development.
+- **`/g-retro` Step 6 — pattern signal feed** — after writing a retro, runs a lightweight pattern mine across all retros and surfaces any normalised label that just reached ≥2 source files. Closes the loop with `/g-patterns` without requiring a separate invocation. Surface only — never modifies rule files.
+- **Auto-trigger rule scoped to `full`** — `G-RULES.md` §B updated: auto-triggers fire only when the tier is `full`. The LLM reads the `Tier:` line in `workflow-checkpoint.sh` output and honors the rule.
+
+### Changed
+- Self-update URL in `workflow-checkpoint.sh` migrated from `hllrm/g-team` to `hllrm/G-Forge` to match the renamed GitHub repository.
+- Hook output header renamed from `[G-Team Workflow Checkpoint]` to `[G-Forge Workflow Checkpoint]` for consistency with the post-M9 G-Forge rename.
+
 ## [0.15.0] — 2026-05-19
 
 ### Added

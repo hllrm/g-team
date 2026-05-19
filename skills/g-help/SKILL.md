@@ -21,6 +21,12 @@ Attempt to read each of the following files from the current working directory. 
 5. `.claude/hooks/workflow-checkpoint.sh` — presence indicates workflow hooks are installed
 6. `project_brief.md` — presence indicates the project has been onboarded or kicked off
 7. Current git branch — run `git branch --show-current` via Bash (skip gracefully if git is unavailable)
+8. `.claude/integration-tier` — active integration tier (default: `full`)
+9. `.claude/voice-profile` — active voice profile (default: `dev`)
+10. `.claude/telemetry-profile` — derived health profile from `/g-telemetry` (default: `stable`)
+11. `docs/telemetry/` — Glob for most recent snapshot file (informational — shows date of last `/g-telemetry` run)
+12. `docs/forecasts/` — Glob for most recent forecast file (informational — shows most recently forecast plan)
+13. `docs/identity.md` — Read if present (informational — shows the project's last synthesised personality snapshot)
 
 ## Step 3 — Determine project name
 
@@ -74,21 +80,63 @@ What's active:
   - [commit gate: open / not set]
   - [project_brief.md: present / missing]
 
+Configuration:
+  - Tier:           [full / balanced / light] ([file present / using default])
+  - Voice:          [dev / mid / eli5] ([file present / using default])
+  - Health profile: [stable / cautious / defensive / recovery] ([from /g-telemetry])
+
+Recent intelligence:
+  - Last telemetry: [date of most recent docs/telemetry/*.md, or "never run — try /g-telemetry"]
+  - Last forecast:  [most recent docs/forecasts/*.md slug, or "none — /g-forecast is auto-invoked by /g-plan"]
+  - Identity:       [present (date of docs/identity.md) / not yet synthesised — try /g-identity]
+
 Next step:
   [one clear action the developer should take right now, including the exact command to run]
 
-All commands:
-  /g-kickoff     — new project: interview → project_brief.md
-  /g-onboard     — existing project: read repo → project_brief.md
-  /g-init        — scaffold CLAUDE.md, commit gate, workflow hooks
-  /g-specialize  — install stack architect agent + architecture rules
-  /g-plan        — decompose task → wave schedule → approval
-  /g-execute     — dispatch waves (auto-triggered after plan approval)
-  /g-review      — full review pipeline → MERGE READY or HOLD
-  /g-brief       — refresh project_brief.md as project evolves
-  /g-status      — quick one-line state snapshot
-  /g-update      — realign all g-forge files to current plugin version
-  /g-help        — context-aware help: assess project state and next step
+All commands (grouped by purpose):
+
+  Setup:
+    /g-kickoff     — new project: interview → project_brief.md
+    /g-onboard     — existing project: read repo → project_brief.md
+    /g-init        — scaffold CLAUDE.md, commit gate, workflow hooks
+    /g-specialize  — install stack architect agent + architecture rules
+
+  Per-task loop (auto-triggered on `full` tier):
+    /g-plan        — decompose task → wave schedule → approval
+    /g-execute     — dispatch waves
+    /g-review      — full review pipeline → MERGE READY or HOLD
+
+  Intelligence:
+    /g-patterns    — mine retros + todo-done for recurring failure patterns
+    /g-forecast    — premortem + scope realism + token-cost band (auto in /g-plan)
+    /g-telemetry   — 8 reliability metrics → health profile → adaptive orchestration
+    /g-blast-radius — forward + reverse deps + per-file volatility for a change
+    /g-identity    — narrative synthesis of the project's operational personality
+
+  Configuration:
+    /g-tier        — integration tier: full / balanced / light
+    /g-voice       — voice profile: dev / mid / eli5
+
+  Hygiene:
+    /g-brief       — refresh project_brief.md as project evolves
+    /g-status      — quick one-line state snapshot
+    /g-doctor      — health check: hooks, settings, rules block
+    /g-update      — realign all g-forge files to current plugin version
+    /g-retro       — record session retrospective
+    /g-adr         — capture an architectural decision record
+    /g-help        — context-aware help (this skill)
+    /g-listen      — Tier 3 listen mode for smoke testing
+    /g-afk         — autonomous milestone executor (requires approved plan)
+
+  Audit / refactor:
+    /g-audit       — code quality audit (SOLID, smells, dead code, coverage)
+    /g-optimize    — performance audit (complexity, N+1, re-render waste)
+    /g-refactor    — guided refactor with spec + review gate
+    /g-docs        — documentation audit and generation
+
+  Skill development:
+    /g-skill-design   — design a new g-team skill from scratch
+    /g-skill-validate — validate a skill or agent against structural rules
 ```
 
 ## Rules

@@ -15,8 +15,24 @@ except Exception:
 " 2>/dev/null)
 
 if echo "$CMD" | grep -q "git commit"; then
+    # Integration tier check — `light` disables the commit gate entirely.
+    # Validate the value against the known tier set; unknown/garbage values
+    # fall through safely to the gate path (default = enforcement).
+    TIER="full"
+    if [ -f ".claude/integration-tier" ]; then
+        _raw=$(tr -d '[:space:]' < .claude/integration-tier 2>/dev/null)
+        case "$_raw" in
+            full|balanced|light) TIER="$_raw" ;;
+        esac
+    fi
+    if [ "$TIER" = "light" ]; then
+        # Light mode — gate is off. Exit 0 without checking the sentinel.
+        exit 0
+    fi
+
     if [ ! -f ".claude/g-team-approved" ]; then
-        echo "G-Team: No code-lead sign-off. Run /g-review and wait for MERGE READY before committing." >&2
+        echo "G-Forge: No code-lead sign-off. Run /g-review and wait for MERGE READY before committing." >&2
+        echo "G-Forge: (To disable the gate for this project, run /g-tier light — opt-out mode.)" >&2
         exit 1
     fi
     # Advisory: warn when committing directly to main with approval

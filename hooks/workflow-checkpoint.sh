@@ -19,6 +19,16 @@ to_int() {
     esac
 }
 
+# Integration tier — `full` (default) emits everything; `balanced` skips the
+# auto-trigger advisory; `light` emits only Branch + Tier.
+TIER="full"
+if [ -f ".claude/integration-tier" ]; then
+    _t=$(tr -d '[:space:]' < .claude/integration-tier 2>/dev/null)
+    case "$_t" in
+        full|balanced|light) TIER="$_t" ;;
+    esac
+fi
+
 ACTIVE_CONTEXT=""
 if [ -f "ROADMAP.md" ]; then
     ACTIVE_CONTEXT=$(grep -m1 'Active context:' ROADMAP.md | sed 's/.*Active context:[[:space:]]*//')
@@ -29,8 +39,15 @@ REVIEW_APPROVED=false
 
 CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
 
-echo "[G-Team Workflow Checkpoint]"
+echo "[G-Forge Workflow Checkpoint]"
 echo "  Branch: $CURRENT_BRANCH"
+
+# Light tier — minimal output, then exit.
+if [ "$TIER" = "light" ]; then
+    echo "  Tier:   light — manual mode; commit gate off"
+    exit 0
+fi
+
 if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
     echo "  ⚠  on main — non-trivial work should be on a feature branch (feat/<slug>, fix/<slug>)" >&2
 fi
@@ -80,6 +97,14 @@ else
     echo "  Health: ⚠ ${HEALTH_PARTS}"
 fi
 
+# Tier line — surfaces the integration tier so the LLM knows whether
+# auto-triggers are permitted (only on `full`). `light` already exited above.
+if [ "$TIER" = "balanced" ]; then
+    echo "  Tier:   balanced — no auto-triggers; invoke skills manually"
+else
+    echo "  Tier:   full"
+fi
+
 # Self-update check — background curl once per day, zero blocking latency
 CLAUDE_DIR="$HOME/.claude"
 INSTALLED_MANIFEST="$CLAUDE_DIR/plugins/cache/g-team/g-team/.claude-plugin/plugin.json"
@@ -96,7 +121,7 @@ if [ -f "$INSTALLED_MANIFEST" ]; then
 
     if [ "$NEEDS_CHECK" = true ]; then
         (curl -sf --max-time 5 \
-          "https://raw.githubusercontent.com/hllrm/g-team/main/.claude-plugin/plugin.json" \
+          "https://raw.githubusercontent.com/hllrm/G-Forge/main/.claude-plugin/plugin.json" \
           | grep '"version"' | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?[a-zA-Z0-9]*' | head -1 \
           > "$VERSION_CACHE" && touch "$CHECK_STAMP") >/dev/null 2>&1 &
     fi

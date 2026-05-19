@@ -8,8 +8,8 @@
     {
       "name": "g-forge",
       "source": "./",
-      "description": "Multi-agent Claude Code plugin - planned execution, production architecture, enforced review. 17 agents, 28 skills, 48 stack profiles, 7 combo profiles, 1 supplementary profile (frontend-data-flow).",
-      "version": "0.15.0",
+      "description": "Multi-agent Claude Code plugin - planned execution, production architecture, enforced review. Three integration tiers (full / balanced / light) and three voice profiles (dev / mid / eli5). 17 agents, 30 skills, 48 stack profiles, 7 combo profiles, 1 supplementary profile (frontend-data-flow).",
+      "version": "1.0.0",
       "author": {
         "name": "hllrm"
       },

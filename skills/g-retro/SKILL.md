@@ -112,6 +112,30 @@ Retro written: docs/retros/YYYY-MM-DD-[topic].md
 
 If the developer requests a correction, edit the file and re-print only the corrected section.
 
+## Step 6 — Pattern suggestions (informational)
+
+After writing the retro, surface any patterns that just-written retro contributes to. This closes the loop with `/g-patterns` without requiring a separate invocation.
+
+Run a lightweight pattern-mine pass:
+1. Read every retro under `docs/retros/`, including the one you just wrote.
+2. Apply the `None recorded.` sentinel filter from `/g-patterns` Step 2a.
+3. Extract bullets under `Avoid / do differently` and group by normalised label.
+4. Count distinct source files per label.
+
+If any label now has ≥2 source files, print:
+
+```
+Pattern signal — labels reaching ≥2 occurrences after this retro:
+  · [label]  — sources: [filenames]
+  · [label]  — sources: [filenames]
+
+Run /g-patterns to triage these into proposed rule edits.
+```
+
+If no label reaches ≥2 — print nothing. Pattern-suggestion is silent when there's no signal worth surfacing.
+
+Do not modify any rule files from inside `/g-retro` — surfacing is the cap of this skill's responsibility. `/g-patterns` is the only entry point that proposes edits.
+
 ## Rules
 
 - Never write the retro file before receiving explicit confirmation in Step 1
