@@ -1,6 +1,6 @@
 ---
-description: G-Forge workflow commands. Subcommands: help, status, doctor, init, kickoff, onboard, brief, roadmap, plan, execute, review, afk, specialize, update, skill-design, skill-validate.
-argument-hint: <help|status|doctor|init|kickoff|onboard|brief|roadmap|plan|execute|review|afk|specialize|update|skill-design|skill-validate> [args]
+description: G-Forge workflow commands. Subcommands: help, status, doctor, init, kickoff, onboard, brief, roadmap, plan, execute, review, afk, specialize, update, skill-design, skill-validate, patterns.
+argument-hint: <help|status|doctor|init|kickoff|onboard|brief|roadmap|plan|execute|review|afk|specialize|update|skill-design|skill-validate|patterns> [args]
 ---
 
 Route to the correct skill file based on the subcommand in $ARGUMENTS.
@@ -23,6 +23,7 @@ For each subcommand, use Glob to find the corresponding SKILL.md inside `~/.clau
 - `update`     → `skills/g-update/SKILL.md`
 - `skill-design` → `skills/g-skill-design/SKILL.md`
 - `skill-validate` → `skills/g-skill-validate/SKILL.md`  (remaining args: $ARGUMENTS)
+- `patterns`   → `skills/g-patterns/SKILL.md`
 
 If $ARGUMENTS is empty or unrecognized, list available subcommands:
   - `help` — show current project state and next recommended action
@@ -41,3 +42,4 @@ If $ARGUMENTS is empty or unrecognized, list available subcommands:
   - `update` — realign all g-team-managed files to the current plugin version
   - `skill-design` — design a new skill from scratch (SKILL.md, command file, router entry)
   - `skill-validate [name]` — validate a skill or agent against G-Forge structural rules
+  - `patterns` — mine docs/retros/ and todo-done.md for recurring failure patterns; propose rule edits

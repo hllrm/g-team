@@ -80,6 +80,7 @@ For an existing project without g-team: run `/g-onboard` instead of the above se
 | `/g-refactor [path\|milestone]` | Guided refactor — pre-analyse, spec, human approval, wave execution, review gate. Accepts a path, an audit milestone file, or runs interactively. |
 | `/g-docs [path\|all]` | Documentation audit and generation — missing JSDoc/docstrings, stale docs, README gaps, undocumented env vars, CHANGELOG gaps, missing ADRs. Targeted: fix via doc-writer. Whole-codebase: debt report + optional milestone. |
 | `/g-adr [title]` | Capture an architectural decision record interactively. Writes to `docs/decisions/NNN-title.md`. Run whenever a significant technical choice is made. |
+| `/g-patterns` | Mine `docs/retros/` and `todo-done.md` for recurring failure patterns. Bucket by frequency (isolated / emerging / systemic) and propose concrete profile-rule edits for any pattern observed ≥2 times. Apply/defer/dismiss per suggestion. |
 
 ### Hard stops
 

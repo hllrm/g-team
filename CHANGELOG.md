@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.11.0] — 2026-05-19
+
+### Added
+- **`/g-patterns`** — organisational-learning skill. Mines `docs/retros/` and `todo-done.md` for recurring failure modes, buckets them by frequency (✓ isolated · ⚠ emerging · ✗ systemic), and proposes concrete profile-rule edits for any pattern observed ≥2 times. Per-suggestion apply/defer/dismiss flow — no edits applied without explicit developer choice. Deferrals logged to `docs/patterns-deferred.md`. Surfaces reinforced "worked well" patterns as a separate positive-signal bucket.
+- **Self-evolution: rule-edit suggestions** — for every Emerging or Systemic pattern, the skill maps the failure class to a candidate fix target (G-RULES section, stack architecture rules, agent system prompt, or skill Rules section) and drafts a concrete edit: target file, target section, exact text, and a one-line rationale citing source retros.
+
 ## [0.10.0] — 2026-05-19
 
 ### Added
