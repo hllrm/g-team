@@ -114,103 +114,33 @@ Active context:   · Fresh project, just initialized
 
 Create `.claude/hooks/` directory if it does not exist.
 
-Write `.claude/hooks/check-commit.sh` with this exact content:
+All four hook scripts are **copied verbatim from the plugin cache** rather than inlined here, so a fresh `/g-init` installs the same canonical hook bodies that `/g-update` and `hooks/*.sh` in the plugin source ship. Inlining them here previously caused divergence — new projects ran the pre-M15 hooks until `/g-update` was run.
 
-```bash
-#!/bin/bash
-# G-Forge commit gate — PreToolUse hook.
-# Blocks git commit if .claude/g-team-approved does not exist.
-# Input: Claude Code PreToolUse JSON on stdin.
+Plugin hooks directory: use Glob to find the highest-versioned entry under `~/.claude/plugins/cache/g-team/g-team/*/hooks/`. Call this `<plugin-hooks>`.
 
-INPUT=$(cat)
-CMD=$(echo "$INPUT" | python3 -c "
-import json, sys
-try:
-    d = json.load(sys.stdin)
-    cmd = d.get('tool_input', {}).get('command', '') or d.get('command', '')
-    print(cmd)
-except Exception:
-    pass
-" 2>/dev/null)
+For each of the following four hook files, copy from `<plugin-hooks>/<filename>` to `.claude/hooks/<filename>`. If the file already exists at the destination, overwrite it — these scripts are g-forge managed and must stay in sync with the plugin cache.
 
-if echo "$CMD" | grep -q "git commit"; then
-    if [ ! -f ".claude/g-team-approved" ]; then
-        echo "G-Forge: No code-lead sign-off. Run /g-review and wait for MERGE READY before committing." >&2
-        exit 1
-    fi
-    # Advisory: warn when committing directly to main with approval
-    BRANCH=$(git branch --show-current 2>/dev/null)
-    if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
-        echo "G-Forge: Note — committing directly to main. Non-trivial work should be on a feature branch (feat/<slug>, fix/<slug>)." >&2
-    fi
-fi
+| Hook | Source | Destination |
+|------|--------|-------------|
+| `check-commit.sh` | `<plugin-hooks>/check-commit.sh` | `.claude/hooks/check-commit.sh` |
+| `post-commit-cleanup.sh` | `<plugin-hooks>/post-commit-cleanup.sh` | `.claude/hooks/post-commit-cleanup.sh` |
+| `pre-compact.sh` | `<plugin-hooks>/pre-compact.sh` | `.claude/hooks/pre-compact.sh` |
+| `workflow-checkpoint.sh` | `<plugin-hooks>/workflow-checkpoint.sh` | `.claude/hooks/workflow-checkpoint.sh` |
+
+After copying each file, ensure it is executable: `chmod +x .claude/hooks/<filename>` (best effort — on Windows, file mode bits may not apply but Claude Code still runs the script via bash).
+
+Report:
+```
+  ✓ .claude/hooks/check-commit.sh — installed (canonical from plugin cache)
+  ✓ .claude/hooks/post-commit-cleanup.sh — installed (canonical from plugin cache)
+  ✓ .claude/hooks/pre-compact.sh — installed (canonical from plugin cache)
+  ✓ .claude/hooks/workflow-checkpoint.sh — installed (canonical from plugin cache)
 ```
 
-Write `.claude/hooks/post-commit-cleanup.sh` with this exact content:
-
-```bash
-#!/bin/bash
-# G-Forge post-commit cleanup — PostToolUse hook.
-# Clears .claude/g-team-approved after a successful git commit.
-INPUT=$(cat)
-CMD=$(echo "$INPUT" | python3 -c "
-import json, sys
-try:
-    d = json.load(sys.stdin)
-    cmd = d.get('tool_input', {}).get('command', '') or d.get('command', '')
-    print(cmd)
-except Exception:
-    pass
-" 2>/dev/null)
-if echo "$CMD" | grep -q "git commit"; then
-    rm -f ".claude/g-team-approved"
-fi
+If the plugin cache does not contain any of the four scripts, stop and report:
 ```
-
-Copy `pre-compact.sh` from the plugin hooks directory to `.claude/hooks/pre-compact.sh`:
-- Plugin hooks path: `~/.claude/plugins/cache/g-team/g-team/` (Glob to confirm exact path) + `/hooks/pre-compact.sh`
-- Destination: `.claude/hooks/pre-compact.sh`
-- If the file already exists at the destination, overwrite it — it is g-team managed.
-
-Report: `✓ .claude/hooks/pre-compact.sh — installed`
-
-Write `.claude/hooks/workflow-checkpoint.sh` with this exact content:
-
-```bash
-#!/bin/bash
-# G-Forge workflow checkpoint — UserPromptSubmit hook.
-# Outputs current workflow state so Claude can auto-trigger the right step.
-
-ACTIVE_CONTEXT=""
-if [ -f "todo.md" ]; then
-    ACTIVE_CONTEXT=$(grep -m1 'Active context:' todo.md | sed 's/.*Active context:[[:space:]]*//')
-fi
-
-REVIEW_APPROVED=false
-[ -f ".claude/g-team-approved" ] && REVIEW_APPROVED=true
-
-CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
-
-echo "[G-Forge Workflow Checkpoint]"
-echo "  Branch: $CURRENT_BRANCH"
-if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
-    echo "  ⚠  on main — non-trivial work should be on a feature branch (feat/<slug>, fix/<slug>)" >&2
-fi
-if [ -n "$ACTIVE_CONTEXT" ]; then
-    echo "  Active: $ACTIVE_CONTEXT"
-else
-    echo "  Active: none"
-fi
-if [ "$REVIEW_APPROVED" = true ]; then
-    echo "  Review: approved (commit gate open)"
-else
-    echo "  Review: not yet approved — run /g-review before merging"
-fi
-
-if [ -f ".claude/tier3-active" ]; then
-    BUG_COUNT=$(cat ".claude/tier3-active" 2>/dev/null || echo 0)
-    echo "  Tier 3 listen mode ACTIVE — ${BUG_COUNT} bug(s) logged this round — no fixes until developer declares round complete"
-fi
+✗ Plugin cache missing hook file: <plugin-hooks>/<filename>
+  Reinstall the plugin: /plugin install g-team
 ```
 
 ## Step 7 — Register hooks in .claude/settings.json
@@ -274,6 +204,41 @@ Add the following hook entries under the `hooks` key. If `hooks` already exists,
 
 Write the merged result back to `.claude/settings.json`.
 
+## Step 7a — First-chat onboarding (voice + tier)
+
+Ask the developer two short questions to set up `.claude/voice-profile` and `.claude/integration-tier`. Ask one at a time, wait for each answer.
+
+**Question 1 (voice):**
+> "How should I talk to you?
+>   1) **dev** — terse, assumes you know the jargon (default)
+>   2) **mid** — same info, one sentence of context per major result
+>   3) **eli5** — plain language, no jargon, conversational
+>
+> Pick one (default: dev). You can change anytime with /g-voice."
+
+Wait for the answer. Map `1`/`d`/`dev` → `dev`; `2`/`m`/`mid` → `mid`; `3`/`e`/`eli5` → `eli5`; anything else or empty → `dev`. Write the resolved value to `.claude/voice-profile`.
+
+**Question 2 (integration tier):**
+> "How present should G-Forge be?
+>   1) **full** — all hooks fire; /g-plan, /g-execute, /g-review auto-trigger (default)
+>   2) **balanced** — state info only; you invoke skills manually; commit gate still on
+>   3) **light** — workflow-checkpoint only; commit gate off (opt-out mode)
+>
+> Pick one (default: full). You can change anytime with /g-tier."
+
+Wait for the answer. Map `1`/`f`/`full` → `full`; `2`/`b`/`balanced` → `balanced`; `3`/`l`/`light` → `light`; anything else or empty → `full`. Write the resolved value to `.claude/integration-tier`.
+
+If the developer chose `light` for the tier, surface the consequence in the active voice profile:
+- `dev`: `⚠ Light tier — commit gate off. Manual mode.`
+- `mid`: `⚠ Light tier selected — the commit gate is off. You can git commit without /g-review.`
+- `eli5`: `Got it. You picked the minimal mode. I won't block your commits and I won't auto-suggest steps. You're driving; I'll be available when you call me.`
+
+Report:
+```
+  ✓ .claude/voice-profile — [resolved]
+  ✓ .claude/integration-tier — [resolved]
+```
+
 ## Step 8 — Report
 
 After all steps, report:
@@ -286,8 +251,10 @@ G-Forge initialized ✓
   ✓ ROADMAP.md — stub created (or already existed)
   ✓ milestones/M1.md — created (or already existed)
   ✓ todo.md — created (or already existed)
-  ✓ .claude/hooks/ — check-commit.sh, workflow-checkpoint.sh, and pre-compact.sh installed
+  ✓ .claude/hooks/ — check-commit.sh, workflow-checkpoint.sh, post-commit-cleanup.sh, and pre-compact.sh installed
   ✓ .claude/settings.json — hooks registered
+  ✓ .claude/voice-profile — [chosen voice]
+  ✓ .claude/integration-tier — [chosen tier]
 
 Next: run /g-plan with your first feature request, or edit milestones/M1.md to define your scope.
 

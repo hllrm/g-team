@@ -41,7 +41,7 @@ The goal isn't to automate your project. It's to give it a better chance of succ
 /plugin install g-team
 ```
 
-All 17 G-Forge agents, 28 skills, 48 stack profiles, 7 combo profiles, and 1 supplementary profile (frontend-data-flow) become available globally across all your projects.
+All 17 G-Forge agents, 30 skills, 48 stack profiles, 7 combo profiles, and 1 supplementary profile (frontend-data-flow) become available globally across all your projects.
 
 #### Desktop app, VS Code, JetBrains
 
@@ -90,7 +90,7 @@ This loads G-Forge for that session only. Re-run with `--plugin-dir` each time, 
 
 ### Verify
 
-Type `/g-help` in any Claude Code session. You should see the current project state and a full command reference. Commands follow the `/g-<name>` pattern: `/g-plan`, `/g-execute`, `/g-review`, `/g-afk`, `/g-init`, `/g-kickoff`, `/g-onboard`, `/g-specialize`, `/g-roadmap`, `/g-brief`, `/g-listen`, `/g-help`, `/g-status`, `/g-doctor`, `/g-update`, `/g-skill-design`, `/g-skill-validate`, `/g-audit`, `/g-optimize`, `/g-refactor`, `/g-docs`, `/g-adr`, `/g-retro`, `/g-patterns`, `/g-forecast`, `/g-telemetry`, `/g-blast-radius`, `/g-identity`.
+Type `/g-help` in any Claude Code session. You should see the current project state and a full command reference. Commands follow the `/g-<name>` pattern: `/g-plan`, `/g-execute`, `/g-review`, `/g-afk`, `/g-init`, `/g-kickoff`, `/g-onboard`, `/g-specialize`, `/g-roadmap`, `/g-brief`, `/g-listen`, `/g-help`, `/g-status`, `/g-doctor`, `/g-update`, `/g-skill-design`, `/g-skill-validate`, `/g-audit`, `/g-optimize`, `/g-refactor`, `/g-docs`, `/g-adr`, `/g-retro`, `/g-patterns`, `/g-forecast`, `/g-telemetry`, `/g-blast-radius`, `/g-identity`, `/g-tier`, `/g-voice`.
 
 ### Set up a new project
 
@@ -238,6 +238,8 @@ rm .claude/hooks/check-commit.sh   # removes the gate for this project
 | `/g-telemetry` | Compute 8 reliability metrics (hallucination, review catch, regression, rework, spec deviation, escalation, token efficiency, retry dependency); classify health profile (stable / cautious / defensive / recovery); write `.claude/telemetry-profile` for adaptive orchestration. `/g-execute` and `/g-review` Step 0 read the profile and scale wave size, model tier, and reviewer count accordingly. |
 | `/g-blast-radius [file\|plan\|feature]` | Map forward + reverse dependencies for a planned change; compute per-file volatility from git history; output aggregate rating (Narrow / Moderate / Wide). Persists `docs/blast-radius/<slug>.md` for `/g-forecast` Step 2b integration. |
 | `/g-identity` | Narrative synthesis of the project's operational personality from accumulated retros, forecasts, telemetry, ADRs, blast-radius reports, CHANGELOG, ROADMAP, and git history. Produces `docs/identity.md` covering what the project is, how it ships, what it does well, where it struggles, and what it's becoming. Qualitative complement to `/g-telemetry`. |
+| `/g-tier [full\|balanced\|light]` | Switch the integration tier. `full` (default) = all hooks + auto-triggers; `balanced` = state info only, commit gate on, no auto-triggers; `light` = workflow-checkpoint only, commit gate off (opt-out mode). Switching to `light` requires confirmation. Writes `.claude/integration-tier`. See `docs/integration-tiers.md`. |
+| `/g-voice [dev\|mid\|eli5]` | Switch the voice profile. `dev` (default) = terse, jargon-dense; `mid` = explained-but-concise; `eli5` = plain language, conversational. Same facts, same verdicts — rendering changes. Read mode shows side-by-side samples. Writes `.claude/voice-profile`. See `docs/voice-profiles.md`. |
 
 ---
 
@@ -519,4 +521,4 @@ git push
 | M12 — Reliability & Adaptive Systems | ✅ Done |
 | M13 — Profile Additions | ✅ Done |
 | M14 — Advanced Production Modeling | ✅ Done |
-| M15 — Hook / Behavioral Integration Pass | ⬜ Not started |
+| M15 — Hook / Behavioral Integration Pass | ✅ Done — **v1.0.0 shipped** |
