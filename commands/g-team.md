@@ -1,6 +1,6 @@
 ---
-description: G-Forge workflow commands. Subcommands: help, status, doctor, init, kickoff, onboard, brief, roadmap, plan, execute, review, afk, specialize, update, skill-design, skill-validate, patterns, forecast.
-argument-hint: <help|status|doctor|init|kickoff|onboard|brief|roadmap|plan|execute|review|afk|specialize|update|skill-design|skill-validate|patterns|forecast> [args]
+description: G-Forge workflow commands. Subcommands: help, status, doctor, init, kickoff, onboard, brief, roadmap, plan, execute, review, afk, specialize, update, skill-design, skill-validate, patterns, forecast, telemetry.
+argument-hint: <help|status|doctor|init|kickoff|onboard|brief|roadmap|plan|execute|review|afk|specialize|update|skill-design|skill-validate|patterns|forecast|telemetry> [args]
 ---
 
 Route to the correct skill file based on the subcommand in $ARGUMENTS.
@@ -25,6 +25,7 @@ For each subcommand, use Glob to find the corresponding SKILL.md inside `~/.clau
 - `skill-validate` → `skills/g-skill-validate/SKILL.md`  (remaining args: $ARGUMENTS)
 - `patterns`   → `skills/g-patterns/SKILL.md`
 - `forecast`   → `skills/g-forecast/SKILL.md`  (remaining args: $ARGUMENTS)
+- `telemetry`  → `skills/g-telemetry/SKILL.md`
 
 If $ARGUMENTS is empty or unrecognized, list available subcommands:
   - `help` — show current project state and next recommended action
@@ -45,3 +46,4 @@ If $ARGUMENTS is empty or unrecognized, list available subcommands:
   - `skill-validate [name]` — validate a skill or agent against G-Forge structural rules
   - `patterns` — mine docs/retros/ and todo-done.md for recurring failure patterns; propose rule edits
   - `forecast [plan-slug]` — premortem and scope-realism analysis on a plan; produces complexity score, miss-risk %, and ranked failure scenarios
+  - `telemetry` — compute 8 reliability metrics and derive a health profile (stable / cautious / defensive / recovery); drives adaptive orchestration in /g-execute and /g-review

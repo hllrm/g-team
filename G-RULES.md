@@ -82,6 +82,7 @@ For an existing project without g-team: run `/g-onboard` instead of the above se
 | `/g-adr [title]` | Capture an architectural decision record interactively. Writes to `docs/decisions/NNN-title.md`. Run whenever a significant technical choice is made. |
 | `/g-patterns` | Mine `docs/retros/` and `todo-done.md` for recurring failure patterns. Bucket by frequency (isolated / emerging / systemic) and propose concrete profile-rule edits for any pattern observed ≥2 times. Apply/defer/dismiss per suggestion. |
 | `/g-forecast [plan-slug]` | Premortem and scope-realism pass on a plan. Outputs complexity score (0–10), quantified miss-risk percentage, and ranked top-5 failure scenarios seeded by `/g-patterns` history. Advisory — never blocks approval. Persists `docs/forecasts/<slug>.md` for feedback-loop mining. |
+| `/g-telemetry` | Compute the 8 reliability metrics defined in `docs/telemetry-metrics.md`, derive a health profile (`stable` / `cautious` / `defensive` / `recovery`), and write `.claude/telemetry-profile` for adaptive orchestration. `/g-execute` and `/g-review` read the profile in their Step 0 and adjust wave size, model tier, and reviewer count accordingly. Read-only on history. |
 
 ### Hard stops
 

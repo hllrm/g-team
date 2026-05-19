@@ -6,11 +6,11 @@
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-HANDOFF — g-forge | branch: feat/m11-planning-intelligence
+HANDOFF — g-forge | branch: feat/m12-reliability-adaptive-systems
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Done this pass:   · M11 — /g-forecast skill, premortem wiring, feedback loop, health line, v0.12.0 bump
-Next up:          · M12 — Reliability & Adaptive Systems (8-metric telemetry, adaptive orchestration)
-Active context:   · M11 implemented; awaiting /g-review before merge to main
+Done this pass:   · M12 — /g-telemetry skill, 8-metric spec, adaptive /g-execute and /g-review, v0.13.0 bump
+Next up:          · M13 — Profile Additions (flask, pygame, xamarin, dependency-auditor, frontend-data-flow)
+Active context:   · M12 implemented; awaiting /g-review before merge to main
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -124,7 +124,7 @@ Active context:   · M11 implemented; awaiting /g-review before merge to main
 ---
 
 ### M12 — Reliability & Adaptive Systems
-**Status:** ⬜ Not started
+**Status:** ✅ Complete
 **Version:** v0.13.0
 **Goal:** Instrument agent performance; system adapts its behavior based on measured reliability
 **Scope:**

@@ -8,6 +8,24 @@ context: [task, sprint, architectural]
 
 You are running the merge gate. Execute these steps in order.
 
+## Step 0 — Read telemetry profile (adaptive review intensity)
+
+Read `.claude/telemetry-profile` if it exists. Treat the contents as one of `stable`, `cautious`, `defensive`, or `recovery`. Missing or malformed → treat as `stable`.
+
+Apply the following review adjustments throughout this skill:
+
+| Profile | Reviewer adjustment | Pre-review additions |
+|---------|---------------------|----------------------|
+| `stable` | Default reviewer set (code-reviewer, security-auditor when auth/external IO touched, architecture-enforcer when layer-boundary changes, performance-auditor when hot-path changes) | None |
+| `cautious` | +1 additional `code-reviewer` pass with stricter instructions | None |
+| `defensive` | +1 `code-reviewer`, +1 `architecture-enforcer` regardless of diff | Dispatch `debugger` pre-review on the diff for root-cause sanity check |
+| `recovery` | Full reviewer set regardless of diff (`code-reviewer`, `security-auditor`, `architecture-enforcer`, `performance-auditor`) | Dispatch `debugger` + `error-detective` pre-review |
+
+Pass the active profile to code-lead in Step 4 so its dispatch of review-orchestrator applies the adjustments. Announce the profile once at the top of the run:
+```
+Telemetry profile: [profile] — review intensity adjusted accordingly
+```
+
 ## Step 1 — Run the test suite
 
 Before reviewing any code, verify the test suite passes.
@@ -68,7 +86,9 @@ Dispatch the `code-lead` agent. Provide **all of the following** in the prompt s
 - The current branch name (from `git branch --show-current`)
 - The task list (if known)
 
-code-lead will verify remaining done conditions structurally (file checks, grep, read) and dispatch review-orchestrator internally. It must NOT re-run tests or type-check when attested results are provided. Wait for code-lead's complete verdict.
+code-lead will verify remaining done conditions structurally (file checks, grep, read) and dispatch review-orchestrator internally. It must NOT re-run tests or type-check when attested results are provided. Pass the telemetry profile from Step 0 to code-lead so its dispatch of review-orchestrator scales reviewer count and pre-review additions accordingly. Wait for code-lead's complete verdict.
+
+If code-lead returns HOLD, increment `.claude/review-holds` by 1 — this counter feeds the rework-rate telemetry metric (per `docs/telemetry-metrics.md` §4) regardless of the active profile. If the file does not exist, create it with value `1`. The increment is unconditional; only the *review-intensity adjustments above* depend on the profile. `/g-telemetry` resets the counter to `0` when a `stable` profile is derived.
 
 ## Step 5 — Tier 3 Smoke Test (MERGE READY path only)
 
