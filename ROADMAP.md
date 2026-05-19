@@ -6,11 +6,11 @@
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-HANDOFF — g-forge | branch: feat/m14-advanced-production-modeling
+HANDOFF — g-forge | branch: main
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Done this pass:   · M14 — /g-blast-radius + /g-identity skills, /g-forecast economic reasoning, v0.15.0 bump
-Next up:          · M15 — Hook / Behavioral Integration Pass (the v1.0.0 cohesion milestone)
-Active context:   · M14 implemented; pre-shipping complete; awaiting /g-review before merge to main
+Done this pass:   · M10–M14 shipped (v0.10.0 → v0.15.0) — pattern mining, premortem, telemetry, profile additions, advanced production modeling
+Next up:          · M15 — Hook / Behavioral Integration Pass (v1.0.0 cohesion milestone)
+Active context:   · Pre-shipping complete on main; M15 not started
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
